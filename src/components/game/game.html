@@ -1,2 +1,6 @@
 <!-- <img src="src/BSK_logo.png"/> -->
-<board [name]="title"></board>
+<board [clearings]="this.gs.Clearings" ></board>
+<div>
+    <button (click)="Start()">Start</button>
+    <button (click)="Reset()">Reset</button>
+</div>

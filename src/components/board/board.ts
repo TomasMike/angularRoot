@@ -1,15 +1,37 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { ClearingSuit, ClearingModel } from '../../classes/models/ClearingModel';
+import { ClearingComponent } from "../clearing/clearing";
+import { CommonModule } from '@angular/common';
+import { ExpressionStatement } from '@angular/compiler';
+import { GameManager } from '../../classes/GameManager';
 
 @Component({
     standalone: true,
     selector: 'board',
-    templateUrl: './board.html',
-    styleUrl: './board.css'
+    //templateUrl: './board.html',
+    template: `
+    <div id="board">
+        <clearing *ngFor="let c of clearings" [clearing]="c" ></clearing>
+</div>
+    `,
+    styleUrl: './board.css',
+    imports: [ClearingComponent, CommonModule]
 })
-export class BoardComponent {
-    @Input() name: string = "defaultHodnota";
+export class BoardComponent implements OnInit {
+    @Input() clearings!: ClearingModel[];
+    GameManager = inject(GameManager);
+
+
+    ngOnInit(): void {
+        console.log("test");
+        var data = GameManager.GetGameData();
+        if (data != null) {
+
+        }
+    }
 
 
 
-    title = 'your-angular-project';
+
+
 }
