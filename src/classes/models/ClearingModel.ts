@@ -1,19 +1,44 @@
+import { IPieceModel } from "./IPieceModel";
+
 export class ClearingModel {
     Id: number;
     Suit: string;
     Left: number;
     Top: number;
+    Pieces: IPieceModel[];
 
-    constructor(id: number, color: ClearingSuit, left: number, top: number) {
+    constructor(id: number, color: ClearingSuitEnum, left: number, top: number) {
         this.Id = id;
-        this.Suit = ClearingSuit[color];
+        this.Suit = ClearingSuitEnum[color];
         this.Left = left;
         this.Top = top;
+        this.Pieces = [];
     }
 }
 
-export enum ClearingSuit {
+export enum ClearingSuitEnum {
     Fox, Rabbit, Mouse
+}
+
+export enum RaceEnum
+{
+    MarquiseDeCat,
+    EyrieDynasties,
+    WoodlandAlliance,
+    Vagabond,
+    LizardCult,
+    RiverfolkCompany,
+    UndergroundDuchy,
+    CorvidConspiracy,
+    LordOfTheHundreds,
+    KeepersInIron
+}
+
+export enum ComponentType{
+    Warrior,
+    Pawn,
+    Building,
+    Token
 }
 
 

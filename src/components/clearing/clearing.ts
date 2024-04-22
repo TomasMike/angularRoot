@@ -1,17 +1,16 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { ClearingModel, ClearingSuit } from "../../classes/models/ClearingModel";
+import { ClearingModel, ClearingSuitEnum } from "../../classes/models/ClearingModel";
 import { CommonModule } from "@angular/common";
+import { PieceGrouping } from "../../classes/models/WarriorPieceModel";
+// import { PieceGroupingComponent } from "../piece/pieceGrouping";
 
 
 @Component({
     standalone: true,
     selector: "clearing",
-    imports: [CommonModule],
     template: `
-    <!-- <div>test</div> -->
-    <div id="{{clearing.Id}}" class="clearing {{clearing.Suit}}Clearing" style="top:{{clearing.Top}}px;left:{{clearing.Left}}px;">{{clearing.Id}}-{{clearing.Suit}}
-<canvas id="i"></canvas>
-    </div>
+    <!-- <div id="{{Clearing.Id}}" class="clearing {{Clearing.Suit}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;"><p>{{Clearing.Id}}-{{Clearing.Suit}}</p>
+    </div> -->
     `,
     styles: `
     .clearing{
@@ -22,6 +21,7 @@ import { CommonModule } from "@angular/common";
         position:absolute;
         color:black;
         background-color:white;
+        font-size:9px;
     }
     .FoxClearing {
         border-color:red;
@@ -32,12 +32,31 @@ import { CommonModule } from "@angular/common";
     .MouseClearing {
         border-color:orange;
     }
-    `
+    p{
+        margin:0px;
+    }
+    `,
+    imports: [CommonModule]
 })
 export class ClearingComponent implements OnInit {
-    @Input() clearing!: ClearingModel;
+    @Input() Clearing!: ClearingModel;
 
-    
+    // GetGroupings():PieceGrouping[]
+    // {
+    //     var d: PieceGrouping[]= [];
+    //     this.Clearing.Pieces.forEach(piece => 
+    //     {
+    //         var q =  d.find(a => a.type === piece.ComponentCode());
+             
+    //         if(q === undefined)
+    //             d.push(new PieceGrouping(piece.ComponentCode()))
+    //         else
+    //             q.count = q?.count + 1;
+    //     });
+
+    //     return d;
+    // }
+
     ngOnInit(): void {
         // var canvas = <HTMLCanvasElement>document.getElementById('i');
         // var context = canvas.getContext('2d');
@@ -49,6 +68,11 @@ export class ClearingComponent implements OnInit {
         // context!.stroke();
     }
 
+    private qwe()
+    {
+        var d = [];
+
+    }
 
 
 

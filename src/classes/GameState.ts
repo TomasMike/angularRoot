@@ -1,4 +1,4 @@
-import { ClearingSuit, ClearingModel } from "./models/ClearingModel";
+import { ClearingSuitEnum, ClearingModel } from "./models/ClearingModel";
 
 export class GameState {
     Clearings: ClearingModel[];
