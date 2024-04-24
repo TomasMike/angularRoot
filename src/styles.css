@@ -1,1 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
+p{
+    margin:0px;
+}
+.MarquiseDeCat{
+    background-color: orange;
+}
+.EyrieDynasties{
+    background-color: blue;
+    
+}
+.WoodlandAlliance{
+    background-color: green;
+    
+}
+.Vagabond{
+    background-color: beige;
+}
+.LizardCult{
+    
+    background-color: yellow;
+}
+.RiverfolkCompany{
+    background-color: turquoise;
+    
+}
+.UndergroundDuchy{
+    background-color: chocolate;
+    
+}
+.CorvidConspiracy{
+    background-color: darkorchid;
+    
+}
+.LordOfTheHundreds{
+    background-color: red;
+    
+}
+.KeepersInIro{
+    background-color: silver;
+    
+}

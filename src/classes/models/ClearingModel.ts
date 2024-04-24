@@ -34,11 +34,12 @@ export enum RaceEnum
     KeepersInIron
 }
 
-export enum ComponentType{
+export enum ComponentTypeEnum{
     Warrior,
     Pawn,
     Building,
     Token
 }
+
 
 

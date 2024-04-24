@@ -9,3 +9,4 @@ export class GameState {
         this.ClearingSize = 50;
     }
 }
+

@@ -1,10 +1,9 @@
-import { ComponentType, RaceEnum } from "./ClearingModel";
+import { ComponentTypeEnum, RaceEnum } from "./ClearingModel";
 
 export interface IPieceModel {
     text:string;
     race:RaceEnum;
-    type:ComponentType;
-    ComponentCode():string;
+    type:ComponentTypeEnum;
 }
 
 

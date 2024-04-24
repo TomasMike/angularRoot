@@ -1,33 +1,35 @@
-import { ComponentType, RaceEnum } from "./ClearingModel";
+import { ComponentTypeEnum, RaceEnum } from "./ClearingModel";
 import { IPieceModel } from "./IPieceModel";
 
 export class WarriorPieceModel implements IPieceModel {
     text: string;
     race: RaceEnum;
-    type: ComponentType;
+    type: ComponentTypeEnum;
 
     constructor(race: RaceEnum) {
         this.text = "Warrior";
         this.race = race;
-        this.type = ComponentType.Warrior;
+        this.type = ComponentTypeEnum.Warrior;
     }
 
-    ComponentCode(): string {
-        return this.race + "_" + this.type;
-    }
 
-   
 }
 
 
-
 export class PieceGrouping {
-    type: string;
+    componentType: ComponentTypeEnum;
+    componentRace: RaceEnum;
+    componentTypeText: string;
+    componentRaceText: string;
+
     count: number;
 
-    constructor(type: string) {
-        this.type = type;
-        this.count =1;
+    constructor(type: ComponentTypeEnum, race: RaceEnum) {
+        this.componentType = type;
+        this.componentRace = race;
+        this.componentTypeText = ComponentTypeEnum[type];
+        this.componentRaceText = RaceEnum[race];
+            this.count = 1;
     }
 
 }

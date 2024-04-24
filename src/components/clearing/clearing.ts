@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, output } from "@angular/core";
 import { ClearingModel, ClearingSuitEnum } from "../../classes/models/ClearingModel";
 import { CommonModule } from "@angular/common";
 import { PieceGrouping } from "../../classes/models/WarriorPieceModel";
+import { PieceGroupingComponent } from "../piece/pieceGrouping";
 // import { PieceGroupingComponent } from "../piece/pieceGrouping";
 
 
@@ -9,8 +10,12 @@ import { PieceGrouping } from "../../classes/models/WarriorPieceModel";
     standalone: true,
     selector: "clearing",
     template: `
-    <!-- <div id="{{Clearing.Id}}" class="clearing {{Clearing.Suit}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;"><p>{{Clearing.Id}}-{{Clearing.Suit}}</p>
-    </div> -->
+    <div id="{{Clearing.Id}}" class="clearing {{Clearing.Suit}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
+        <p>{{Clearing.Id}}-{{Clearing.Suit}}</p>
+        <!-- <piece-grouping [model]="q"] /> -->
+        <piece-grouping *ngFor="let g of GetGroupings()" [model]="g" />
+
+    </div>
     `,
     styles: `
     .clearing{
@@ -36,28 +41,42 @@ import { PieceGrouping } from "../../classes/models/WarriorPieceModel";
         margin:0px;
     }
     `,
-    imports: [CommonModule]
+    imports: [CommonModule, PieceGroupingComponent]
 })
 export class ClearingComponent implements OnInit {
     @Input() Clearing!: ClearingModel;
+    @Input() onClearingClickEmitter = new EventEmitter<number>();
+    
+    
 
-    // GetGroupings():PieceGrouping[]
-    // {
-    //     var d: PieceGrouping[]= [];
-    //     this.Clearing.Pieces.forEach(piece => 
-    //     {
-    //         var q =  d.find(a => a.type === piece.ComponentCode());
+    onClickHandler() {
+       this.onClearingClickEmitter.emit(this.Clearing.Id);
+       
+
+       
+    }
+
+
+    GetGroupings():PieceGrouping[]
+    {
+        var d: PieceGrouping[]= [];
+        this.Clearing.Pieces.forEach(piece => 
+        {
+            var q =  d.find(a => a.componentType === piece.type && a.componentRace === piece.race);
              
-    //         if(q === undefined)
-    //             d.push(new PieceGrouping(piece.ComponentCode()))
-    //         else
-    //             q.count = q?.count + 1;
-    //     });
+            if(q === undefined)
+                d.push(new PieceGrouping(piece.type,piece.race));
+            else
+                q.count = q.count + 1;
+        });
 
-    //     return d;
-    // }
+        return d;
+    }
 
     ngOnInit(): void {
+        //this.onClearingClickEmitter.subscribe(id => console.log("in subscribe i got[" + id + "]"));
+
+        //this.q = new PieceGrouping("test");
         // var canvas = <HTMLCanvasElement>document.getElementById('i');
         // var context = canvas.getContext('2d');
         // canvas.height = 500;
@@ -68,11 +87,7 @@ export class ClearingComponent implements OnInit {
         // context!.stroke();
     }
 
-    private qwe()
-    {
-        var d = [];
 
-    }
 
 
 

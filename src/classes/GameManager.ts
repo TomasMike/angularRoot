@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { GameState } from "./GameState";
 import { ClearingModel, ClearingSuitEnum } from "./models/ClearingModel";
 import { IPieceModel } from "./models/IPieceModel";
+import { error } from "console";
 
 @Injectable({
     providedIn: "root"
@@ -39,15 +40,30 @@ export class GameManager {
     }
 
     static SpawnPiece(piece: IPieceModel, clearingId: number): void {
-        this.gameState.Clearings[clearingId].Pieces.push(piece);
+        var c = this.gameState.Clearings.find(_ => _.Id === clearingId);
+
+        if (c === undefined) {
+            throw new Error;
+        }
+        else {
+            c.Pieces.push(piece);
+        }
     }
 
-    static ExecCommand(command: string): void 
-    {
+    static ExecCommand(command: string): void {
+        var c = command.split(' ');
 
+        switch(c[0])
+        {
+            case "move":
+                this.Move(Number(c[1]),Number(c[2]))
+                break;
+        }
     }
 
-    static Move(idFrom:number,idTo:number){
+    
+
+    static Move(idFrom: number, idTo: number) {
         
     }
 
