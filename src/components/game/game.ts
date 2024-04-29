@@ -5,7 +5,9 @@ import { GameManager } from '../../classes/GameManager';
 import { GameState } from '../../classes/GameState';
 import { WarriorPieceModel } from '../../classes/models/WarriorPieceModel';
 import { RaceEnum } from '../../classes/models/ClearingModel';
-
+import { MatDialog, } from '@angular/material/dialog';
+import { DialogData, MoveDialog } from '../dialog/moveDialog';
+import { Observable } from 'rxjs/internal/Observable';
 
 
 @Component({
@@ -32,11 +34,13 @@ import { RaceEnum } from '../../classes/models/ClearingModel';
 
 export class GameComponent {
     gs: GameState;
-    messageText!:string;
+    messageText!: string;
+
+
 
     clearingClickHandler: EventEmitter<number>;
 
-    constructor() {
+    constructor(public dialog: MatDialog) {
         this.gs = GameManager.GetGameData();
 
         this.clearingClickHandler = new EventEmitter<number>();
@@ -53,7 +57,7 @@ export class GameComponent {
     }
     Reset() {
         //GameManager.gameState.Clearings = [];
-        console.log(this.nieco());
+        // console.log(this.nieco());
     }
     Spawn() {
         GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.MarquiseDeCat), 1);
@@ -67,36 +71,69 @@ export class GameComponent {
         GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.LordOfTheHundreds), 9);
         GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.KeepersInIron), 10);
     }
-    Execute(command:string){
-        GameManager.ExecCommand(command);
+    async Execute(command: string) {
+        // GameManager.ExecCommand(command);
+       
+       
     }
-    async Move()
-    {
-        
-        this.messageText="select clearing to move from";
-        var s = this.clearingClickHandler.subscribe(
-            i => {
-                console.log("in game, got" + i);
+
+    async Move() {
+
+        var moveFrom: number = -1;
+        var moveTo: number = -1;
+
+        this.messageText = "select clearing to move from";
+
+        var promise = this.getNextClick().then(i => {
+            moveFrom = i;
+        });
+
+        await promise;
+
+        console.log("after await in move,from is  " + moveFrom);
+
+        this.messageText = "select clearing to move into";
+
+        var promise = this.getNextClick().then(i => {
+            moveTo = i;
+        });
+
+        await promise;
+
+        console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
+
+        let dialogRef = this.dialog.open(MoveDialog,{
+            data: new DialogData(4)
+        });
+
+        var qq:number = -1;
+        var promise = this.getNextValueFromSub(dialogRef.afterClosed()).then(i => {
+            qq = Number(i);
+        });
+
+        await promise;
+        this.messageText = "output from modal is " + qq;
+
+    }
+
+    /**
+     * get next click on clearing
+     */
+    async getNextClick(): Promise<number> {
+        return new Promise<number>(async callback => {
+            var s = this.clearingClickHandler.subscribe(i => {
                 s.unsubscribe();
-                this.messageText="select clearing to move into";
-
-                var ss = this.clearingClickHandler.subscribe(
-                    i => {
-                        console.log("in game, got" + i);
-                        ss.unsubscribe();
-                        this.messageText="select clearing to move into";
-                    });
+                callback(i);
             });
-        
-        console.log("out of move func");
+        });
     }
 
-    async nieco():Promise<void>{
-        var ss = this.clearingClickHandler.subscribe(
-            i => {
-                console.log("in nieco, got" + i);
-                ss.unsubscribe();
-                return i;
+    async getNextValueFromSub<T>(o: Observable<T>): Promise<T> {
+        return new Promise<T>(async callback => {
+            var s = o.subscribe(i => {
+                s.unsubscribe();
+                callback(i);
             });
+        });
     }
 }
