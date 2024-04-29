@@ -1,13 +1,15 @@
 import { IPieceModel } from "./IPieceModel";
 
-export class ClearingModel {
+export class ClearingModel
+{
     Id: number;
     Suit: string;
     Left: number;
     Top: number;
     Pieces: IPieceModel[];
 
-    constructor(id: number, color: ClearingSuitEnum, left: number, top: number) {
+    constructor(id: number, color: ClearingSuitEnum, left: number, top: number)
+    {
         this.Id = id;
         this.Suit = ClearingSuitEnum[color];
         this.Left = left;
@@ -16,7 +18,8 @@ export class ClearingModel {
     }
 }
 
-export enum ClearingSuitEnum {
+export enum ClearingSuitEnum
+{
     Fox, Rabbit, Mouse
 }
 
@@ -34,7 +37,8 @@ export enum RaceEnum
     KeepersInIron
 }
 
-export enum ComponentTypeEnum{
+export enum ComponentTypeEnum
+{
     Warrior,
     Pawn,
     Building,

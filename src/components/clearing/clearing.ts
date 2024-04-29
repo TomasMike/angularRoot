@@ -43,29 +43,26 @@ import { PieceGroupingComponent } from "../piece/pieceGrouping";
     `,
     imports: [CommonModule, PieceGroupingComponent]
 })
-export class ClearingComponent implements OnInit {
+export class ClearingComponent implements OnInit
+{
     @Input() Clearing!: ClearingModel;
     @Input() onClearingClickEmitter = new EventEmitter<number>();
-    
-    
 
-    onClickHandler() {
-       this.onClearingClickEmitter.emit(this.Clearing.Id);
-       
-
-       
+    onClickHandler()
+    {
+        this.onClearingClickEmitter.emit(this.Clearing.Id);
     }
 
 
-    GetGroupings():PieceGrouping[]
+    GetGroupings(): PieceGrouping[]
     {
-        var d: PieceGrouping[]= [];
+        var d: PieceGrouping[] = [];
         this.Clearing.Pieces.forEach(piece => 
         {
-            var q =  d.find(a => a.componentType === piece.type && a.componentRace === piece.race);
-             
-            if(q === undefined)
-                d.push(new PieceGrouping(piece.type,piece.race));
+            var q = d.find(a => a.componentType === piece.type && a.componentRace === piece.race);
+
+            if (q === undefined)
+                d.push(new PieceGrouping(piece.type, piece.race));
             else
                 q.count = q.count + 1;
         });
@@ -73,7 +70,8 @@ export class ClearingComponent implements OnInit {
         return d;
     }
 
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         //this.onClearingClickEmitter.subscribe(id => console.log("in subscribe i got[" + id + "]"));
 
         //this.q = new PieceGrouping("test");
@@ -86,9 +84,4 @@ export class ClearingComponent implements OnInit {
         // context!.lineTo(450, 50);
         // context!.stroke();
     }
-
-
-
-
-
 }

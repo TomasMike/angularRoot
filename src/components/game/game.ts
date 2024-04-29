@@ -6,7 +6,7 @@ import { GameState } from '../../classes/GameState';
 import { WarriorPieceModel } from '../../classes/models/WarriorPieceModel';
 import { RaceEnum } from '../../classes/models/ClearingModel';
 import { MatDialog, } from '@angular/material/dialog';
-import { DialogData, MoveDialog } from '../dialog/moveDialog';
+import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
 
 
@@ -35,9 +35,6 @@ import { Observable } from 'rxjs/internal/Observable';
 export class GameComponent {
     gs: GameState;
     messageText!: string;
-
-
-
     clearingClickHandler: EventEmitter<number>;
 
     constructor(public dialog: MatDialog) {
@@ -103,7 +100,7 @@ export class GameComponent {
         console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
 
         let dialogRef = this.dialog.open(MoveDialog,{
-            data: new DialogData(4)
+            data: 4
         });
 
         var qq:number = -1;

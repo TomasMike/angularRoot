@@ -7,20 +7,24 @@ import { error } from "console";
 @Injectable({
     providedIn: "root"
 })
-export class GameManager {
+export class GameManager
+{
     static gameState: GameState = new GameState();
 
-    constructor() {
+    constructor()
+    {
         console.log("GameManager.constuctor");
 
     }
 
-    static GetGameData(): GameState {
+    static GetGameData(): GameState
+    {
         console.log("GameManager.GetGameData");
         return this.gameState;
     }
 
-    static Start(): void {
+    static Start(): void
+    {
         console.log("GameManager.Start");
 
         this.gameState.Clearings = [
@@ -39,7 +43,8 @@ export class GameManager {
         ]
     }
 
-    static SpawnPiece(piece: IPieceModel, clearingId: number): void {
+    static SpawnPiece(piece: IPieceModel, clearingId: number): void
+    {
         var c = this.gameState.Clearings.find(_ => _.Id === clearingId);
 
         if (c === undefined) {
@@ -50,21 +55,19 @@ export class GameManager {
         }
     }
 
-    static ExecCommand(command: string): void {
+    static ExecCommand(command: string): void
+    {
         var c = command.split(' ');
 
-        switch(c[0])
-        {
+        switch (c[0]) {
             case "move":
-                this.Move(Number(c[1]),Number(c[2]))
+                this.Move(Number(c[1]), Number(c[2]))
                 break;
         }
     }
 
-    
+    static Move(idFrom: number, idTo: number)
+    {
 
-    static Move(idFrom: number, idTo: number) {
-        
     }
-
 }

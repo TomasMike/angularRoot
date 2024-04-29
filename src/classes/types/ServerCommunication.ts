@@ -1,11 +1,8 @@
-export class ServerCommunication{
-
-
-    
-
-    async callServer(path:string): Promise<string> {
-
-        var a =  "api/game/";
+export class ServerCommunication
+{
+    async callServer(path: string): Promise<string>
+    {
+        var a = "api/game/";
         var url = "https://localhost:7200/";
         var h = new Headers();
         h.append("Content-Type", "text/plain");
@@ -16,7 +13,6 @@ export class ServerCommunication{
             method: "GET"
         };
         var r = new Request(url + path, myInit);
-
 
         const data = await fetch(r);
         var q = await data.json();

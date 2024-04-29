@@ -1,10 +1,12 @@
-import { ClearingSuitEnum, ClearingModel } from "./models/ClearingModel";
+import { ClearingModel } from "./models/ClearingModel";
 
-export class GameState {
+export class GameState
+{
     Clearings: ClearingModel[];
     ClearingSize: number;
 
-    constructor() {
+    constructor()
+    {
         this.Clearings = [];
         this.ClearingSize = 50;
     }
