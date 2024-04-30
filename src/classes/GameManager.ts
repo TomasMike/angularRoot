@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { GameState } from "./GameState";
-import { ClearingModel, ClearingSuitEnum } from "./models/ClearingModel";
+import { ClearingModel, ClearingSuitEnum, RaceEnum } from "./models/ClearingModel";
 import { IPieceModel } from "./models/IPieceModel";
-import { error } from "console";
+import { WarriorPieceModel } from "./models/WarriorPieceModel";
+import { ClearingHelper } from "./helpers/ClearingHelper";
 
 @Injectable({
     providedIn: "root"
@@ -10,6 +11,15 @@ import { error } from "console";
 export class GameManager
 {
     static gameState: GameState = new GameState();
+
+    private static GetClearing(id: number): ClearingModel
+    {
+        var a = this.gameState.Clearings.find(c => c.Id === id);
+        if (a === undefined)
+            throw new Error(`nie je cleraing s id=${id}`);
+
+        return a;
+    }
 
     constructor()
     {
@@ -26,48 +36,53 @@ export class GameManager
     static Start(): void
     {
         console.log("GameManager.Start");
-
-        this.gameState.Clearings = [
-            new ClearingModel(1, ClearingSuitEnum.Fox, 40, 40),
-            new ClearingModel(2, ClearingSuitEnum.Mouse, 420, 90),
-            new ClearingModel(3, ClearingSuitEnum.Rabbit, 390, 390),
-            new ClearingModel(4, ClearingSuitEnum.Rabbit, 40, 360),
-            new ClearingModel(5, ClearingSuitEnum.Rabbit, 250, 40),
-            new ClearingModel(6, ClearingSuitEnum.Fox, 440, 220),
-            new ClearingModel(7, ClearingSuitEnum.Mouse, 270, 320),
-            new ClearingModel(8, ClearingSuitEnum.Fox, 170, 400),
-            new ClearingModel(9, ClearingSuitEnum.Mouse, 30, 170),
-            new ClearingModel(10, ClearingSuitEnum.Rabbit, 200, 110),
-            new ClearingModel(11, ClearingSuitEnum.Mouse, 300, 200),
-            new ClearingModel(12, ClearingSuitEnum.Fox, 130, 230),
-        ]
+        this.gameState.Clearings = ClearingHelper.GetClearings();
     }
+
+    static Setup(startingClearingId: number, race: RaceEnum): void
+    {
+        switch (race)
+        {
+            case RaceEnum.MarquiseDeCat:
+                let opositeClearing = ClearingHelper.GetOppositeClearingId(startingClearingId);
+
+                for (let index = 1; index <= 12; index++)
+                {
+                    if (index === opositeClearing)
+                        continue;
+
+                    this.SpawnPiece(new WarriorPieceModel(RaceEnum.MarquiseDeCat), index);
+                }
+        }
+    }
+
+    static Move(from: number, to: number, amount: number)
+    {
+        this.GetClearing(from)
+
+    }
+
+
 
     static SpawnPiece(piece: IPieceModel, clearingId: number): void
     {
+
         var c = this.gameState.Clearings.find(_ => _.Id === clearingId);
 
-        if (c === undefined) {
+        if (c === undefined)
+        {
             throw new Error;
         }
-        else {
+        else
+        {
             c.Pieces.push(piece);
         }
     }
 
     static ExecCommand(command: string): void
     {
-        var c = command.split(' ');
-
-        switch (c[0]) {
-            case "move":
-                this.Move(Number(c[1]), Number(c[2]))
-                break;
-        }
-    }
-
-    static Move(idFrom: number, idTo: number)
-    {
 
     }
+
+
 }
