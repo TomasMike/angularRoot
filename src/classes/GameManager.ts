@@ -11,6 +11,15 @@ export class GameManager
 {
     static gameState: GameState = new GameState();
 
+    private static GetClearing(id: number): ClearingModel
+    {
+        var a = this.gameState.Clearings.find(c => c.Id === id);
+        if (a === undefined)
+            throw new Error(`nie je cleraing s id=${id}`);
+
+        return a;
+    }
+
     constructor()
     {
         console.log("GameManager.constuctor");
