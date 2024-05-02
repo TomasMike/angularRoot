@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { GameState } from "./GameState";
-import { ClearingModel, ClearingSuitEnum } from "./models/ClearingModel";
-import { IPieceModel } from "./models/IPieceModel";
+import { ClearingModel, ClearingSuitEnum, ComponentTypeEnum } from "./models/ClearingModel";
 import { error } from "console";
+import { PieceGroupingModel } from "./models/PieceGroupingModel";
 
 @Injectable({
     providedIn: "root"
@@ -43,31 +43,37 @@ export class GameManager
         ]
     }
 
-    static SpawnPiece(piece: IPieceModel, clearingId: number): void
+    static SpawnPiece(type: ComponentTypeEnum, clearingId: number): void
     {
-        var c = this.gameState.Clearings.find(_ => _.Id === clearingId);
+        var c = this.GetClearingById(clearingId);
 
-        if (c === undefined) {
-            throw new Error;
-        }
-        else {
-            c.Pieces.push(piece);
-        }
+        c.AddPiece(type);
     }
 
     static ExecCommand(command: string): void
     {
-        var c = command.split(' ');
+        // var c = command.split(' ');
 
-        switch (c[0]) {
-            case "move":
-                this.Move(Number(c[1]), Number(c[2]))
-                break;
-        }
+        // switch (c[0]) {
+        //     case "move":
+        //         this.Move(Number(c[1]), Number(c[2]))
+        //         break;
+        // }
     }
 
-    static Move(idFrom: number, idTo: number)
+    static Move(idFrom: number, idTo: number, amount: number)
     {
+        var fromPieces = this.GetClearingById(idFrom).Pieces;
+        //fromPieces = fromPieces.reduce
+    }
 
+    static GetClearingById(id: number): ClearingModel
+    {
+        var c = this.gameState.Clearings.find(_ => _.Id === id);
+
+        if (c === undefined)
+            throw new Error(`Clearing with id=[${id}] doesnt exist.`);
+
+        return c;
     }
 }

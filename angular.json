@@ -24,7 +24,6 @@
               "src/assets/board.jpg"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles/styles.css",
               "src/styles/angularMaterial.css"
             ],
@@ -91,7 +90,6 @@
                 "src/assets/"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles/styles.css"
             ],
             "scripts": []

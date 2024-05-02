@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, output } from "@angular/core";
 import { ClearingModel, ClearingSuitEnum } from "../../classes/models/ClearingModel";
 import { CommonModule } from "@angular/common";
-import { PieceGrouping } from "../../classes/models/WarriorPieceModel";
 import { PieceGroupingComponent } from "../piece/pieceGrouping";
 // import { PieceGroupingComponent } from "../piece/pieceGrouping";
 
@@ -13,7 +12,7 @@ import { PieceGroupingComponent } from "../piece/pieceGrouping";
     <div id="{{Clearing.Id}}" class="clearing {{Clearing.Suit}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
         <p>{{Clearing.Id}}-{{Clearing.Suit}}</p>
         <!-- <piece-grouping [model]="q"] /> -->
-        <piece-grouping *ngFor="let g of GetGroupings()" [model]="g" />
+        <piece-grouping *ngFor="let g of this.Clearing.Pieces" [model]="g" />
 
     </div>
     `,
@@ -54,21 +53,21 @@ export class ClearingComponent implements OnInit
     }
 
 
-    GetGroupings(): PieceGrouping[]
-    {
-        var d: PieceGrouping[] = [];
-        this.Clearing.Pieces.forEach(piece => 
-        {
-            var q = d.find(a => a.componentType === piece.type && a.componentRace === piece.race);
+    // GetGroupings(): PieceGroupingModel[]
+    // {
+    //     var d: PieceGroupingModel[] = [];
+    //     this.Clearing.Pieces.forEach(piece => 
+    //     {
+    //         var q = d.find(a => a.componentType === piece.type && a.componentRace === piece.race);
 
-            if (q === undefined)
-                d.push(new PieceGrouping(piece.type, piece.race));
-            else
-                q.count = q.count + 1;
-        });
+    //         if (q === undefined)
+    //             d.push(new PieceGroupingModel(piece.type, piece.race));
+    //         else
+    //             q.count = q.count + 1;
+    //     });
 
-        return d;
-    }
+    //     return d;
+    // }
 
     ngOnInit(): void
     {

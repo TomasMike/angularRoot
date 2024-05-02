@@ -4,14 +4,10 @@ export class Dictionary<TKey, TValue>
 {
     private _i: KeyValuePair<TKey, TValue>[];
 
-    public Get(key: TKey): TValue
+
+    public GetValue(key: TKey): TValue
     {
-        var r = this._i.find(k => k.key == key);
-
-        if (r === undefined)
-            throw new Error("object with this key doesnt exist.");
-
-        return r.value;
+        return this.GetPair(key).value;
     }
 
     public ContainsKey(key: TKey): boolean
@@ -27,8 +23,25 @@ export class Dictionary<TKey, TValue>
         this._i.push(new KeyValuePair(key, value));
     }
 
-    constructor()
+    public GetPair(key: TKey): KeyValuePair<TKey, TValue>
     {
-        this._i = [];
+        if (!this.ContainsKey(key))
+            throw new Error("object with this key already exists.");
+
+        return this._i.find(k => k.key == key) as KeyValuePair<TKey, TValue>;
     }
+
+    constructor(options: { data: KeyValuePair<TKey, TValue>[] })
+    {
+        if (options.data)
+        { 
+            this._i = options.data;
+        }
+        else
+        {
+            this._i = [];
+        }
+    }
+
+
 }

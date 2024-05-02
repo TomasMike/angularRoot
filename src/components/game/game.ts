@@ -3,8 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { BoardComponent } from '../board/board';
 import { GameManager } from '../../classes/GameManager';
 import { GameState } from '../../classes/GameState';
-import { WarriorPieceModel } from '../../classes/models/WarriorPieceModel';
-import { RaceEnum } from '../../classes/models/ClearingModel';
+import { ComponentTypeEnum, RaceEnum } from '../../classes/models/ClearingModel';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
@@ -16,9 +15,9 @@ import { Observable } from 'rxjs/internal/Observable';
     imports: [RouterOutlet, BoardComponent],
     //templateUrl: './game.html',
     template: `
-    <board [clearings]="this.gs.Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
+    <board id="boardWrapper" [clearings]="this.gs.Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
     <div id="message">{{messageText}}</div>
-    <div>
+    <div id="buttonsPanel">
         <div><button (click)="Start()">Start</button></div>
         <div><button (click)="Reset()">Reset</button></div>
         <div><button (click)="Spawn()">Spawn</button></div>
@@ -57,16 +56,16 @@ export class GameComponent {
         // console.log(this.nieco());
     }
     Spawn() {
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.MarquiseDeCat), 1);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.EyrieDynasties), 2);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.WoodlandAlliance), 3);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.Vagabond), 4);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.LizardCult), 5);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.RiverfolkCompany), 6);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.UndergroundDuchy), 7);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.CorvidConspiracy), 8);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.LordOfTheHundreds), 9);
-        GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.KeepersInIron), 10);
+        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, 1);
+        GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior ,2);
+        GameManager.SpawnPiece(ComponentTypeEnum.WoodlandAlliance_Warrior ,3);
+        GameManager.SpawnPiece(ComponentTypeEnum.Vagabond_Pawn ,4);
+        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.LizardCult), 5);
+        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.RiverfolkCompany), 6);
+        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.UndergroundDuchy), 7);
+        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.CorvidConspiracy), 8);
+        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.LordOfTheHundreds), 9);
+        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.KeepersInIron), 10);
     }
     async Execute(command: string) {
         // GameManager.ExecCommand(command);
