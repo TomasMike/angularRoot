@@ -1,4 +1,3 @@
-import { error } from "console";
 import { ClearingModel, ClearingSuitEnum } from "../models/ClearingModel";
 
 export class ClearingHelper
