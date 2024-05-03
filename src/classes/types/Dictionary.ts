@@ -26,7 +26,7 @@ export class Dictionary<TKey, TValue>
     public GetPair(key: TKey): KeyValuePair<TKey, TValue>
     {
         if (!this.ContainsKey(key))
-            throw new Error("object with this key already exists.");
+            throw new Error("object with this key exists.");
 
         return this._i.find(k => k.key == key) as KeyValuePair<TKey, TValue>;
     }

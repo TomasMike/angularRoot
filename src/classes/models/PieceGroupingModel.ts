@@ -1,6 +1,5 @@
-import { race } from "rxjs";
 import { ComponentTypeEnum, RaceEnum } from "./ClearingModel";
-import { ComponentHelper } from "../helpers/ComponentHelper";
+import { ComponentHelper } from "../helpers/ComponentHelper"
 
 export class PieceGroupingModel
 {
@@ -15,17 +14,17 @@ export class PieceGroupingModel
 
     GetComponentRaceText(): string
     {
-        return ComponentHelper.ComponentInfoDict.GetValue(this.componentType).Race.toString();
+       return RaceEnum[this.GetComponentRace()].toString()
     }
 
     GetComponentRace(): RaceEnum
     {
-        return ComponentHelper.ComponentInfoDict.GetValue(this.componentType).Race;
+        return ComponentHelper.GetComponentInfo(this.componentType).Race;
     }
 
     GetComponentTypeText(): string
     {
-        return ComponentHelper.ComponentInfoDict.GetValue(this.componentType).Group.toString();
+        return ComponentHelper.GetComponentInfo(this.componentType).ComponentDisplayText;
     }
 }
 

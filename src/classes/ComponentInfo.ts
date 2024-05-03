@@ -11,6 +11,6 @@ export class ComponentInfo
     {
         this.Race = race;
         this.Group = group;
-        this.ComponentDisplayText = text ?? ComponentGroupEnum.Warrior.toString();
+        this.ComponentDisplayText = text ?? ComponentGroupEnum[group].toString();
     }
 }

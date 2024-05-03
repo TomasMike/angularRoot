@@ -3,10 +3,14 @@ import { RouterOutlet } from '@angular/router';
 import { BoardComponent } from '../board/board';
 import { GameManager } from '../../classes/GameManager';
 import { GameState } from '../../classes/GameState';
-import { ComponentTypeEnum, RaceEnum } from '../../classes/models/ClearingModel';
+import { ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from '../../classes/models/ClearingModel';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
+import { Dictionary } from '../../classes/types/Dictionary';
+import { ComponentInfo } from '../../classes/ComponentInfo';
+import KeyValuePair from '../../classes/types/KeyValuePair';
+import { ComponentHelper } from '../../classes/helpers/ComponentHelper';
 
 
 @Component({
@@ -72,7 +76,9 @@ export class GameComponent
     }
     async Execute(command: string)
     {
-        // GameManager.ExecCommand(command);
+      
+    
+
 
 
     }
