@@ -5,6 +5,7 @@ import { error } from "console";
 import { PieceGroupingModel } from "./models/PieceGroupingModel";
 import { ClearingHelper } from "./helpers/ClearingHelper";
 import { Player } from "./Player";
+import { TArray } from "./types/TArray";
 
 @Injectable({
     providedIn: "root"
@@ -36,6 +37,16 @@ export class GameManager
 
     static Start(): void
     {
+
+        let a: TArray<number> = new TArray<number>();
+        a.push(1);
+        a.push(2);
+        a.push(3);
+        a.push(4);
+        let b = a.First(_ => _ === 3);
+        
+        let c = a.First(_ => _ === 5);
+
         console.log("GameManager.Start");
 
         this.gameState.Clearings = ClearingHelper.GetClearings();
@@ -53,20 +64,15 @@ export class GameManager
 
     static ExecCommand(command: string): void
     {
-        // var c = command.split(' ');
-
-        // switch (c[0]) {
-        //     case "move":
-        //         this.Move(Number(c[1]), Number(c[2]))
-        //         break;
-        // }
+       
+    
     }
 
     static Move(idFrom: number, idTo: number, amount: number)
     {
         var fromPieces = this.GetClearingById(idFrom).Pieces;
-        this.gameState.Players
-
+        var a = this.gameState.Players.First(_ => _.number === this.gameState.ActivePlayerId);
+        fromPieces.find
     }
 
     static GetClearingById(id: number): ClearingModel
@@ -78,4 +84,8 @@ export class GameManager
 
         return c;
     }
+
+
+    
 }
+

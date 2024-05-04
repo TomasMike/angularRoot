@@ -1,11 +1,12 @@
 import { Player } from "./Player";
 import { ClearingModel } from "./models/ClearingModel";
+import { TArray } from "./types/TArray";
 
 export class GameState
 {
     Clearings: ClearingModel[];
     ClearingSize: number;
-    Players: Player[];
+    Players: TArray<Player>;
     ActivePlayerId: number;
 
 
@@ -13,7 +14,7 @@ export class GameState
     {
         this.Clearings = [];
         this.ClearingSize = 50;
-        this.Players = [];
+        this.Players = new TArray;
         this.ActivePlayerId = 1;
     }
 }

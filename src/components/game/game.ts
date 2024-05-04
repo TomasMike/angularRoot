@@ -58,36 +58,31 @@ export class GameComponent
         GameManager.Start();
 
     }
-    Reset() {
+    Reset()
+    {
         //GameManager.gameState.Clearings = [];
         // console.log(this.nieco());
     }
-    Spawn() {
+    Spawn()
+    {
         GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, 1);
-        GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior ,2);
-        GameManager.SpawnPiece(ComponentTypeEnum.WoodlandAlliance_Warrior ,3);
-        GameManager.SpawnPiece(ComponentTypeEnum.Vagabond_Pawn ,4);
-        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.LizardCult), 5);
-        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.RiverfolkCompany), 6);
-        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.UndergroundDuchy), 7);
-        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.CorvidConspiracy), 8);
-        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.LordOfTheHundreds), 9);
-        // GameManager.SpawnPiece(new WarriorPieceModel(RaceEnum.KeepersInIron), 10);
+        GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, 2);
+        GameManager.SpawnPiece(ComponentTypeEnum.WoodlandAlliance_Warrior, 3);
+        GameManager.SpawnPiece(ComponentTypeEnum.Vagabond_Pawn, 4);
+        GameManager.SpawnPiece(ComponentTypeEnum.RiverfolkCompany_Warrior, 5);
+        GameManager.SpawnPiece(ComponentTypeEnum.LizardCult_Warrior, 6);
+        GameManager.SpawnPiece(ComponentTypeEnum.UndergroundDuchy_Warrior, 7);
+        GameManager.SpawnPiece(ComponentTypeEnum.CorvidConspiracy_Warrior, 8);
+        GameManager.SpawnPiece(ComponentTypeEnum.LordOfTheHundreds_Warrior, 9);
+        GameManager.SpawnPiece(ComponentTypeEnum.KeepersInIron_Warrior, 10);
     }
     async Execute(command: string)
     {
-      
-    
-
-
 
     }
 
-
-
     async Move()
     {
-
         var moveFrom: number = -1;
         var moveTo: number = -1;
 
@@ -126,7 +121,6 @@ export class GameComponent
         await promise;
         this.messageText = "output from modal is " + qq;
 
-        
     }
 
     /**

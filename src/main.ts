@@ -4,3 +4,4 @@ import { GameComponent } from './components/game/game';
 
 bootstrapApplication(GameComponent, appConfig)
   .catch((err) => console.error(err));
+

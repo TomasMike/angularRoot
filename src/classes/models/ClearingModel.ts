@@ -1,3 +1,4 @@
+import { TArray } from "../types/TArray";
 import { PieceGroupingModel } from "./PieceGroupingModel";
 
 export class ClearingModel
@@ -6,7 +7,7 @@ export class ClearingModel
     Suit: string;
     Left: number;
     Top: number;
-    Pieces: PieceGroupingModel[];
+    Pieces: TArray<PieceGroupingModel>;
 
     constructor(id: number, color: ClearingSuitEnum, left: number, top: number)
     {
@@ -14,7 +15,7 @@ export class ClearingModel
         this.Suit = ClearingSuitEnum[color];
         this.Left = left;
         this.Top = top;
-        this.Pieces = [];
+        this.Pieces = new TArray;
     }
 
     AddPiece(type: ComponentTypeEnum): void
