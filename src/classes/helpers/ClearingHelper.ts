@@ -1,4 +1,5 @@
-import { ClearingModel, ClearingSuitEnum } from "../models/ClearingModel";
+import { ClearingModel } from "../models/ClearingModel";
+import { ClearingSuitEnum } from "../models/Enums";
 
 export class ClearingHelper
 {

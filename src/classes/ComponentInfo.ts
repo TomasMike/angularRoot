@@ -1,5 +1,4 @@
-import { ComponentGroupEnum, RaceEnum } from "./models/ClearingModel";
-
+import { ComponentGroupEnum, RaceEnum } from "./models/Enums";
 
 export class ComponentInfo
 {

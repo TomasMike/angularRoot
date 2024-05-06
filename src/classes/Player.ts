@@ -1,13 +1,13 @@
-import { RaceEnum } from "./models/ClearingModel";
+import { RaceEnum } from "./models/Enums";
 
 export class Player
 {
-    number: number;
-race:RaceEnum;
+    Number: number;
+    Race: RaceEnum;
 
-    constructor(number: number,race:RaceEnum)
+    constructor(number: number, race: RaceEnum)
     {
-        this.number = number;
-        this.race = race;
+        this.Number = number;
+        this.Race = race;
     }
 }

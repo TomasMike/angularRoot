@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { GameState } from "./GameState";
-import { ClearingModel, ClearingSuitEnum, ComponentTypeEnum, RaceEnum } from "./models/ClearingModel";
-import { error } from "console";
-import { PieceGroupingModel } from "./models/PieceGroupingModel";
 import { ClearingHelper } from "./helpers/ClearingHelper";
 import { Player } from "./Player";
 import { TArray } from "./types/TArray";
+import { ClearingModel } from "./models/ClearingModel";
+import { ComponentTypeEnum, RaceEnum } from "./models/Enums";
+import { ComponentHelper } from "./helpers/ComponentHelper";
 
 @Injectable({
     providedIn: "root"
@@ -13,15 +13,6 @@ import { TArray } from "./types/TArray";
 export class GameManager
 {
     static gameState: GameState = new GameState();
-
-    private static GetClearing(id: number): ClearingModel
-    {
-        var a = this.gameState.Clearings.find(c => c.Id === id);
-        if (a === undefined)
-            throw new Error(`nie je cleraing s id=${id}`);
-
-        return a;
-    }
 
     constructor()
     {
@@ -44,35 +35,46 @@ export class GameManager
         a.push(3);
         a.push(4);
         let b = a.First(_ => _ === 3);
-        
-        let c = a.First(_ => _ === 5);
+
+        //let c = a.First(_ => _ === 5);
 
         console.log("GameManager.Start");
 
         this.gameState.Clearings = ClearingHelper.GetClearings();
 
 
-        this.gameState.Players.push(new Player(1,RaceEnum.MarquiseDeCat));
+        this.gameState.Players.push(new Player(1, RaceEnum.MarquiseDeCat));
     }
 
     static SpawnPiece(type: ComponentTypeEnum, clearingId: number): void
     {
         var c = this.GetClearingById(clearingId);
 
-        c.AddPiece(type);
+        c.AddPieces(type);
     }
 
     static ExecCommand(command: string): void
     {
-       
-    
+
+
     }
 
     static Move(idFrom: number, idTo: number, amount: number)
     {
-        var fromPieces = this.GetClearingById(idFrom).Pieces;
-        var a = this.gameState.Players.First(_ => _.number === this.gameState.ActivePlayerId);
-        fromPieces.find
+        var activePlayerRace = GameManager.GetActivePlayer().Race;
+        var wType = ComponentHelper.GetWarriorComponentTypeByRace(activePlayerRace);
+
+        this.GetClearingById(idFrom).RemovePieces(wType, amount);
+        this.GetClearingById(idTo).AddPieces(wType, amount);
+        // var toPieces = this.GetClearingById(idTo).Pieces;
+
+
+        // var piecesOnFromClearing = fromPieces.First(_ => _.GetComponentRace() === activePlayer.Race);
+        // var piecesOnToClearing = toPieces.First(_ => _.GetComponentRace() === activePlayer.Race);        
+
+
+
+
     }
 
     static GetClearingById(id: number): ClearingModel
@@ -85,7 +87,15 @@ export class GameManager
         return c;
     }
 
+    static GetActivePlayer(): Player
+    {
+        return this.gameState.Players.First(_ => _.Number === this.gameState.ActivePlayerId);
+    }
 
-    
+    static GetAllowedMoveFromClearings()
+    {
+
+    }
+
 }
 

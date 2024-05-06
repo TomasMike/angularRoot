@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, output } from "@angular/core";
-import { ClearingModel, ClearingSuitEnum } from "../../classes/models/ClearingModel";
+import { ClearingModel } from "../../classes/models/ClearingModel";
 import { CommonModule } from "@angular/common";
 import { PieceGroupingComponent } from "../piece/pieceGrouping";
 // import { PieceGroupingComponent } from "../piece/pieceGrouping";

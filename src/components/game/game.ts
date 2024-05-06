@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { BoardComponent } from '../board/board';
 import { GameManager } from '../../classes/GameManager';
 import { GameState } from '../../classes/GameState';
-import { ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from '../../classes/models/ClearingModel';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
@@ -11,6 +10,7 @@ import { Dictionary } from '../../classes/types/Dictionary';
 import { ComponentInfo } from '../../classes/ComponentInfo';
 import KeyValuePair from '../../classes/types/KeyValuePair';
 import { ComponentHelper } from '../../classes/helpers/ComponentHelper';
+import { ComponentTypeEnum, RaceEnum } from '../../classes/models/Enums';
 
 
 @Component({
@@ -78,7 +78,13 @@ export class GameComponent
     }
     async Execute(command: string)
     {
+        var id = Number(command);
+        var r = GameManager.GetClearingById(id).GetWhoRulesClearing();
+        if(r === null)
 
+        console.log(`Clearing[${id}] is ruled by [${r === null ? "noone": RaceEnum[r]}]`)
+        
+        GameManager.ExecCommand(command);
     }
 
     async Move()
@@ -87,6 +93,9 @@ export class GameComponent
         var moveTo: number = -1;
 
         this.messageText = "select clearing to move from";
+
+        var p = this.getNextClickFiltered([1, 2, 3]).then(i => moveFrom = i);
+        await p;
 
         var promise = this.getNextClick().then(i =>
         {
@@ -109,7 +118,7 @@ export class GameComponent
         console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
 
         let dialogRef = this.dialog.open(MoveDialog, {
-            data: 4
+            data: GameManager.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().Race)
         });
 
         var qq: number = -1;
@@ -120,6 +129,8 @@ export class GameComponent
 
         await promise;
         this.messageText = "output from modal is " + qq;
+
+        GameManager.Move(moveFrom, moveTo, qq);
 
     }
 
@@ -132,11 +143,35 @@ export class GameComponent
         {
             var s = this.clearingClickHandler.subscribe(i =>
             {
+
                 s.unsubscribe();
                 callback(i);
             });
         });
     }
+
+    async getNextClickFiltered(allowedIds: number[]): Promise<number>
+    {
+        return new Promise<number>(async callback =>
+        {
+            let value = -1;
+
+            do
+            {
+                console.log(`waiting for click in filtered`);
+
+                var promise = this.getNextClick().then(i =>
+                {
+                    value = i;
+                });
+                await promise;
+                console.log(`got ${value}`);
+            } while (!allowedIds.includes(value))
+
+            callback(value);
+        })
+    }
+
 
     async getNextValueFromSub<T>(o: Observable<T>): Promise<T>
     {

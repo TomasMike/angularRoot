@@ -1,4 +1,7 @@
+import { ComponentHelper, ExtensionFaker } from "../helpers/ComponentHelper";
+import { Dictionary } from "../types/Dictionary";
 import { TArray } from "../types/TArray";
+import { ClearingSuitEnum, ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "./Enums";
 import { PieceGroupingModel } from "./PieceGroupingModel";
 
 export class ClearingModel
@@ -18,98 +21,86 @@ export class ClearingModel
         this.Pieces = new TArray;
     }
 
-    AddPiece(type: ComponentTypeEnum): void
+    AddPieces(type: ComponentTypeEnum, amount: number = 1): void
     {
         var g = this.Pieces.find(_ => _.componentType === type);
 
-        if(g === undefined)
+        if (g === undefined)
         {
-            this.Pieces.push(new PieceGroupingModel(type));
+
+            this.Pieces.push(new PieceGroupingModel(type, amount));
         }
         else
         {
-            g.count++;
+            g.count += amount;
         }
     }
+
+    RemovePieces(type: ComponentTypeEnum, amount: number = 1): void
+    {
+        var g = this.Pieces.First(_ => _.componentType === type);
+
+        if (amount > g.count)
+            throw new Error("Cant remove more than there is.");
+
+        g.count -= amount;
+
+        if (g.count === 0)
+        {
+            this.Pieces = this.Pieces.Where(_ => _.count > 0);
+        }
+    }
+
+    GetAmountOfWarOfPlayer(race: RaceEnum): number
+    {
+        var warType = ComponentHelper.GetWarriorComponentTypeByRace(race);
+        return this.Pieces.First(_ => _.componentType === warType).count;
+    }
+
+    GetWhoRulesClearing(): RaceEnum | null
+    {
+        var d = new Map<RaceEnum, number>();
+
+        if (this.Pieces.length === 0)
+            return null;
+
+        this.Pieces.forEach(g =>
+        {
+            let info = ComponentHelper.GetComponentInfo(g.componentType);
+            let race = info.Race;
+            if (info.Group === ComponentGroupEnum.Pawn || info.Group === ComponentGroupEnum.Token)
+                return;
+
+            if (d.has(race))
+            {
+                let p = d.get(race) as number;
+                d.set(race, p + g.count)
+            }
+            else
+            {
+                d.set(race, g.count);
+            }
+        });
+
+        var vals = d.values();
+
+        let iterator = vals[Symbol.iterator]();
+
+        var maxVal = Math.max(...vals);
+
+        var playersWithMax = ExtensionFaker.MapWhere(d, _ => _.value === maxVal);
+
+        if (playersWithMax.size === 1)
+        {
+            return ExtensionFaker.MapFirst(d).value;
+        }
+        //RULE - EYRIE WIN RULING TIES
+        else if (d.has(RaceEnum.EyrieDynasties) && d.get(RaceEnum.EyrieDynasties) === maxVal)
+        {
+            return RaceEnum.EyrieDynasties;
+        }
+
+        return null;
+    }
 }
-
-export enum ClearingSuitEnum
-{
-    Fox, Rabbit, Mouse
-}
-
-export enum RaceEnum
-{
-    MarquiseDeCat,
-    EyrieDynasties,
-    WoodlandAlliance,
-    Vagabond,
-    LizardCult,
-    RiverfolkCompany,
-    UndergroundDuchy,
-    CorvidConspiracy,
-    LordOfTheHundreds,
-    KeepersInIron
-}
-
-export enum ComponentGroupEnum
-{
-    Warrior,
-    Pawn,
-    Building,
-    Token
-}
-
-export enum ComponentTypeEnum
-{
-    MarquiseDeCat_Warrior,
-    MarquiseDeCat_Building_Sawmill,
-    MarquiseDeCat_Building_Recruiter,
-    MarquiseDeCat_Building_Workshop,
-    MarquiseDeCat_Token_Wood,
-    MarquiseDeCat_Token_Keep,
-
-    EyrieDynasties_Warrior,
-    EyrieDynasties_Building_Roost,
-
-    WoodlandAlliance_Warrior,
-    WoodlandAlliance_Building_Base_Fox,
-    WoodlandAlliance_Building_Base_Rabbit,
-    WoodlandAlliance_Building_Base_Mouse,
-    WoodlandAlliance_Token_Sympathy,
-
-    Vagabond_Pawn,
-
-    LizardCult_Warrior,
-    LizardCult_Building_Garden_Fox,
-    LizardCult_Building_Garden_Rabbit,
-    LizardCult_Building_Garden_Mouse,
-
-    RiverfolkCompany_Warrior,
-    RiverfolkCompany_Token_TradePost_Fox,
-    RiverfolkCompany_Token_TradePost_Rabbit,
-    RiverfolkCompany_Token_TradePost_Mouse,
-
-    UndergroundDuchy_Warrior,
-    UndergroundDuchy_Building_Citadel,
-    UndergroundDuchy_Building_Market,
-    UndergroundDuchy_Token_Tunnel,
-
-    CorvidConspiracy_Warrior,
-    CorvidConspiracy_Token_Bomb,
-    CorvidConspiracy_Token_Snare,
-    CorvidConspiracy_Token_Extortion,
-    CorvidConspiracy_Token_Raid,
-
-    LordOfTheHundreds_Warrior,
-    LordOfTheHundreds_Warrior_Warlord,
-    LordOfTheHundreds_Building_Citadel,
-    LordOfTheHundreds_Token_Mob,
-
-    KeepersInIron_Warrior,
-    KeepersInIron_Building_Waystation,
-
-}
-
-
 

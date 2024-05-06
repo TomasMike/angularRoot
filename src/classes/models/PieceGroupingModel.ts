@@ -1,20 +1,21 @@
-import { ComponentTypeEnum, RaceEnum } from "./ClearingModel";
+import { AnonymousSubject } from "rxjs/internal/Subject";
 import { ComponentHelper } from "../helpers/ComponentHelper"
+import { ComponentTypeEnum, RaceEnum } from "./Enums";
 
 export class PieceGroupingModel
 {
     componentType: ComponentTypeEnum;
     count: number;
 
-    constructor(type: ComponentTypeEnum)
+    constructor(type: ComponentTypeEnum, amount: number = 1)
     {
         this.componentType = type;
-        this.count = 1;
+        this.count = amount;
     }
 
     GetComponentRaceText(): string
     {
-       return RaceEnum[this.GetComponentRace()].toString()
+        return RaceEnum[this.GetComponentRace()].toString()
     }
 
     GetComponentRace(): RaceEnum
