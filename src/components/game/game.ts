@@ -11,6 +11,7 @@ import { ComponentInfo } from '../../classes/ComponentInfo';
 import KeyValuePair from '../../classes/types/KeyValuePair';
 import { ComponentHelper } from '../../classes/helpers/ComponentHelper';
 import { ComponentTypeEnum, RaceEnum } from '../../classes/models/Enums';
+import { mergeAll } from 'rxjs';
 
 
 @Component({
@@ -152,6 +153,8 @@ export class GameComponent
 
     async getNextClickFiltered(allowedIds: number[]): Promise<number>
     {
+
+        mergeAll()
         return new Promise<number>(async callback =>
         {
             let value = -1;

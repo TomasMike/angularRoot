@@ -84,8 +84,6 @@ export class ClearingModel
 
         var vals = d.values();
 
-        let iterator = vals[Symbol.iterator]();
-
         var maxVal = Math.max(...vals);
 
         var playersWithMax = ExtensionFaker.MapWhere(d, _ => _.value === maxVal);
