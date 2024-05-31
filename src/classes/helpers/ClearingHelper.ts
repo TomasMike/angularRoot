@@ -1,5 +1,5 @@
 import { ClearingModel } from "../models/ClearingModel";
-import { ClearingSuitEnum } from "../models/Enums";
+import { ClearingSuitEnum, RaceEnum } from "../models/Enums";
 
 export class ClearingHelper
 {
@@ -29,6 +29,35 @@ export class ClearingHelper
         ];
     }
 
+    static GetLinkedClearings()
+    {
+
+    }
+
+    private static Paths:{a:number,b:number}[]=
+    [
+           {a:1,b:5},
+           {a:1,b:9},
+           {a:1,b:10},
+           {a:2,b:5},
+           {a:2,b:6},
+           {a:2,b:10},
+           {a:3,b:6},
+           {a:3,b:7},
+           {a:3,b:11},
+           {a:4,b:8},
+           {a:4,b:9},
+           {a:4,b:12},
+           {a:5,b:10},
+           {a:6,b:11},
+           {a:7,b:8},
+           {a:7,b:12},
+           {a:9,b:12},
+           {a:10,b:12},
+           {a:11,b:12},
+    ];
+    
+
     static GetOppositeClearingId(clearingId: number): number
     {
         switch(clearingId)
@@ -39,5 +68,11 @@ export class ClearingHelper
             case 4: return 2;
             default: throw new Error(`Clearing id[${clearingId}] isnt corner clearing.`);
         }
+    }
+
+    static GetClearingsToMoveFrom(race:RaceEnum):number[]
+    {
+        var retVal :number[]= [];
+        return retVal;
     }
 }

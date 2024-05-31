@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, output } from "@angular
 import { ClearingModel } from "../../classes/models/ClearingModel";
 import { CommonModule } from "@angular/common";
 import { PieceGroupingComponent } from "../piece/pieceGrouping";
+import { RaceEnum } from "../../classes/models/Enums";
 // import { PieceGroupingComponent } from "../piece/pieceGrouping";
 
 
@@ -9,8 +10,11 @@ import { PieceGroupingComponent } from "../piece/pieceGrouping";
     standalone: true,
     selector: "clearing",
     template: `
-    <div id="{{Clearing.Id}}" class="highlightedClearing clearing {{Clearing.Suit}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
-        <p>{{Clearing.Id}}-{{Clearing.Suit}}</p>
+    <div id="{{Clearing.Id}}" class="{{GetHightlightClass()}} clearing {{Clearing.Suit.toLocaleLowerCase()}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
+        <div class="clearingHeaderWrapper">
+            <div class="clearingId {{GetRulingClass()}}">{{Clearing.Id}}</div>
+            <div class="clearingSuit">{{Clearing.Suit}}</div>
+        </div>
         <!-- <piece-grouping [model]="q"] /> -->
         <piece-grouping *ngFor="let g of this.Clearing.Pieces" [model]="g" />
 
@@ -20,7 +24,7 @@ import { PieceGroupingComponent } from "../piece/pieceGrouping";
     .clearing{
         width:50px;
         height:50px;
-       
+        border-width:2px;
         border-style:solid;
         position:absolute;
         color:black;
@@ -44,22 +48,17 @@ export class ClearingComponent implements OnInit
         this.onClearingClickEmitter.emit(this.Clearing.Id);
     }
 
+    GetHightlightClass(): string
+    {
+        return this.Clearing.Highlighted ? "highlightedClearing" : "";
+    }
 
-    // GetGroupings(): PieceGroupingModel[]
-    // {
-    //     var d: PieceGroupingModel[] = [];
-    //     this.Clearing.Pieces.forEach(piece => 
-    //     {
-    //         var q = d.find(a => a.componentType === piece.type && a.componentRace === piece.race);
+    GetRulingClass()
+    {
+        var r = this.Clearing.GetWhoRulesClearing();
+        return r == null ? "" : RaceEnum[r];
+    }
 
-    //         if (q === undefined)
-    //             d.push(new PieceGroupingModel(piece.type, piece.race));
-    //         else
-    //             q.count = q.count + 1;
-    //     });
-
-    //     return d;
-    // }
 
     ngOnInit(): void
     {

@@ -11,6 +11,8 @@ export class ClearingModel
     Left: number;
     Top: number;
     Pieces: TArray<PieceGroupingModel>;
+    Highlighted: boolean;
+
 
     constructor(id: number, color: ClearingSuitEnum, left: number, top: number)
     {
@@ -19,6 +21,7 @@ export class ClearingModel
         this.Left = left;
         this.Top = top;
         this.Pieces = new TArray;
+        this.Highlighted = false;
     }
 
     AddPieces(type: ComponentTypeEnum, amount: number = 1): void
@@ -90,7 +93,7 @@ export class ClearingModel
 
         if (playersWithMax.size === 1)
         {
-            return ExtensionFaker.MapFirst(d).value;
+            return ExtensionFaker.MapFirst(d).key;
         }
         //RULE - EYRIE WIN RULING TIES
         else if (d.has(RaceEnum.EyrieDynasties) && d.get(RaceEnum.EyrieDynasties) === maxVal)
