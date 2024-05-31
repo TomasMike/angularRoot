@@ -3,6 +3,7 @@ import { ClearingModel } from '../../classes/models/ClearingModel';
 import { ClearingComponent } from "../clearing/clearing";
 import { CommonModule } from '@angular/common';
 import { GameManager } from '../../classes/GameManager';
+import { Observable, observable } from 'rxjs';
 
 @Component({
     standalone: true,
@@ -32,6 +33,10 @@ export class BoardComponent implements OnInit
         if (data != null) {
 
         }
+
+        var o = new Observable((a)=>{
+            
+        });
     }
 
     onClearingClickHander(e: number)

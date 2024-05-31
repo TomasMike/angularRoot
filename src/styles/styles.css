@@ -2,7 +2,7 @@
 #board p{
     margin:0px;
 }
-.MarquiseDeCat{
+/* .MarquiseDeCat{
     background-color: orange;
 }
 .EyrieDynasties{
@@ -39,12 +39,21 @@
 .KeepersInIro{
     background-color: silver;
     
-}
-
-/* #buttonsPanel, #boardWrapper{
-    display:flex;
 } */
+
+
 
 #game{
     display:flex;
 }
+
+/* .highlightedClearing.clearing{
+    border: 20px solid cyan;
+    animation: border-pulsate 2s infinite;
+}
+
+@keyframes border-pulsate {
+    0%   { border-color: rgba(0, 255, 255, 1); }
+    50%  { border-color: rgba(0, 255, 255, 0); }
+    100% { border-color: rgba(0, 255, 255, 1); }
+} */

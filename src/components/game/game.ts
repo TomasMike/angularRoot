@@ -11,7 +11,7 @@ import { ComponentInfo } from '../../classes/ComponentInfo';
 import KeyValuePair from '../../classes/types/KeyValuePair';
 import { ComponentHelper } from '../../classes/helpers/ComponentHelper';
 import { ComponentTypeEnum, RaceEnum } from '../../classes/models/Enums';
-import { mergeAll } from 'rxjs';
+import { fromEvent, interval, mergeAll, race } from 'rxjs';
 
 
 @Component({
@@ -26,44 +26,74 @@ import { mergeAll } from 'rxjs';
         <div><button (click)="Start()">Start</button></div>
         <!-- <div><button (click)="Reset()">Reset</button></div> -->
         <div><button (click)="Spawn()">Spawn</button></div>
-        <div><button (click)="Move()">Move</button></div>
+        <div><button (click)="MoveButtonClick()">{{getMoveBtnText()}}</button></div>
         <div>
             <button  (click)="Execute(cmd.value)">Execute</button>
             <input #cmd type="text" id="cmd">
         </div>
+        <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
     </div>
        `,
     styleUrl: './game.css'
 })
+
+
 
 export class GameComponent
 {
     gs: GameState;
     messageText!: string;
     clearingClickHandler: EventEmitter<number>;
+    moveMode: MoveMode;
+    CancelButtonClickHandler: EventEmitter<number>;
+
+
 
     constructor(public dialog: MatDialog)
     {
         this.gs = GameManager.GetGameData();
 
         this.clearingClickHandler = new EventEmitter<number>();
+        this.CancelButtonClickHandler = new EventEmitter<number>();
+        this.moveMode = MoveMode.None;
 
         //malo by byt volane az po button-Start
         GameManager.Start();
         console.log("GameComponent.constructor");
     }
 
+    getMoveBtnText()
+    {
+        if (this.moveMode === MoveMode.None) return "Move";
+        else
+            return "Cancel Move";
+    }
+
+    MoveButtonClick()
+    {
+        if (this.moveMode === MoveMode.None)
+        {
+            this.moveMode = MoveMode.Selecting;
+            this.Move();
+        }
+        else
+        {
+            this.CancelButtonClickHandler.emit(-1);
+        }
+    }
+
     Start()
     {
         console.log("GameComponent.Start");
         GameManager.Start();
-
     }
+
     Reset()
     {
         //GameManager.gameState.Clearings = [];
         // console.log(this.nieco());
     }
+
     Spawn()
     {
         GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, 1);
@@ -77,44 +107,51 @@ export class GameComponent
         GameManager.SpawnPiece(ComponentTypeEnum.LordOfTheHundreds_Warrior, 9);
         GameManager.SpawnPiece(ComponentTypeEnum.KeepersInIron_Warrior, 10);
     }
+
     async Execute(command: string)
     {
         var id = Number(command);
         var r = GameManager.GetClearingById(id).GetWhoRulesClearing();
-        if(r === null)
 
-        console.log(`Clearing[${id}] is ruled by [${r === null ? "noone": RaceEnum[r]}]`)
-        
+        console.log(`Clearing[${id}] is ruled by [${r === null ? "noone" : RaceEnum[r]}]`)
+
         GameManager.ExecCommand(command);
     }
 
+    ResetMoveMode(wasCanceled:boolean = true)
+    {
+        this.messageText = "";
+        this.moveMode = MoveMode.None;
+        if(wasCanceled)console.log("move cancelled");
+    };
+
     async Move()
     {
+        console.info("in move");
         var moveFrom: number = -1;
         var moveTo: number = -1;
 
+        var availableClearingsToMoveFrom = [1, 2, 3]; //temp
+        var pFrom = this.getNextClickFiltered(availableClearingsToMoveFrom, true).then(i => moveFrom = i);
         this.messageText = "select clearing to move from";
+        await pFrom;
 
-        var p = this.getNextClickFiltered([1, 2, 3]).then(i => moveFrom = i);
-        await p;
-
-        var promise = this.getNextClick().then(i =>
+        if (moveFrom === -1)
         {
-            moveFrom = i;
-        });
+            this.ResetMoveMode();
+            return;//cancelled action
+        }
 
-        await promise;
-
-        console.log("after await in move,from is  " + moveFrom);
-
+        //todo filter where can move to
+        var pMoveTo = this.getNextClick().then(i => moveTo = i);
         this.messageText = "select clearing to move into";
+        await pMoveTo;
 
-        var promise = this.getNextClick().then(i =>
+        if (moveTo === -1)
         {
-            moveTo = i;
-        });
-
-        await promise;
+            this.ResetMoveMode();
+            return;//cancelled action
+        }
 
         console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
 
@@ -123,53 +160,64 @@ export class GameComponent
         });
 
         var qq: number = -1;
-        var promise = this.getNextValueFromSub(dialogRef.afterClosed()).then(i =>
+        var qwe = this.getNextValueFromSub(dialogRef.afterClosed()).then(i =>
         {
-            qq = Number(i);
+            if (i === undefined)
+                qq = -1;
+            else
+                qq = Number(i);
         });
 
-        await promise;
-        this.messageText = "output from modal is " + qq;
+        await qwe;
+        console.log(`output from modal is ${qq} `);
+
+        if (qq === -1)
+        {
+            this.ResetMoveMode();
+            return;
+        }
 
         GameManager.Move(moveFrom, moveTo, qq);
-
+        this.ResetMoveMode(false);
     }
 
     /**
      * get next click on clearing
      */
-    async getNextClick(): Promise<number>
+    async getNextClick(cancelable: boolean = false): Promise<number>
     {
         return new Promise<number>(async callback =>
         {
-            var s = this.clearingClickHandler.subscribe(i =>
+            var r = cancelable ? race(this.clearingClickHandler, this.CancelButtonClickHandler) : this.clearingClickHandler;
+            var s = r.subscribe(i =>
             {
-
                 s.unsubscribe();
                 callback(i);
             });
         });
     }
 
-    async getNextClickFiltered(allowedIds: number[]): Promise<number>
+    async getNextClickFiltered(allowedIds: number[], cancelable: boolean = false): Promise<number>
     {
-
-        mergeAll()
         return new Promise<number>(async callback =>
         {
             let value = -1;
 
-            do
+            while (true)
             {
-                console.log(`waiting for click in filtered`);
-
-                var promise = this.getNextClick().then(i =>
+                var promise = this.getNextClick(cancelable).then(i =>
                 {
                     value = i;
                 });
                 await promise;
                 console.log(`got ${value}`);
-            } while (!allowedIds.includes(value))
+
+                if (allowedIds.includes(value) || (cancelable && value === -1))
+                {
+                    console.log(`got valid value ${value},callingback`);
+                    break;
+                }
+            }
 
             callback(value);
         })
@@ -187,4 +235,10 @@ export class GameComponent
             });
         });
     }
+}
+
+export enum MoveMode
+{
+    None,
+    Selecting
 }

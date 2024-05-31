@@ -9,7 +9,7 @@ import { PieceGroupingComponent } from "../piece/pieceGrouping";
     standalone: true,
     selector: "clearing",
     template: `
-    <div id="{{Clearing.Id}}" class="clearing {{Clearing.Suit}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
+    <div id="{{Clearing.Id}}" class="highlightedClearing clearing {{Clearing.Suit}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
         <p>{{Clearing.Id}}-{{Clearing.Suit}}</p>
         <!-- <piece-grouping [model]="q"] /> -->
         <piece-grouping *ngFor="let g of this.Clearing.Pieces" [model]="g" />
@@ -20,22 +20,14 @@ import { PieceGroupingComponent } from "../piece/pieceGrouping";
     .clearing{
         width:50px;
         height:50px;
-        border-width:2px;
+       
         border-style:solid;
         position:absolute;
         color:black;
         background-color:white;
         font-size:9px;
     }
-    .FoxClearing {
-        border-color:red;
-    }
-    .RabbitClearing {
-        border-color:yellow;
-    }
-    .MouseClearing {
-        border-color:orange;
-    }
+
     p{
         margin:0px;
     }
