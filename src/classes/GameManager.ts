@@ -94,11 +94,11 @@ export class GameManager
 
     static GetAllowedMoveFromClearings()
     {
-        array.forEach(element => {
+        // array.forEach(element => {
             
-        });
-        this.gameState.Clearings
-        this.gameState.ActivePlayerId
+        // });
+        // this.gameState.Clearings
+        // this.gameState.ActivePlayerId
     }
 
 }

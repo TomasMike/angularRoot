@@ -6,23 +6,19 @@ import { GameState } from '../../classes/GameState';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { Dictionary } from '../../classes/types/Dictionary';
-import { ComponentInfo } from '../../classes/ComponentInfo';
-import KeyValuePair from '../../classes/types/KeyValuePair';
-import { ComponentHelper } from '../../classes/helpers/ComponentHelper';
-import { ComponentTypeEnum, RaceEnum } from '../../classes/models/Enums';
+import { ComponentTypeEnum, EnumHelper, RaceEnum } from '../../classes/models/Enums';
 import { fromEvent, interval, mergeAll, race } from 'rxjs';
-
-
+import { MatSelectModule } from "@angular/material/select";
+import {StartupPanelComponent} from '../startupPanel/startupPanel'
 @Component({
     selector: 'game',
     standalone: true,
-    imports: [RouterOutlet, BoardComponent],
+    imports: [RouterOutlet, BoardComponent,MatSelectModule,StartupPanelComponent],
     //templateUrl: './game.html',
     template: `
     <board id="boardWrapper" [clearings]="this.gs.Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
     <div id="message">{{messageText}}</div>
-    <div id="buttonsPanel">
+    <div id="debugButtonsPanel">
         <div><button (click)="Start()">Start</button></div>
         <!-- <div><button (click)="Reset()">Reset</button></div> -->
         <div><button (click)="Spawn()">Spawn</button></div>
@@ -33,6 +29,7 @@ import { fromEvent, interval, mergeAll, race } from 'rxjs';
         </div>
         <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
     </div>
+    <startupPanel/>
        `,
     styleUrl: './game.css'
 })

@@ -77,5 +77,23 @@ export enum ComponentTypeEnum
 
 }
 
+export class EnumHelper {
+    public static GetEnumArray<T extends {}>(e:T):{value:number,text:string}[]
+    {
+        var k = Object.keys(e);
+        if(k.length % 2 != 0)
+            throw new Error();
+
+        var a = k.length /2;
+
+        var retVal : {value:number,text:string}[] = [];
+
+        for (let index = a; index < k.length; index++) {
+            retVal.push({value:index-a,text:k[index]});
+            
+        }
+        return retVal;
+    }
+}
 
 
