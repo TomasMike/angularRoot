@@ -1,6 +1,7 @@
 import { AnonymousSubject } from "rxjs/internal/Subject";
 import { ComponentHelper } from "../helpers/ComponentHelper"
 import { ComponentTypeEnum, RaceEnum } from "./Enums";
+import { ComponentInfo } from "../ComponentInfo";
 
 export class PieceGroupingModel
 {
@@ -26,6 +27,11 @@ export class PieceGroupingModel
     GetComponentTypeText(): string
     {
         return ComponentHelper.GetComponentInfo(this.componentType).ComponentDisplayText;
+    }
+
+    GetComponentInfo(): ComponentInfo
+    {
+        return ComponentHelper.GetComponentInfo(this.componentType);
     }
 }
 

@@ -25,7 +25,7 @@ export class ComponentHelper
             case ComponentTypeEnum.WoodlandAlliance_Building_Base_Rabbit: return new ComponentInfo(RaceEnum.WoodlandAlliance, ComponentGroupEnum.Building, "Rabbit Base");
             case ComponentTypeEnum.WoodlandAlliance_Building_Base_Mouse: return new ComponentInfo(RaceEnum.WoodlandAlliance, ComponentGroupEnum.Building, "Mouse Base");
             case ComponentTypeEnum.WoodlandAlliance_Token_Sympathy: return new ComponentInfo(RaceEnum.WoodlandAlliance, ComponentGroupEnum.Token, "Sympathy");
-            case ComponentTypeEnum.Vagabond_Pawn: return new ComponentInfo(RaceEnum.Vagabond, ComponentGroupEnum.Token, "Vagabond");
+            case ComponentTypeEnum.Vagabond_Pawn: return new ComponentInfo(RaceEnum.Vagabond, ComponentGroupEnum.Pawn, "Vagabond");
             case ComponentTypeEnum.LizardCult_Warrior: return new ComponentInfo(RaceEnum.LizardCult, ComponentGroupEnum.Warrior);
             case ComponentTypeEnum.LizardCult_Building_Garden_Fox: return new ComponentInfo(RaceEnum.LizardCult, ComponentGroupEnum.Building, "Fox Garden");
             case ComponentTypeEnum.LizardCult_Building_Garden_Rabbit: return new ComponentInfo(RaceEnum.LizardCult, ComponentGroupEnum.Building, "Rabbit Garden");

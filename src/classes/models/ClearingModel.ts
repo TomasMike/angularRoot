@@ -1,3 +1,4 @@
+import { ClearingHelper } from "../helpers/ClearingHelper";
 import { ComponentHelper, ExtensionFaker } from "../helpers/ComponentHelper";
 import { Dictionary } from "../types/Dictionary";
 import { TArray } from "../types/TArray";
@@ -67,10 +68,16 @@ export class ClearingModel
         if (this.Pieces.length === 0)
             return null;
 
+        //RULE - LIZARD GARDENS OVERRIDE RULE
+        if (this.Pieces.some(p => p.GetComponentRace() === RaceEnum.LizardCult && p.GetComponentInfo().Group === ComponentGroupEnum.Building))
+            return RaceEnum.LizardCult;
+
+
         this.Pieces.forEach(g =>
         {
             let info = ComponentHelper.GetComponentInfo(g.componentType);
             let race = info.Race;
+
             if (info.Group === ComponentGroupEnum.Pawn || info.Group === ComponentGroupEnum.Token)
                 return;
 
