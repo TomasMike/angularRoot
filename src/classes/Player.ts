@@ -1,13 +1,40 @@
+import { CorvidConspiracyRace } from "../races/CorvidConspiracyRace";
+import { EyrieDynastiesRace } from "../races/EyrieDynastiesRace";
+import { IRace } from "../races/IRace";
+import { KeepersInIronRace } from "../races/KeepersInIronRace";
+import { LizardCultRace } from "../races/LizardCultRace";
+import { LordOfTheHundredsRace } from "../races/LordOfTheHundredsRace";
+import { MarquiseDeCatRace } from "../races/MarquiseDeCatRace";
+import { RiverfolkCompanyRace } from "../races/RiverfolkCompanyRace";
+import { UndergroundDuchyRace } from "../races/UndergroundDuchyRace";
+import { VagabondRace } from "../races/VagabondRace";
+import { WoodlandAllianceRace } from "../races/WoodlandAllianceRace";
 import { RaceEnum } from "./models/Enums";
 
 export class Player
 {
     Number: number;
-    Race: RaceEnum;
+    Race: IRace;
+    RaceEnum: RaceEnum;
 
     constructor(number: number, race: RaceEnum)
     {
         this.Number = number;
-        this.Race = race;
+        this.RaceEnum = race;
+
+        switch (race)
+        {
+            case RaceEnum.MarquiseDeCat: this.Race = new MarquiseDeCatRace(); break;
+            case RaceEnum.EyrieDynasties: this.Race = new EyrieDynastiesRace(); break;
+            case RaceEnum.WoodlandAlliance: this.Race = new WoodlandAllianceRace(); break;
+            case RaceEnum.Vagabond: this.Race = new VagabondRace(); break;
+            case RaceEnum.LizardCult: this.Race = new LizardCultRace(); break;
+            case RaceEnum.RiverfolkCompany: this.Race = new RiverfolkCompanyRace(); break;
+            case RaceEnum.UndergroundDuchy: this.Race = new UndergroundDuchyRace(); break;
+            case RaceEnum.CorvidConspiracy: this.Race = new CorvidConspiracyRace(); break;
+            case RaceEnum.LordOfTheHundreds: this.Race = new LordOfTheHundredsRace(); break;
+            case RaceEnum.KeepersInIron: this.Race = new KeepersInIronRace(); break;
+            default: throw new Error();
+        }
     }
 }

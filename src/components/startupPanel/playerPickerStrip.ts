@@ -1,42 +1,35 @@
-import { Component, Input, Output, input } from "@angular/core";
+import { Component, EventEmitter, Input, Output, input } from "@angular/core";
 import { MatSelectModule } from "@angular/material/select";
 import { EnumHelper, RaceEnum } from "../../classes/models/Enums";
 import { FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { Player } from "../../classes/Player";
-interface Food
-{
-    value: string;
-    viewValue: string;
-}
+
 @Component({
-    selector: 'startupPanel',
+    selector: 'playerPickerStrip',
     standalone: true,
     imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
     template: `
-    <mat-form-field>
-        <mat-label>Race</mat-label>
-        <mat-select name="raceasi" >
+    <div>
+        <span>Player {{player.Number}}</span><select name="test" id="">
             @for (item of races; track item) {
-                <mat-option [value]="item.value">{{item.text}}</mat-option>
+                <option [value]="item.value">{{item.text}}</option>
             }
-        </mat-select>
-    </mat-form-field>
+        </select>
+    </div>
     `,
 })
-export class StartupPanelComponent
+export class PlayerPickerStripComponent
 {
-    @Input() pNumber!: number;
+    @Input() player!: Player;
+    
     //selectedValue: string = "";
     races: { value: RaceEnum, text: string }[] = EnumHelper.GetEnumArray(RaceEnum);
 
-    player:Player;
 
-    constructor()
-{
-    this.player = new Player();
-    // this.players.push(new Player(1,RaceEnum.MarquiseDeCat));
-}
+
+
+
 }
 

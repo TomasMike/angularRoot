@@ -1,5 +1,6 @@
 import { ClearingHelper } from "../helpers/ClearingHelper";
-import { ComponentHelper, ExtensionFaker } from "../helpers/ComponentHelper";
+import { ComponentHelper } from "../helpers/ComponentHelper";
+import { ExtensionFaker } from "../helpers/ExtensionFaker";
 import { Dictionary } from "../types/Dictionary";
 import { TArray } from "../types/TArray";
 import { ClearingSuitEnum, ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "./Enums";

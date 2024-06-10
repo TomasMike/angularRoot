@@ -26,24 +26,30 @@ export class GameManager
         return this.gameState;
     }
 
-    static Start(): void
+    static GetNextClearingClick: (cancelable: boolean) => Promise<number>;
+    static GetNextClearingClickFiltered: (allowedIds: number[], cancelable: boolean) => Promise<number>;
+
+    static Hook(getNextClearingClickMethod: (cancelable: boolean) => Promise<number>, getNextClearingClickFilteredMethod: (allowedIds: number[], cancelable: boolean) => Promise<number>): void
     {
+        this.GetNextClearingClick = getNextClearingClickMethod;
+        this.GetNextClearingClickFiltered = getNextClearingClickFilteredMethod;
+    }
 
-        let a: TArray<number> = new TArray<number>();
-        a.push(1);
-        a.push(2);
-        a.push(3);
-        a.push(4);
-        let b = a.First(_ => _ === 3);
-
-        //let c = a.First(_ => _ === 5);
-
+    static Start(players: TArray<Player>): void
+    {
         console.log("GameManager.Start");
 
-        this.gameState.Clearings = ClearingHelper.GetClearings();
+        this.gameState.Clearings = ClearingHelper.InitClearings();
 
+        this.gameState.Players = players;
 
-        this.gameState.Players.push(new Player(1, RaceEnum.MarquiseDeCat));
+        //setup players
+
+        this.gameState.Players.forEach(p =>
+        {
+            p.Race.Setup();
+            // p.Race
+        });
     }
 
     static SpawnPiece(type: ComponentTypeEnum, clearingId: number): void
@@ -61,7 +67,7 @@ export class GameManager
 
     static Move(idFrom: number, idTo: number, amount: number)
     {
-        var activePlayerRace = GameManager.GetActivePlayer().Race;
+        var activePlayerRace = GameManager.GetActivePlayer().RaceEnum;
         var wType = ComponentHelper.GetWarriorComponentTypeByRace(activePlayerRace);
 
         this.GetClearingById(idFrom).RemovePieces(wType, amount);
@@ -95,7 +101,7 @@ export class GameManager
     static GetAllowedMoveFromClearings()
     {
         // array.forEach(element => {
-            
+
         // });
         // this.gameState.Clearings
         // this.gameState.ActivePlayerId

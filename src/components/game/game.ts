@@ -6,20 +6,22 @@ import { GameState } from '../../classes/GameState';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ComponentTypeEnum, EnumHelper, RaceEnum } from '../../classes/models/Enums';
+import { ComponentTypeEnum, RaceEnum } from '../../classes/models/Enums';
 import { fromEvent, interval, mergeAll, race } from 'rxjs';
 import { MatSelectModule } from "@angular/material/select";
-import {StartupPanelComponent} from '../startupPanel/startupPanel'
+import { RacePickingSectionComponent } from '../startupPanel/racePickingSection'
+import { TArray } from '../../classes/types/TArray';
+import { Player } from '../../classes/Player';
 @Component({
     selector: 'game',
     standalone: true,
-    imports: [RouterOutlet, BoardComponent,MatSelectModule,StartupPanelComponent],
+    imports: [RouterOutlet, BoardComponent, MatSelectModule, RacePickingSectionComponent],
     //templateUrl: './game.html',
     template: `
     <board id="boardWrapper" [clearings]="this.gs.Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
     <div id="message">{{messageText}}</div>
     <div id="debugButtonsPanel">
-        <div><button (click)="Start()">Start</button></div>
+        <!-- <div><button (click)="Start()">Start</button></div> -->
         <!-- <div><button (click)="Reset()">Reset</button></div> -->
         <div><button (click)="Spawn()">Spawn</button></div>
         <div><button (click)="MoveButtonClick()">{{getMoveBtnText()}}</button></div>
@@ -29,13 +31,10 @@ import {StartupPanelComponent} from '../startupPanel/startupPanel'
         </div>
         <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
     </div>
-    <startupPanel/>
+    <racePickingSection [qwe]="Start" />
        `,
     styleUrl: './game.css'
 })
-
-
-
 export class GameComponent
 {
     gs: GameState;
@@ -43,8 +42,6 @@ export class GameComponent
     clearingClickHandler: EventEmitter<number>;
     moveMode: MoveMode;
     CancelButtonClickHandler: EventEmitter<number>;
-
-
 
     constructor(public dialog: MatDialog)
     {
@@ -54,8 +51,8 @@ export class GameComponent
         this.CancelButtonClickHandler = new EventEmitter<number>();
         this.moveMode = MoveMode.None;
 
-        //malo by byt volane az po button-Start
-        GameManager.Start();
+        GameManager.Hook(this.getNextClearingClick, this.getNextClearingClickFiltered);
+
         console.log("GameComponent.constructor");
     }
 
@@ -79,10 +76,10 @@ export class GameComponent
         }
     }
 
-    Start()
+    Start(players:TArray<Player>)
     {
         console.log("GameComponent.Start");
-        GameManager.Start();
+        //GameManager.Start();
     }
 
     Reset()
@@ -115,11 +112,11 @@ export class GameComponent
         GameManager.ExecCommand(command);
     }
 
-    ResetMoveMode(wasCanceled:boolean = true)
+    ResetMoveMode(wasCanceled: boolean = true)
     {
         this.messageText = "";
         this.moveMode = MoveMode.None;
-        if(wasCanceled)console.log("move cancelled");
+        if (wasCanceled) console.log("move cancelled");
     };
 
     async Move()
@@ -129,7 +126,7 @@ export class GameComponent
         var moveTo: number = -1;
 
         var availableClearingsToMoveFrom = [1, 2, 3]; //temp
-        var pFrom = this.getNextClickFiltered(availableClearingsToMoveFrom, true).then(i => moveFrom = i);
+        var pFrom = this.getNextClearingClickFiltered(availableClearingsToMoveFrom, true).then(i => moveFrom = i);
         this.messageText = "select clearing to move from";
         await pFrom;
 
@@ -140,7 +137,7 @@ export class GameComponent
         }
 
         //todo filter where can move to
-        var pMoveTo = this.getNextClick().then(i => moveTo = i);
+        var pMoveTo = this.getNextClearingClick().then(i => moveTo = i);
         this.messageText = "select clearing to move into";
         await pMoveTo;
 
@@ -153,7 +150,7 @@ export class GameComponent
         console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
 
         let dialogRef = this.dialog.open(MoveDialog, {
-            data: GameManager.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().Race)
+            data: GameManager.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
         });
 
         var qq: number = -1;
@@ -181,7 +178,7 @@ export class GameComponent
     /**
      * get next click on clearing
      */
-    async getNextClick(cancelable: boolean = false): Promise<number>
+    async getNextClearingClick(cancelable: boolean = false): Promise<number>
     {
         return new Promise<number>(async callback =>
         {
@@ -194,7 +191,7 @@ export class GameComponent
         });
     }
 
-    async getNextClickFiltered(allowedIds: number[], cancelable: boolean = false): Promise<number>
+    async getNextClearingClickFiltered(allowedIds: number[], cancelable: boolean = false): Promise<number>
     {
         return new Promise<number>(async callback =>
         {
@@ -202,7 +199,7 @@ export class GameComponent
 
             while (true)
             {
-                var promise = this.getNextClick(cancelable).then(i =>
+                var promise = this.getNextClearingClick(cancelable).then(i =>
                 {
                     value = i;
                 });

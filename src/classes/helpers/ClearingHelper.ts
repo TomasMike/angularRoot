@@ -11,7 +11,7 @@ export class ClearingHelper
       {a:4,b:2}
     ];
 
-    static GetClearings(): ClearingModel[]
+    static InitClearings(): ClearingModel[]
     {
         return [
             new ClearingModel(1, ClearingSuitEnum.Fox, 40, 40),
