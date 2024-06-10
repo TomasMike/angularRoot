@@ -30,9 +30,10 @@ import { Player } from '../../classes/Player';
             <input #cmd type="text" id="cmd">
         </div>
         <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
+        <div><button (click)="Test()">Test</button></div>
     </div>
-    <racePickingSection [qwe]="Start" />
-       `,
+    <racePickingSection [StartCallback]="Start" />
+    `,
     styleUrl: './game.css'
 })
 export class GameComponent
@@ -56,6 +57,11 @@ export class GameComponent
         console.log("GameComponent.constructor");
     }
 
+    Test()
+    {
+        this.askPlayer();
+    }
+
     getMoveBtnText()
     {
         if (this.moveMode === MoveMode.None) return "Move";
@@ -76,7 +82,7 @@ export class GameComponent
         }
     }
 
-    Start(players:TArray<Player>)
+    Start(players: TArray<Player>)
     {
         console.log("GameComponent.Start");
         //GameManager.Start();
@@ -193,6 +199,11 @@ export class GameComponent
 
     async getNextClearingClickFiltered(allowedIds: number[], cancelable: boolean = false): Promise<number>
     {
+        allowedIds.forEach(i =>
+        {
+            GameManager.GetClearingById(i).Highlighted = true;
+        });
+
         return new Promise<number>(async callback =>
         {
             let value = -1;
@@ -213,6 +224,11 @@ export class GameComponent
                 }
             }
 
+            allowedIds.forEach(i =>
+            {
+                GameManager.GetClearingById(i).Highlighted = false;
+            });
+
             callback(value);
         })
     }
@@ -228,6 +244,12 @@ export class GameComponent
                 callback(i);
             });
         });
+    }
+
+    askPlayer()
+    {
+        var q = prompt("test");
+        console.log(q);
     }
 }
 

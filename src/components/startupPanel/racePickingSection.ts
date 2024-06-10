@@ -27,7 +27,7 @@ import { TArray } from "../../classes/types/TArray";
 })
 export class RacePickingSectionComponent
 {
-    @Input() qwe!: (players:TArray<Player>)=>void;
+    @Input() StartCallback!: (players:TArray<Player>)=>void;
 
     players: TArray<Player>;
 
@@ -48,7 +48,7 @@ export class RacePickingSectionComponent
     }
     Start()
     {
-        this.qwe(this.players);
+        this.StartCallback(this.players);
     }
 }
 
