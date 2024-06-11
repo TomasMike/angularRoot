@@ -47,7 +47,7 @@ export class RacePickingSectionComponent
     }
     Start()
     {
-        GameManager.gameState.Players = this.players;
+        GameManager.GameState.Players = this.players;
         this.StartClicked.emit();
     }
 }

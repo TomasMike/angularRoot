@@ -28,7 +28,7 @@ export class Asker
 })
 export class GameManager
 {
-    static gameState: GameState = new GameState();
+    static GameState: GameState = new GameState();
 
     constructor()
     {
@@ -38,7 +38,7 @@ export class GameManager
 
     static GetGameData(): GameState
     {
-        return this.gameState;
+        return this.GameState;
     }
 
     // static GetNextClearingClick: (cancelable?: boolean) => Promise<number>;
@@ -104,7 +104,7 @@ export class GameManager
 
     static GetClearingById(id: number): ClearingModel
     {
-        var c = this.gameState.Clearings.find(_ => _.Id === id);
+        var c = this.GameState.Clearings.find(_ => _.Id === id);
 
         if (c === undefined)
             throw new Error(`Clearing with id=[${id}] doesnt exist.`);
@@ -114,7 +114,7 @@ export class GameManager
 
     static GetActivePlayer(): Player
     {
-        return this.gameState.Players.First(_ => _.Number === this.gameState.ActivePlayerId);
+        return this.GameState.Players.First(_ => _.Number === this.GameState.ActivePlayerId);
     }
 
     static GetAllowedMoveFromClearings()
@@ -148,13 +148,13 @@ export class GameManager
 
         if (which == "all")
         {
-            this.gameState.Clearings.forEach(c => c.Highlighted = setHighlight(c));
+            this.GameState.Clearings.forEach(c => c.Highlighted = setHighlight(c));
         }
         else if (which == "")
         {
             if (some.length > 0)
             {
-                this.gameState.Clearings.filter(c => some.includes(c.Id)).forEach(c => c.Highlighted = setHighlight(c));
+                this.GameState.Clearings.filter(c => some.includes(c.Id)).forEach(c => c.Highlighted = setHighlight(c));
 
             }
 

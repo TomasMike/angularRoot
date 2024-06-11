@@ -142,7 +142,7 @@ export class GameComponent
         console.log("GameComponent.Start");
 
 
-        GameManager.gameState.Clearings = ClearingHelper.InitClearings();
+        GameManager.GameState.Clearings = ClearingHelper.InitClearings();
 
         // var q = new Asker(
         //     this,
@@ -151,7 +151,7 @@ export class GameComponent
 
         //setup players
 
-        GameManager.gameState.Players.forEach(p =>
+        GameManager.GameState.Players.forEach(p =>
         {
             p.Race.Setup(this.Asker);
         });
