@@ -78,12 +78,12 @@
 
 @keyframes border-pulsate {
 	0% {
-		border-color: rgba(0, 255, 255, 1);
+		border-color: rgb(255, 55, 0);
 	}
 	50% {
-		border-color: rgba(0, 255, 255, 0);
+		border-color: rgba(22, 205, 89, 0.936);
 	}
 	100% {
-		border-color: rgba(0, 255, 255, 1);
+		border-color: rgb(43, 0, 255);
 	}
 }

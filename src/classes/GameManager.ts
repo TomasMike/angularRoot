@@ -4,8 +4,24 @@ import { ClearingHelper } from "./helpers/ClearingHelper";
 import { Player } from "./Player";
 import { TArray } from "./types/TArray";
 import { ClearingModel } from "./models/ClearingModel";
-import { ComponentTypeEnum, RaceEnum } from "./models/Enums";
+import { AskPlayerQuestionTypeEnum, ComponentTypeEnum, RaceEnum } from "./models/Enums";
 import { ComponentHelper } from "./helpers/ComponentHelper";
+
+export class Asker
+{
+    that: object;
+    AskOneClearing: (cancelable?: boolean,question?:string) => Promise<number>;
+    AskOneClearingFiltered:(allowedIds:number[], question?:string,cancelable?: boolean) => Promise<number>;
+    constructor(
+        that: object, 
+        askOneClearing: (cancelable?: boolean,question?:string) => Promise<number>,
+        askOneClearingFiltered:(allowedIds:number[],question?:string, cancelable?: boolean) => Promise<number>)
+    {
+        this.that = that;
+        this.AskOneClearing = askOneClearing;
+        this.AskOneClearingFiltered = askOneClearingFiltered;
+    }
+}
 
 @Injectable({
     providedIn: "root"
@@ -22,35 +38,38 @@ export class GameManager
 
     static GetGameData(): GameState
     {
-        console.log("GameManager.GetGameData");
         return this.gameState;
     }
 
-    static GetNextClearingClick: (cancelable: boolean) => Promise<number>;
-    static GetNextClearingClickFiltered: (allowedIds: number[], cancelable: boolean) => Promise<number>;
+    // static GetNextClearingClick: (cancelable?: boolean) => Promise<number>;
+    // static GetNextClearingClickFiltered: (allowedIds: number[], cancelable?: boolean) => Promise<number>;
+    // static SetMessageBoxText: (text: string) => void;
 
-    static Hook(getNextClearingClickMethod: (cancelable: boolean) => Promise<number>, getNextClearingClickFilteredMethod: (allowedIds: number[], cancelable: boolean) => Promise<number>): void
-    {
-        this.GetNextClearingClick = getNextClearingClickMethod;
-        this.GetNextClearingClickFiltered = getNextClearingClickFilteredMethod;
-    }
+    // static Hook(getNextClearingClickMethod: (cancelable?: boolean) => Promise<number>, getNextClearingClickFilteredMethod: (allowedIds: number[], cancelable?: boolean) => Promise<number>, setMessageBoxText: (text: string) => void): void
+    // {
+    //     this.GetNextClearingClick = getNextClearingClickMethod;
+    //     this.GetNextClearingClickFiltered = getNextClearingClickFilteredMethod;
+    //     this.SetMessageBoxText = setMessageBoxText;
+    // }
 
-    static Start(players: TArray<Player>): void
-    {
-        console.log("GameManager.Start");
 
-        this.gameState.Clearings = ClearingHelper.InitClearings();
 
-        this.gameState.Players = players;
+    // AskPlayer(question: string, questionType: AskPlayerQuestionTypeEnum)
+    // {
+    //     switch (questionType)
+    //     {
+    //         case AskPlayerQuestionTypeEnum.PickOneClearing:
+    //             return GameManager.GetNextClearingClick(false);
+    //         default: return null;
+    //     }
+    // }
 
-        //setup players
-
-        this.gameState.Players.forEach(p =>
-        {
-            p.Race.Setup();
-            // p.Race
-        });
-    }
+    // AskPlayerAnyClearing(): Promise<number>
+    // {
+    //     var p = GameManager.GetNextClearingClick(false);
+    //     //p.then(() => GameManager.SetMessageBoxText(""));
+    //     return p;
+    // }
 
     static SpawnPiece(type: ComponentTypeEnum, clearingId: number): void
     {
@@ -105,6 +124,41 @@ export class GameManager
         // });
         // this.gameState.Clearings
         // this.gameState.ActivePlayerId
+    }
+
+
+   
+    static ToggleClearingHighlight(a:number[] | string,b:boolean)
+    {
+        if(typeof a ===  'string')
+            GameManager._toggleClearingHighlight(a,b);
+        else if(typeof a === 'object')
+            GameManager._toggleClearingHighlight("",b,a);
+    }
+
+    private static _toggleClearingHighlight(which: string = "", onOff: boolean | null = null, some: number[] = [])
+    {
+        var setHighlight: (c: ClearingModel) => boolean = (c) =>
+        {
+            if (onOff == null)
+                return !c.Highlighted;
+            else if (onOff) return true;
+            else return false;
+        }
+
+        if (which == "all")
+        {
+            this.gameState.Clearings.forEach(c => c.Highlighted = setHighlight(c));
+        }
+        else if (which == "")
+        {
+            if (some.length > 0)
+            {
+                this.gameState.Clearings.filter(c => some.includes(c.Id)).forEach(c => c.Highlighted = setHighlight(c));
+
+            }
+
+        }
     }
 
 }

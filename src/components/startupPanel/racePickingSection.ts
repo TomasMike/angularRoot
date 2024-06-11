@@ -1,4 +1,4 @@
-import { Component, Input, input } from "@angular/core";
+import { Component, EventEmitter, Input, input, Output } from "@angular/core";
 import { MatSelectModule } from "@angular/material/select";
 import { EnumHelper, RaceEnum } from "../../classes/models/Enums";
 import { FormsModule } from "@angular/forms";
@@ -27,8 +27,7 @@ import { TArray } from "../../classes/types/TArray";
 })
 export class RacePickingSectionComponent
 {
-    @Input() StartCallback!: (players:TArray<Player>)=>void;
-
+    @Output() StartClicked = new EventEmitter();
     players: TArray<Player>;
 
     constructor()
@@ -48,7 +47,8 @@ export class RacePickingSectionComponent
     }
     Start()
     {
-        this.StartCallback(this.players);
+        GameManager.gameState.Players = this.players;
+        this.StartClicked.emit();
     }
 }
 

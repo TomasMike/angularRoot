@@ -77,6 +77,12 @@ export enum ComponentTypeEnum
 
 }
 
+export enum AskPlayerQuestionTypeEnum{
+    PickOneClearing,
+    PickOneClearingFiltered,
+    SelectNumber,
+}
+
 export class EnumHelper {
     public static GetEnumArray<T extends {}>(e:T):{value:number,text:string}[]
     {

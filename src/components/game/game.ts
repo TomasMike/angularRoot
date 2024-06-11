@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BoardComponent } from '../board/board';
-import { GameManager } from '../../classes/GameManager';
+import { GameManager, Asker } from '../../classes/GameManager';
 import { GameState } from '../../classes/GameState';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
@@ -12,13 +12,15 @@ import { MatSelectModule } from "@angular/material/select";
 import { RacePickingSectionComponent } from '../startupPanel/racePickingSection'
 import { TArray } from '../../classes/types/TArray';
 import { Player } from '../../classes/Player';
+import { ClearingModel } from '../../classes/models/ClearingModel';
+import { ClearingHelper } from '../../classes/helpers/ClearingHelper';
 @Component({
     selector: 'game',
     standalone: true,
     imports: [RouterOutlet, BoardComponent, MatSelectModule, RacePickingSectionComponent],
     //templateUrl: './game.html',
     template: `
-    <board id="boardWrapper" [clearings]="this.gs.Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
+    <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
     <div id="message">{{messageText}}</div>
     <div id="debugButtonsPanel">
         <!-- <div><button (click)="Start()">Start</button></div> -->
@@ -32,34 +34,50 @@ import { Player } from '../../classes/Player';
         <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
         <div><button (click)="Test()">Test</button></div>
     </div>
-    <racePickingSection [StartCallback]="Start" />
+    <racePickingSection (StartClicked)="Start()" />
     `,
     styleUrl: './game.css'
 })
 export class GameComponent
 {
-    gs: GameState;
     messageText!: string;
     clearingClickHandler: EventEmitter<number>;
     moveMode: MoveMode;
     CancelButtonClickHandler: EventEmitter<number>;
-
+    Asker: Asker;
     constructor(public dialog: MatDialog)
     {
-        this.gs = GameManager.GetGameData();
 
         this.clearingClickHandler = new EventEmitter<number>();
         this.CancelButtonClickHandler = new EventEmitter<number>();
         this.moveMode = MoveMode.None;
+        this.Asker = new Asker(
+            this,
+            (c?: boolean, question?: string) => 
+            {
+                return this.GetNextClearingClickAsync(c,question);
+            },
+            (allowedIds: number[], question?: string, c?: boolean) => 
+            {
+                return this.GetNextClearingClickFilteredAsync(allowedIds,question, c);
+            });
 
-        GameManager.Hook(this.getNextClearingClick, this.getNextClearingClickFiltered);
+
+        // GameManager.Hook(
+        //     this.GetNextClearingClickAsync,
+        //     this.GetNextClearingClickFilteredAsync,
+        //     this.SetMessageText);
+
 
         console.log("GameComponent.constructor");
     }
 
-    Test()
+    //#region PRIVATE
+
+
+    GetGS()
     {
-        this.askPlayer();
+        return GameManager.GetGameData();
     }
 
     getMoveBtnText()
@@ -82,18 +100,6 @@ export class GameComponent
         }
     }
 
-    Start(players: TArray<Player>)
-    {
-        console.log("GameComponent.Start");
-        //GameManager.Start();
-    }
-
-    Reset()
-    {
-        //GameManager.gameState.Clearings = [];
-        // console.log(this.nieco());
-    }
-
     Spawn()
     {
         GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, 1);
@@ -108,14 +114,63 @@ export class GameComponent
         GameManager.SpawnPiece(ComponentTypeEnum.KeepersInIron_Warrior, 10);
     }
 
+
+    //#endregion
+
+
+
+    SetMessageText(text: string): void
+    {
+        this.messageText = text;
+    }
+
+    Test()
+    {
+       console.log(ClearingHelper.GetNeighbourClearings(1));
+    }
+
+
+
+
+
+    /**
+     * Main start of game
+     * @param players 
+     */
+    Start()
+    {
+        console.log("GameComponent.Start");
+
+
+        GameManager.gameState.Clearings = ClearingHelper.InitClearings();
+
+        // var q = new Asker(
+        //     this,
+        //     (c?: boolean) => { return this.GetNextClearingClickAsync(c); },
+        //     (allowedIds:number[],c?: boolean) => { return this.GetNextClearingClickFilteredAsync(allowedIds,c); });
+
+        //setup players
+
+        GameManager.gameState.Players.forEach(p =>
+        {
+            p.Race.Setup(this.Asker);
+        });
+    }
+
+    Reset() { }
+
+
+
     async Execute(command: string)
     {
-        var id = Number(command);
-        var r = GameManager.GetClearingById(id).GetWhoRulesClearing();
+        // var q = await this.GetNextClearingClickAsync();
+        // console.log(q);
+        // var id = Number(command);
+        // var r = GameManager.GetClearingById(id).GetWhoRulesClearing();
 
-        console.log(`Clearing[${id}] is ruled by [${r === null ? "noone" : RaceEnum[r]}]`)
+        // console.log(`Clearing[${id}] is ruled by [${r === null ? "noone" : RaceEnum[r]}]`)
 
-        GameManager.ExecCommand(command);
+        // GameManager.ExecCommand(command);
     }
 
     ResetMoveMode(wasCanceled: boolean = true)
@@ -125,6 +180,7 @@ export class GameComponent
         if (wasCanceled) console.log("move cancelled");
     };
 
+
     async Move()
     {
         console.info("in move");
@@ -132,7 +188,7 @@ export class GameComponent
         var moveTo: number = -1;
 
         var availableClearingsToMoveFrom = [1, 2, 3]; //temp
-        var pFrom = this.getNextClearingClickFiltered(availableClearingsToMoveFrom, true).then(i => moveFrom = i);
+        var pFrom = this._getNextClearingClickFiltered(availableClearingsToMoveFrom, true).then(i => moveFrom = i);
         this.messageText = "select clearing to move from";
         await pFrom;
 
@@ -143,7 +199,7 @@ export class GameComponent
         }
 
         //todo filter where can move to
-        var pMoveTo = this.getNextClearingClick().then(i => moveTo = i);
+        var pMoveTo = this._getNextClearingClick().then(i => moveTo = i);
         this.messageText = "select clearing to move into";
         await pMoveTo;
 
@@ -181,10 +237,51 @@ export class GameComponent
         this.ResetMoveMode(false);
     }
 
+    public async GetNextClearingClickAsync(cancelable?: boolean, question?: string)
+    {
+        console.log("entered game.GetNextClearingClickAsync");
+
+        GameManager.ToggleClearingHighlight("all", true);
+        if(question !== null) this.messageText = question as string;
+
+        var retVal: number = -1;
+        var p = this._getNextClearingClick(cancelable ?? false).then(i => 
+        {
+            retVal = i;
+            GameManager.ToggleClearingHighlight("all", false);
+            this.messageText = "";
+        }
+        );
+
+        await p;
+        console.log("after await game.GetNextClearingClickAsync");
+
+        return retVal;
+    }
+
+    async GetNextClearingClickFilteredAsync(allowedIds: number[], question?: string, cancelable?: boolean)
+    {
+        GameManager.ToggleClearingHighlight(allowedIds, true);
+        if(question !== null) this.messageText = question as string;
+        var retVal: number = -1;
+        var p = this._getNextClearingClickFiltered(allowedIds, cancelable ?? false).then(i => 
+        {
+            retVal = i;
+            GameManager.ToggleClearingHighlight("all", false);
+            this.messageText = "";
+        }
+        );
+        await p;
+        return retVal;
+    }
+
+
+
+
     /**
      * get next click on clearing
      */
-    async getNextClearingClick(cancelable: boolean = false): Promise<number>
+    private async _getNextClearingClick(cancelable: boolean = false): Promise<number>
     {
         return new Promise<number>(async callback =>
         {
@@ -197,12 +294,9 @@ export class GameComponent
         });
     }
 
-    async getNextClearingClickFiltered(allowedIds: number[], cancelable: boolean = false): Promise<number>
+    private async _getNextClearingClickFiltered(allowedIds: number[], cancelable: boolean = false): Promise<number>
     {
-        allowedIds.forEach(i =>
-        {
-            GameManager.GetClearingById(i).Highlighted = true;
-        });
+
 
         return new Promise<number>(async callback =>
         {
@@ -210,7 +304,7 @@ export class GameComponent
 
             while (true)
             {
-                var promise = this.getNextClearingClick(cancelable).then(i =>
+                var promise = this._getNextClearingClick(cancelable).then(i =>
                 {
                     value = i;
                 });

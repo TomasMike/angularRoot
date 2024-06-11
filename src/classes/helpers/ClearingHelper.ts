@@ -3,13 +3,18 @@ import { ClearingSuitEnum, RaceEnum } from "../models/Enums";
 
 export class ClearingHelper
 {
-    private static OppositeClearingIds:{a:number,b:number}[] = 
-    [
-      {a:1,b:3},
-      {a:3,b:1},
-      {a:2,b:4},
-      {a:4,b:2}
-    ];
+    private static OppositeClearingIds: { a: number, b: number }[] =
+        [
+            { a: 1, b: 3 },
+            { a: 3, b: 1 },
+            { a: 2, b: 4 },
+            { a: 4, b: 2 }
+        ];
+
+    static GetCornerClearings(): number[]
+    {
+        return [1, 2, 3, 4];
+    }
 
     static InitClearings(): ClearingModel[]
     {
@@ -29,38 +34,48 @@ export class ClearingHelper
         ];
     }
 
-    static GetLinkedClearings()
+    static GetNeighbourClearings(clearingId: number)
     {
+        let r:number[] = [];
 
+        this.Paths.forEach(p =>
+        {
+            if(p.a == clearingId)
+                r.push(p.b);
+            else if(p.b == clearingId)
+                r.push(p.a);
+        });
+
+        return r;
     }
 
-    private static Paths:{a:number,b:number}[]=
-    [
-           {a:1,b:5},
-           {a:1,b:9},
-           {a:1,b:10},
-           {a:2,b:5},
-           {a:2,b:6},
-           {a:2,b:10},
-           {a:3,b:6},
-           {a:3,b:7},
-           {a:3,b:11},
-           {a:4,b:8},
-           {a:4,b:9},
-           {a:4,b:12},
-           {a:5,b:10},
-           {a:6,b:11},
-           {a:7,b:8},
-           {a:7,b:12},
-           {a:9,b:12},
-           {a:10,b:12},
-           {a:11,b:12},
-    ];
-    
+    private static Paths: { a: number, b: number }[] =
+        [
+            { a: 1, b: 5 },
+            { a: 1, b: 9 },
+            { a: 1, b: 10 },
+            { a: 2, b: 5 },
+            { a: 2, b: 6 },
+            { a: 2, b: 10 },
+            { a: 3, b: 6 },
+            { a: 3, b: 7 },
+            { a: 3, b: 11 },
+            { a: 4, b: 8 },
+            { a: 4, b: 9 },
+            { a: 4, b: 12 },
+            { a: 5, b: 10 },
+            { a: 6, b: 11 },
+            { a: 7, b: 8 },
+            { a: 7, b: 12 },
+            { a: 9, b: 12 },
+            { a: 10, b: 12 },
+            { a: 11, b: 12 },
+        ];
+
 
     static GetOppositeClearingId(clearingId: number): number
     {
-        switch(clearingId)
+        switch (clearingId)
         {
             case 1: return 3;
             case 2: return 4;
@@ -70,9 +85,9 @@ export class ClearingHelper
         }
     }
 
-    static GetClearingsToMoveFrom(race:RaceEnum):number[]
+    static GetClearingsToMoveFrom(race: RaceEnum): number[]
     {
-        var retVal :number[]= [];
+        var retVal: number[] = [];
         return retVal;
     }
 }
