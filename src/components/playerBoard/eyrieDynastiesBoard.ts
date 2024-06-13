@@ -2,26 +2,27 @@ import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Player } from "../../classes/Player";
 import { RaceEnum } from "../../classes/models/Enums";
-import { MarquiseDeCatBoardComponent } from "./MarquiseDeCatBoard";
-import { EyrieDynastiesBoardComponent } from "./EyrieDynastiesBoard";
 
 @Component({
-    selector: 'player-board',
+    selector: 'eyrieDynastiesBoard',
     standalone: true,
     template: `<div class="board">
-       @switch (model.RaceEnum) 
-       {
-            @case (1) {
-                <marquiseDeCatBoard [model]="this.model"/>
+        <table id="mar">
+            @if (this.type === 1) 
+            {
+            <tr>
+                <td>{{model.Race}}</td>
+            </tr>
+
             }
-            @case (2) {
-                <eyrieDynastiesBoard [model]="this.model"/>
-            }
-       }
+            <tr>
+                <td>{{model.Race}}</td>
+            </tr>
+        </table>
     </div>`,
-    imports: [CommonModule, MarquiseDeCatBoardComponent,EyrieDynastiesBoardComponent]
+    imports: [CommonModule]
 })
-export class PlayerBoardComponent
+export class EyrieDynastiesBoardComponent
 {
     @Input() model!: Player;
 
@@ -30,7 +31,7 @@ export class PlayerBoardComponent
     constructor()
     {
         this.type = this.model.RaceEnum;
-
+        
         //     MarquiseDeCat,
         // EyrieDynasties,
         // WoodlandAlliance,
