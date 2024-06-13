@@ -36,6 +36,7 @@
 
 #game {
 	display: flex;
+    flex-wrap: wrap;
 }
 
 .highlightedClearing.clearing {

@@ -16,11 +16,13 @@ export class Player
     Number: number;
     Race: IRace;
     RaceEnum: RaceEnum;
+    IsMechanical:boolean;
 
     constructor(number: number, race: RaceEnum)
     {
         this.Number = number;
         this.RaceEnum = race;
+        this.IsMechanical = false;
 
         switch (race)
         {

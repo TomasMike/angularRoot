@@ -24,13 +24,15 @@ export class MarquiseDeCatRace implements IRace
         //6.3.2 ask for starting cleraing - place keep there
         let startingClearing = -1;
         startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetCornerClearings(), "Select staring clearing");
-        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing)
+        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing);
 
 
         //6.3.3 Place a warrior in each clearing except the clearing in the diagonally opposite corner from the clearing with the keep token.
 
-        GameManager.GameState.Clearings.forEach(c =>{
-            
+        GameManager.GameState.Clearings.forEach(c =>
+        {
+            if (c.Id !== ClearingHelper.GetOppositeClearingId(startingClearing))
+                GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, c.Id);
         });
 
         //6.3.4Place 1 sawmill, 1 workshop, and 1 recruiter. You may place them among the clearing with the keep token  nd any adjacent clearings, in any combination. 
@@ -45,7 +47,7 @@ export class MarquiseDeCatRace implements IRace
             ComponentTypeEnum.MarquiseDeCat_Building_Workshop,
             await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Workshop`));
 
-           
+
 
         //throw new Error("Method not implemented.");
     }
