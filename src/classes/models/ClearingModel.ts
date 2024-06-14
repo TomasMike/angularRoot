@@ -111,5 +111,12 @@ export class ClearingModel
 
         return null;
     }
+
+
+    CanRaceFightHere(r:RaceEnum):boolean
+    {
+        return this.Pieces.some(p => p.GetComponentRace() != r);
+
+    }
 }
 

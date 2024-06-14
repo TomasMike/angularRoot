@@ -1,3 +1,4 @@
+import { retry } from "rxjs";
 import { Asker, GameManager } from "../classes/GameManager";
 import { ClearingHelper } from "../classes/helpers/ClearingHelper";
 import { ComponentHelper } from "../classes/helpers/ComponentHelper";
@@ -9,15 +10,18 @@ export class MarquiseDeCatRace implements IRace
 {
     RaceEnum: RaceEnum = RaceEnum.MarquiseDeCat;
 
-    private _wood: number;
-    private _warriors: number;
+    private _woodReserve: number;
+    private _warriorsReserve: number;
+
+    get WoodReserve() { return this._woodReserve }
+    private set WoodReserve(n: number) { this._woodReserve = n; }
 
     constructor()
     {
-        this._wood = 8;
-        this._warriors = 25;
-    }
+        this._woodReserve = 8;
+        this._warriorsReserve = 25;
 
+    }
 
     async Setup(asker: Asker): Promise<void>
     {
@@ -49,7 +53,6 @@ export class MarquiseDeCatRace implements IRace
 
 
 
-        //throw new Error("Method not implemented.");
     }
     Morning(): void
     {

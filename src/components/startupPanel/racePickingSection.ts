@@ -13,7 +13,7 @@ import { TArray } from "../../classes/types/TArray";
 @Component({
     selector: 'racePickingSection',
     standalone: true,
-    imports: [PlayerPickerStripComponent, FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule,CommonModule],
+    imports: [PlayerPickerStripComponent, FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, CommonModule],
     template: `
     <div id="startupPanel">
         <div style="border-top:1px black solid">
@@ -39,7 +39,13 @@ export class RacePickingSectionComponent
 
     AddPlayer()
     {
-        this.players.push(new Player(this.players.length + 1, RaceEnum.MarquiseDeCat));
+        let nextRace: RaceEnum = RaceEnum.MarquiseDeCat;
+        while (this.players.some(p => p.RaceEnum === nextRace))
+        {
+            nextRace++;
+        }
+
+        this.players.push(new Player(this.players.length + 1, nextRace));
     }
     RemoveLast()
     {
