@@ -36,13 +36,13 @@ export class ClearingHelper
 
     static GetNeighbourClearings(clearingId: number)
     {
-        let r:number[] = [];
+        let r: number[] = [];
 
         this.Paths.forEach(p =>
         {
-            if(p.a == clearingId)
+            if (p.a == clearingId)
                 r.push(p.b);
-            else if(p.b == clearingId)
+            else if (p.b == clearingId)
                 r.push(p.a);
         });
 
@@ -89,5 +89,22 @@ export class ClearingHelper
     {
         var retVal: number[] = [];
         return retVal;
+    }
+
+
+    static GetAvailableStartingClearings(usedStartingClearings: number[]): number[]
+    {
+
+        let withoutUsedOnes = this.GetCornerClearings().filter(c => !usedStartingClearings.includes(c));
+
+        if (withoutUsedOnes.length === 1) return withoutUsedOnes;
+
+        //forceDiagonallyOposite
+        let withoutTwoFreeOpopsiteOnes = withoutUsedOnes.filter(c => !withoutUsedOnes.includes(this.GetOppositeClearingId(c)));
+
+        //there are only clearing that are diagonally oposite, pick from those
+        if (withoutTwoFreeOpopsiteOnes.length === 0) return withoutUsedOnes;
+        //there is one that its opposite clearing is used, must use that one.
+        else return withoutTwoFreeOpopsiteOnes;
     }
 }

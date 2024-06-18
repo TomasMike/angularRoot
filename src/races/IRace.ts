@@ -4,11 +4,13 @@ import { GameComponent } from "../components/game/game";
 
 export interface IRace
 {
-    RaceEnum:RaceEnum;
-    Setup(o:Asker):void;
-    Morning():void;
-    Day():void;
-    Evening():void;
+    RaceEnum: RaceEnum;
+    StartingClearing?: number;
+
+    Setup(asker: Asker, availableStartingClearings: number[]): Promise<number>;
+    Morning(): void;
+    Day(): void;
+    Evening(): void;
 }
 
 

@@ -55,11 +55,11 @@ export class GameComponent
             this,
             (c?: boolean, question?: string) => 
             {
-                return this.GetNextClearingClickAsync(c,question);
+                return this.GetNextClearingClickAsync(c, question);
             },
             (allowedIds: number[], question?: string, c?: boolean) => 
             {
-                return this.GetNextClearingClickFilteredAsync(allowedIds,question, c);
+                return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
             });
 
 
@@ -126,7 +126,11 @@ export class GameComponent
 
     Test()
     {
-       console.log(ClearingHelper.GetNeighbourClearings(1));
+        console.log(ClearingHelper.GetAvailableStartingClearings([]));
+        console.log(ClearingHelper.GetAvailableStartingClearings([1]));
+        console.log(ClearingHelper.GetAvailableStartingClearings([2]));
+        console.log(ClearingHelper.GetAvailableStartingClearings([3]));
+        //console.log(ClearingHelper.GetNeighbourClearings(1));
     }
 
 
@@ -137,7 +141,7 @@ export class GameComponent
      * Main start of game
      * @param players 
      */
-    Start()
+    async Start()
     {
         console.log("GameComponent.Start");
 
@@ -150,11 +154,31 @@ export class GameComponent
         //     (allowedIds:number[],c?: boolean) => { return this.GetNextClearingClickFilteredAsync(allowedIds,c); });
 
         //setup players
+        let usedStartingClearings: number[] = [];
+        console.log("setup start");
 
-        GameManager.GameState.Players.forEach(p =>
+        for (let index = 0; index < GameManager.GameState.Players.length; index++)
         {
-            p.Race.Setup(this.Asker);
-        });
+
+            const p = GameManager.GameState.Players[index];
+            var sc = await p.Race.Setup(this.Asker, usedStartingClearings);
+            usedStartingClearings.push(sc);
+            console.log(usedStartingClearings);
+        }
+
+
+        // .forEach( p =>
+        //     {
+        //         //console.log(usedStartingClearings);
+        //        
+
+        //       // await pr;
+        //        //usedStartingClearings.push(q);
+        //        //;
+
+
+        //     });
+
     }
 
     Reset() { }
@@ -242,7 +266,7 @@ export class GameComponent
         console.log("entered game.GetNextClearingClickAsync");
 
         GameManager.ToggleClearingHighlight("all", true);
-        if(question !== null) this.messageText = question as string;
+        if (question !== null) this.messageText = question as string;
 
         var retVal: number = -1;
         var p = this._getNextClearingClick(cancelable ?? false).then(i => 
@@ -262,7 +286,7 @@ export class GameComponent
     async GetNextClearingClickFilteredAsync(allowedIds: number[], question?: string, cancelable?: boolean)
     {
         GameManager.ToggleClearingHighlight(allowedIds, true);
-        if(question !== null) this.messageText = question as string;
+        if (question !== null) this.messageText = question as string;
         var retVal: number = -1;
         var p = this._getNextClearingClickFiltered(allowedIds, cancelable ?? false).then(i => 
         {

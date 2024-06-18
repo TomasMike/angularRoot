@@ -12,24 +12,32 @@ import { Player } from "../../classes/Player";
     imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
     template: `
     <div>
-        <span>Player {{player.Number}}</span><select name="test" id="">
-            @for (item of races; track item) {
-                <option [value]="item.value">{{item.text}}</option>
-            }
+        <span>Player {{player.Number}}</span>
+        <select id="test"  value="3">
+            <!-- @for (item of races; track item) {
+                <option [value]="item.value" selected="{{player.RaceEnum == item.value ? "selected":""}}">{{player.RaceEnum}}{{item.text}} </option>
+            } -->
+             @for (item of races; track item) {
+                <option [value]="item.value" [selected]="player.RaceEnum == item.value">{{item.text}} </option>
+            } 
         </select>
+        <button (click)="test()">test</button>
     </div>
     `,
 })
 export class PlayerPickerStripComponent
 {
     @Input() player!: Player;
-    
+
     //selectedValue: string = "";
     races: { value: RaceEnum, text: string }[] = EnumHelper.GetEnumArray(RaceEnum);
 
 
 
+    test()
+    {
 
+    }
 
 }
 

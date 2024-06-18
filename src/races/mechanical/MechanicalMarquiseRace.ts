@@ -8,7 +8,7 @@ export class MechanicalMarquiseRace implements IRace
 {
     RaceEnum: RaceEnum = RaceEnum.MarquiseDeCat;
 
-    Setup(): void
+    Setup(): Promise<void>
     {
         // 4.3.2 Step 2: Place Keep. Place the keep token in a random corner clearing.
         var startingClearing = GenericHelper.RandomIntFromInterval(1, 4);
@@ -38,6 +38,9 @@ export class MechanicalMarquiseRace implements IRace
         );
 
 
+        return  new Promise((resolveInner) => {
+            setTimeout(resolveInner, 50);
+          });
 
 
 

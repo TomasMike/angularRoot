@@ -2,24 +2,24 @@ import { RaceEnum } from "../classes/models/Enums";
 import { IRace } from "./IRace";
 
 
-export class RiverfolkCompanyRace implements IRace
-{
-    RaceEnum:RaceEnum = RaceEnum.RiverfolkCompany;
+// export class RiverfolkCompanyRace implements IRace
+// {
+//     RaceEnum:RaceEnum = RaceEnum.RiverfolkCompany;
 
-    Setup(): void
-    {
-        throw new Error("Method not implemented.");
-    }
-    Morning(): void
-    {
-        throw new Error("Method not implemented.");
-    }
-    Day(): void
-    {
-        throw new Error("Method not implemented.");
-    }
-    Evening(): void
-    {
-        throw new Error("Method not implemented.");
-    }
-}
+//     Setup(): Promise<void>
+//     {
+//         throw new Error("Method not implemented.");
+//     }
+//     Morning(): void
+//     {
+//         throw new Error("Method not implemented.");
+//     }
+//     Day(): void
+//     {
+//         throw new Error("Method not implemented.");
+//     }
+//     Evening(): void
+//     {
+//         throw new Error("Method not implemented.");
+//     }
+// }

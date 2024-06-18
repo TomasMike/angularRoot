@@ -23,13 +23,17 @@ export class MarquiseDeCatRace implements IRace
 
     }
 
-    async Setup(asker: Asker): Promise<void>
+    async Setup(asker: Asker, usedStartingClearings: number[]): Promise<number>
     {
+        console.log("Marquise setup");
+
         //6.3.2 ask for starting cleraing - place keep there
         let startingClearing = -1;
-        startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetCornerClearings(), "Select staring clearing");
-        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing);
 
+
+        startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetAvailableStartingClearings(usedStartingClearings), "Select staring clearing");
+        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing);
+       // usedStartingClearings.push(startingClearing);
 
         //6.3.3 Place a warrior in each clearing except the clearing in the diagonally opposite corner from the clearing with the keep token.
 
@@ -51,7 +55,7 @@ export class MarquiseDeCatRace implements IRace
             ComponentTypeEnum.MarquiseDeCat_Building_Workshop,
             await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Workshop`));
 
-
+return startingClearing;
 
     }
     Morning(): void
