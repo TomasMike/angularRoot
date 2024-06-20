@@ -13,15 +13,15 @@ import { Player } from "../../classes/Player";
     template: `
     <div>
         <span>Player {{player.Number}}</span>
-        <select id="test"  value="3">
+        <select id="test" #o value="3" (change)="test(o.value)">
             <!-- @for (item of races; track item) {
                 <option [value]="item.value" selected="{{player.RaceEnum == item.value ? "selected":""}}">{{player.RaceEnum}}{{item.text}} </option>
             } -->
              @for (item of races; track item) {
-                <option [value]="item.value" [selected]="player.RaceEnum == item.value">{{item.text}} </option>
+                <option [value]="item.value"    [selected]="player.RaceEnum == item.value">{{item.text}} </option>
             } 
         </select>
-        <button (click)="test()">test</button>
+        <!-- <button (click)="test()">test</button> -->
     </div>
     `,
 })
@@ -34,9 +34,9 @@ export class PlayerPickerStripComponent
 
 
 
-    test()
+    test(t:string)
     {
-
+        this.player.RaceEnum = Number(t);
     }
 
 }

@@ -14,9 +14,9 @@ import { RaceEnum } from "./models/Enums";
 export class Player
 {
     Number: number;
-    Race: IRace;
+    Race!: IRace;
     RaceEnum: RaceEnum;
-    IsMechanical:boolean;
+    IsMechanical: boolean;
 
     constructor(number: number, race: RaceEnum)
     {
@@ -24,7 +24,11 @@ export class Player
         this.RaceEnum = race;
         this.IsMechanical = false;
 
-        switch (race)
+    }
+
+    SetRace()
+    {
+        switch (this.RaceEnum)
         {
             case RaceEnum.MarquiseDeCat: this.Race = new MarquiseDeCatRace(); break;
             case RaceEnum.EyrieDynasties: this.Race = new EyrieDynastiesRace(); break;

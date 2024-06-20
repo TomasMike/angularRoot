@@ -126,11 +126,9 @@ export class GameComponent
 
     Test()
     {
-        console.log(ClearingHelper.GetAvailableStartingClearings([]));
-        console.log(ClearingHelper.GetAvailableStartingClearings([1]));
-        console.log(ClearingHelper.GetAvailableStartingClearings([2]));
-        console.log(ClearingHelper.GetAvailableStartingClearings([3]));
-        //console.log(ClearingHelper.GetNeighbourClearings(1));
+      
+        var q = this.Asker.AskPrompt("kolko?",["1","2"],false);
+        console.log(q);
     }
 
 
@@ -161,23 +159,13 @@ export class GameComponent
         {
 
             const p = GameManager.GameState.Players[index];
+            p.SetRace();
             var sc = await p.Race.Setup(this.Asker, usedStartingClearings);
             usedStartingClearings.push(sc);
-            console.log(usedStartingClearings);
         }
 
 
-        // .forEach( p =>
-        //     {
-        //         //console.log(usedStartingClearings);
-        //        
-
-        //       // await pr;
-        //        //usedStartingClearings.push(q);
-        //        //;
-
-
-        //     });
+      
 
     }
 
@@ -366,7 +354,7 @@ export class GameComponent
 
     askPlayer()
     {
-        var q = prompt("test");
+        var q = Asker
         console.log(q);
     }
 }
