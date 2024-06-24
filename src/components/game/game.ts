@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BoardComponent } from '../board/board';
-import { GameManager, Asker } from '../../classes/GameManager';
+import { GameManager } from '../../classes/GameManager';
+import { Asker } from "../../classes/Asker";
 import { GameState } from '../../classes/GameState';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
@@ -14,10 +15,12 @@ import { TArray } from '../../classes/types/TArray';
 import { Player } from '../../classes/Player';
 import { ClearingModel } from '../../classes/models/ClearingModel';
 import { ClearingHelper } from '../../classes/helpers/ClearingHelper';
+import { PlayerBoardComponent } from '../playerBoard/playerBoard';
+import { CommonModule } from '@angular/common';
 @Component({
     selector: 'game',
     standalone: true,
-    imports: [RouterOutlet, BoardComponent, MatSelectModule, RacePickingSectionComponent],
+    imports: [CommonModule,RouterOutlet, BoardComponent, MatSelectModule, RacePickingSectionComponent,PlayerBoardComponent],
     //templateUrl: './game.html',
     template: `
     <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
@@ -35,6 +38,9 @@ import { ClearingHelper } from '../../classes/helpers/ClearingHelper';
         <div><button (click)="Test()">Test</button></div>
     </div>
     <racePickingSection (StartClicked)="Start()" />
+    <div>
+        <player-board  *ngFor="let p of this.GetGS().Players" [player]="p" ></player-board>
+    </div>
     `,
     styleUrl: './game.css'
 })
@@ -45,6 +51,8 @@ export class GameComponent
     moveMode: MoveMode;
     CancelButtonClickHandler: EventEmitter<number>;
     Asker: Asker;
+
+
     constructor(public dialog: MatDialog)
     {
 
@@ -77,7 +85,9 @@ export class GameComponent
 
     GetGS()
     {
-        return GameManager.GetGameData();
+    //    console.log(`calling GetGS, returning`);
+   //    console.log(GameManager.GameState);
+        return GameManager.GameState;
     }
 
     getMoveBtnText()
@@ -126,9 +136,9 @@ export class GameComponent
 
     Test()
     {
-      
-        var q = this.Asker.AskPrompt("kolko?",["1","2"],false);
-        console.log(q);
+        console.log(GameManager.GameState);
+        //var q = this.Asker.AskPrompt("kolko?",["1","2"],false);
+        //console.log(q);
     }
 
 

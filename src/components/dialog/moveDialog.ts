@@ -13,10 +13,10 @@ import { MatInputModule } from '@angular/material/input';
         <button [disabled]="this.val <= 1" (click)="change(-1)">-</button>{{this.val}}<button [disabled]="this.val >= this.moveMaxAmount" (click)="change(1)">+</button>
     </div>
 </mat-dialog-content>
-    <mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="-1">Cancel Move</button>
-  <button mat-button [mat-dialog-close]="val">Ok</button>
-  </mat-dialog-actions>
+<mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="-1">Cancel Move</button>
+    <button mat-button [mat-dialog-close]="val">Ok</button>
+</mat-dialog-actions>
     `,
     standalone: true,
     imports: [

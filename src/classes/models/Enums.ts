@@ -83,6 +83,13 @@ export enum AskPlayerQuestionTypeEnum{
     SelectNumber,
 }
 
+export enum GameWorkflowState
+{
+    PlayersPickingRaces,
+    PlayerSetup,
+    Game
+}
+
 export class EnumHelper {
     public static GetEnumArray<T extends {}>(e:T):{value:number,text:string}[]
     {

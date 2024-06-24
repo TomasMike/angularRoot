@@ -1,4 +1,5 @@
-import { Asker, GameManager } from "../classes/GameManager";
+import { GameManager } from "../classes/GameManager";
+import { Asker } from "../classes/Asker";
 import { ClearingHelper } from "../classes/helpers/ClearingHelper";
 import { ComponentTypeEnum, EnumHelper, RaceEnum } from "../classes/models/Enums";
 import { IRace } from "./IRace";
@@ -19,11 +20,16 @@ export class EyrieDynastiesRace implements IRace
     WarriorsReserve: number;
     RoostReserve: number;
 
+    ActiveLeader!: EyrieLeaderEnum;
+    UnusedLeaders: EyrieLeaderEnum[];
+    UsedLeaders: EyrieLeaderEnum[];
 
     constructor()
     {
         this.WarriorsReserve = 20;
         this.RoostReserve = 7;
+        this.UnusedLeaders = [];
+        this.UsedLeaders = [];
     }
 
 
@@ -36,15 +42,23 @@ export class EyrieDynastiesRace implements IRace
         startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetAvailableStartingClearings(usedStartingClearings), "Select staring clearing");
 
         GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Building_Roost, startingClearing);
-        
+
         for (let index = 1; index <= 6; index++)
         {
             GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, startingClearing);
         }
-       
+
 
         // 7.3.3 Step 3: Choose Leader. Choose 1 of the 4 Eyrie leader cards and place it in your Leader Card slot. Gather the remaining leaders face up near you.
-//let leader = asker.AskPrompt("Choose leader: 1=",EnumHelper.GetEnumArray(EyrieLeaderEnum).some)
+        var extraInfo = EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => `[${_.value}]-${_.text}`).join(',');
+        let leader = Number(asker.AskPrompt(`Choose leader `, EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => _.value.toString()), false, extraInfo) as string);
+
+        this.ActiveLeader = leader;
+
+        this.UnusedLeaders = EnumHelper.GetEnumArray(EyrieLeaderEnum)
+            .filter(_ => _.value !== leader)
+            .map(_ => _.value);
+
 
         // 7.3.4 Step 4: Tuck Viziers. Tuck your 2 Loyal Vizier cards, showing their suit, into the Decree columns above your faction board as listed on your leader.
         // 7.3.5 Step 5: Fill Roosts Track. Place your 6 remaining roosts on your Roosts track from right to left.

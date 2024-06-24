@@ -1,5 +1,6 @@
 import { Player } from "./Player";
 import { ClearingModel } from "./models/ClearingModel";
+import { GameWorkflowState } from "./models/Enums";
 import { TArray } from "./types/TArray";
 
 export class GameState
@@ -8,7 +9,7 @@ export class GameState
     ClearingSize: number;
     Players: TArray<Player>;
     ActivePlayerId: number;
-
+GameWorkflowState:GameWorkflowState;
 
     constructor()
     {
@@ -16,6 +17,7 @@ export class GameState
         this.ClearingSize = 50;
         this.Players = new TArray;
         this.ActivePlayerId = 1;
+        this.GameWorkflowState = GameWorkflowState.PlayersPickingRaces;
     }
 }
 

@@ -7,53 +7,6 @@ import { ClearingModel } from "./models/ClearingModel";
 import { AskPlayerQuestionTypeEnum, ComponentTypeEnum, RaceEnum } from "./models/Enums";
 import { ComponentHelper } from "./helpers/ComponentHelper";
 
-export class Asker
-{
-    that: object;
-    AskOneClearing: (cancelable?: boolean, question?: string) => Promise<number>;
-    AskOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>;
-    constructor(
-        that: object,
-        askOneClearing: (cancelable?: boolean, question?: string) => Promise<number>,
-        askOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>)
-    {
-        this.that = that;
-        this.AskOneClearing = askOneClearing;
-        this.AskOneClearingFiltered = askOneClearingFiltered;
-    }
-
-    AskPrompt(question: string, validAnswers?: string[], cancelable?: boolean)
-    {
-        let answeredWrongly = false;
-        cancelable = cancelable ?? true;
-        if (validAnswers !== undefined)
-        {
-            question = `${question} ${validAnswers.join(';')}`;
-        }
-        
-        while (true)
-        {
-
-            let message =
-                `${answeredWrongly ? "Wrong!" : ""}
-            ${question}`;
-
-            let a = prompt(message);
-
-            if (!cancelable && a === null)
-            {
-                answeredWrongly = true;
-                continue;
-            }
-
-            if (validAnswers === undefined || validAnswers.includes(a as string))
-                return a;
-
-            answeredWrongly = true;
-        }
-    }
-}
-
 @Injectable({
     providedIn: "root"
 })

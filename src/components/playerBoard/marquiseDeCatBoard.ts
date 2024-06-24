@@ -25,18 +25,22 @@ import { GameManager } from "../../classes/GameManager";
 })
 export class MarquiseDeCatBoardComponent
 {
-    @Input() model!: IRace;
-    m: MarquiseDeCatRace;
+    @Input() model!: Player;
+    m!: MarquiseDeCatRace;
 
 
-    type: RaceEnum;
+    type!: RaceEnum;
 
     constructor()
     {
-        this.type = this.model.RaceEnum;
-        this.m = this.model as MarquiseDeCatRace;
+        if (this.model !== undefined)
+        {
+            this.type = this.model.RaceEnum;
+            this.m = this.model.Race as MarquiseDeCatRace;
 
-        var q = this.m.WoodReserve;
+            var q = this.m.WoodReserve;
+        }
+
 
         //     MarquiseDeCat,
         // EyrieDynasties,
@@ -50,9 +54,9 @@ export class MarquiseDeCatBoardComponent
         // KeepersInIron
     }
 
-    CanBattle():boolean
+    CanBattle(): boolean
     {
-        return GameManager.GameState.Clearings.some(c=>c.CanRaceFightHere(this.model.RaceEnum));
+        return GameManager.GameState.Clearings.some(c => c.CanRaceFightHere(this.model.RaceEnum));
     }
     Battle()
     {

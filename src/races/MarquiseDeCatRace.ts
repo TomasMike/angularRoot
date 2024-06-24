@@ -1,5 +1,6 @@
 import { retry } from "rxjs";
-import { Asker, GameManager } from "../classes/GameManager";
+import { GameManager } from "../classes/GameManager";
+import { Asker } from "../classes/Asker";
 import { ClearingHelper } from "../classes/helpers/ClearingHelper";
 import { ComponentHelper } from "../classes/helpers/ComponentHelper";
 import { ComponentTypeEnum, RaceEnum } from "../classes/models/Enums";
