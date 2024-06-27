@@ -18,14 +18,14 @@ import { EyrieDynastiesRace } from "../../races/EyrieDynastiesRace";
 })
 export class EyrieDynastiesBoardComponent
 {
-    @Input() model!: Player;
+    @Input() player!: Player;
     race: EyrieDynastiesRace;
     type: RaceEnum;
 
     constructor()
     {
-        this.type = this.model.RaceEnum;
-        this.race = this.model.Race as EyrieDynastiesRace;
+        this.type = this.player.RaceEnum;
+        this.race = this.player.Race as EyrieDynastiesRace;
         //     MarquiseDeCat,
         // EyrieDynasties,
         // WoodlandAlliance,

@@ -83,7 +83,7 @@ export enum AskPlayerQuestionTypeEnum{
     SelectNumber,
 }
 
-export enum GameWorkflowState
+export enum GameWorkflowStateEnum
 {
     PlayersPickingRaces,
     PlayerSetup,

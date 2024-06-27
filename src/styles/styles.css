@@ -36,7 +36,7 @@
 
 #game {
 	display: flex;
-    flex-wrap: wrap;
+	flex-wrap: wrap;
 }
 
 .highlightedClearing.clearing {
@@ -87,4 +87,11 @@
 	100% {
 		border-color: rgb(43, 0, 255);
 	}
+}
+
+.playerBoard {
+    border: 1px solid black;
+}
+.playerBoard div {
+	padding: 5px;
 }

@@ -7,7 +7,7 @@ import { GameState } from '../../classes/GameState';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ComponentTypeEnum, RaceEnum } from '../../classes/models/Enums';
+import { ComponentTypeEnum, GameWorkflowStateEnum, RaceEnum } from '../../classes/models/Enums';
 import { fromEvent, interval, mergeAll, race } from 'rxjs';
 import { MatSelectModule } from "@angular/material/select";
 import { RacePickingSectionComponent } from '../startupPanel/racePickingSection'
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 @Component({
     selector: 'game',
     standalone: true,
-    imports: [CommonModule,RouterOutlet, BoardComponent, MatSelectModule, RacePickingSectionComponent,PlayerBoardComponent],
+    imports: [CommonModule, RouterOutlet, BoardComponent, MatSelectModule, RacePickingSectionComponent, PlayerBoardComponent],
     //templateUrl: './game.html',
     template: `
     <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
@@ -37,7 +37,11 @@ import { CommonModule } from '@angular/common';
         <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
         <div><button (click)="Test()">Test</button></div>
     </div>
-    <racePickingSection (StartClicked)="Start()" />
+    @if(ShowPlayerRacePicker())
+    {
+        <racePickingSection (StartClicked)="Start()" />
+    }
+
     <div>
         <player-board  *ngFor="let p of this.GetGS().Players" [player]="p" ></player-board>
     </div>
@@ -85,8 +89,8 @@ export class GameComponent
 
     GetGS()
     {
-    //    console.log(`calling GetGS, returning`);
-   //    console.log(GameManager.GameState);
+        //    console.log(`calling GetGS, returning`);
+        //    console.log(GameManager.GameState);
         return GameManager.GameState;
     }
 
@@ -153,7 +157,7 @@ export class GameComponent
     {
         console.log("GameComponent.Start");
 
-
+        GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.PlayerSetup;
         GameManager.GameState.Clearings = ClearingHelper.InitClearings();
 
         // var q = new Asker(
@@ -174,8 +178,9 @@ export class GameComponent
             usedStartingClearings.push(sc);
         }
 
+        GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.Game;
+    
 
-      
 
     }
 
@@ -362,10 +367,13 @@ export class GameComponent
         });
     }
 
-    askPlayer()
+    ShowPlayerRacePicker():boolean
     {
-        var q = Asker
-        console.log(q);
+        return GameManager.GameState.GameWorkflowState === GameWorkflowStateEnum.PlayersPickingRaces;
+    }
+    ShowPlayerBoards()
+    {
+        return GameManager.GameState.GameWorkflowState === GameWorkflowStateEnum.Game;
     }
 }
 

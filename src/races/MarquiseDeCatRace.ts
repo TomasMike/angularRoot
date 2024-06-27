@@ -11,16 +11,25 @@ export class MarquiseDeCatRace implements IRace
 {
     RaceEnum: RaceEnum = RaceEnum.MarquiseDeCat;
 
-    private _woodReserve: number;
-    private _warriorsReserve: number;
+    WoodReserve: number;
+    WarriorsReserve: number;
+    SawmillReserve: number;
+    RecruiterReserve: number;
+    WorkshopReserve: number;
 
-    get WoodReserve() { return this._woodReserve }
-    private set WoodReserve(n: number) { this._woodReserve = n; }
+    // get WoodReserve() 
+    // { 
+    //     return this._woodReserve;
+    // }
+    // private set WoodReserve(n: number) { this._woodReserve = n; }
 
     constructor()
     {
-        this._woodReserve = 8;
-        this._warriorsReserve = 25;
+        this.WoodReserve = 8;
+        this.WarriorsReserve = 25;
+        this.SawmillReserve = 6;
+        this.RecruiterReserve = 6;
+        this.WorkshopReserve = 6;
 
     }
 

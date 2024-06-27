@@ -9,19 +9,17 @@ import { IRace } from "../../races/IRace";
 @Component({
     selector: 'player-board',
     standalone: true,
-    template: `<div class="pBoard">
-        <button (click)="C()" >t</button>
+    template: `<div class="playerBoard">
+        <!-- <button (click)="C()" >t</button> -->
         @if(this.player !== undefined)
         {
-            <div>test</div>
-            <div>{{this.player.RaceEnum}}</div>
             @switch (this.player.RaceEnum) 
             {
                 @case (0) {
-                    <marquiseDeCatBoard [model]="this.player"/>
+                    <marquiseDeCatBoard [player]="this.player"/>
                 }
                 @case (1) {
-                    <eyrieDynastiesBoard [model]="this.player"/>
+                    <eyrieDynastiesBoard [player]="this.player"/>
                 }
               @default {
                 <div>default</div>
