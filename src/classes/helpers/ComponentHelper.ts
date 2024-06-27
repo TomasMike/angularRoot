@@ -8,6 +8,11 @@ import { ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "../models/Enums
 })
 export class ComponentHelper
 {
+    /**
+     * Gets object with many component atributes (race, group, text)
+     * @param type 
+     * @returns  object with many component atributes (race, group, text)
+     */
     public static GetComponentInfo(type: ComponentTypeEnum): ComponentInfo
     {
         switch (type)
@@ -52,6 +57,7 @@ export class ComponentHelper
         }
     }
 
+
     public static GetWarriorComponentTypeByRace(race: RaceEnum)
     {
         switch (race)
@@ -68,5 +74,10 @@ export class ComponentHelper
             case RaceEnum.KeepersInIron: return ComponentTypeEnum.KeepersInIron_Warrior;
             default: throw new Error();
         }
+    }
+
+    public static GetRaceFromComponentTypeEnum(type:ComponentTypeEnum)
+    {
+        return ComponentHelper.GetComponentInfo(type).Race;
     }
 }

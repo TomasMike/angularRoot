@@ -33,6 +33,8 @@ export class MarquiseDeCatRace implements IRace
 
     }
 
+    StartingClearing?: number | undefined;
+
     async Setup(asker: Asker, usedStartingClearings: number[]): Promise<number>
     {
         console.log("Marquise setup");
@@ -43,7 +45,7 @@ export class MarquiseDeCatRace implements IRace
 
         startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetAvailableStartingClearings(usedStartingClearings), "Select staring clearing");
         GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing);
-       // usedStartingClearings.push(startingClearing);
+        // usedStartingClearings.push(startingClearing);
 
         //6.3.3 Place a warrior in each clearing except the clearing in the diagonally opposite corner from the clearing with the keep token.
 
@@ -65,7 +67,7 @@ export class MarquiseDeCatRace implements IRace
             ComponentTypeEnum.MarquiseDeCat_Building_Workshop,
             await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Workshop`));
 
-return startingClearing;
+        return startingClearing;
 
     }
     Morning(): void
@@ -80,4 +82,45 @@ return startingClearing;
     {
         throw new Error("Method not implemented.");
     }
+
+    HandleComponentSpawn(type: ComponentTypeEnum): boolean
+    {
+        switch (type)
+        {
+            case ComponentTypeEnum.MarquiseDeCat_Warrior:
+                if (this.WarriorsReserve == 0)
+                    return false;
+                this.WarriorsReserve--;
+                break;
+            case ComponentTypeEnum.MarquiseDeCat_Building_Recruiter:
+                if (this.RecruiterReserve == 0)
+                    return false;
+                this.RecruiterReserve--;
+                break;
+            case ComponentTypeEnum.MarquiseDeCat_Building_Sawmill:
+                if (this.SawmillReserve == 0)
+                    return false;
+                this.SawmillReserve--;
+                break;
+            case ComponentTypeEnum.MarquiseDeCat_Building_Workshop:
+                if (this.WorkshopReserve == 0)
+                    return false;
+                this.WorkshopReserve--;
+                break;
+            case ComponentTypeEnum.MarquiseDeCat_Token_Keep:
+                if (GameManager.GameState.Clearings.some(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.MarquiseDeCat_Token_Keep)))
+                    throw new Error();
+                return true;
+            case ComponentTypeEnum.MarquiseDeCat_Token_Wood:
+                if (this.WoodReserve == 0)
+                    return false;
+                this.WoodReserve--;
+                break;
+            default:
+                throw new Error();
+        }
+
+        return true;
+    }
+
 }

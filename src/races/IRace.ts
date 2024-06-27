@@ -1,5 +1,5 @@
 import { Asker } from "../classes/Asker";
-import { RaceEnum } from "../classes/models/Enums";
+import { ComponentTypeEnum, RaceEnum } from "../classes/models/Enums";
 import { GameComponent } from "../components/game/game";
 
 export interface IRace
@@ -11,6 +11,7 @@ export interface IRace
     Morning(): void;
     Day(): void;
     Evening(): void;
+    HandleComponentSpawn(type: ComponentTypeEnum):boolean;
 }
 
 

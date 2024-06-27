@@ -90,6 +90,19 @@ export enum GameWorkflowStateEnum
     Game
 }
 
+export enum CardSuitEnum
+{
+    Rabbit,Fox,Mouse,Bird
+}
+
+export enum EyrieActionEnum
+{
+    Recruit,
+    Move,
+    Battle,
+    Build
+}
+
 export class EnumHelper {
     public static GetEnumArray<T extends {}>(e:T):{value:number,text:string}[]
     {

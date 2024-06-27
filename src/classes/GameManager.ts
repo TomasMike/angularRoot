@@ -59,6 +59,13 @@ export class GameManager
     {
         var c = this.GetClearingById(clearingId);
 
+        var r = this.GameState.Players.First(_ => _.RaceEnum === ComponentHelper.GetRaceFromComponentTypeEnum(type)).Race;
+
+        if (!r.HandleComponentSpawn(type))
+        {
+            return;
+        }
+
         c.AddPieces(type);
     }
 
