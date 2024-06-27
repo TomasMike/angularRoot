@@ -148,7 +148,10 @@ export class EyrieDynastiesRace implements IRace
 
     Morning(): void
     {
-        throw new Error("Method not implemented.");
+        //7.4.1 Emergency Orders. If you have no cards in your hand, draw one card.
+        //7.4.2 Add to the Decree. You must add one or two cards to the Decree, but only one card added may be a bird card. You may play each card to any column, and each column can hold any number of cards.
+        
+        //7.4.3 A New Roost. If you have no roosts on the map, place a roost and three warriors in a clearing with the fewest warriors where all those pieces can be placed. 
     }
     Day(): void
     {

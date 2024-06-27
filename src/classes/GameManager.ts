@@ -17,7 +17,6 @@ export class GameManager
     constructor()
     {
         console.log("GameManager.constuctor");
-
     }
 
     static GetGameData(): GameState
@@ -25,6 +24,8 @@ export class GameManager
         return this.GameState;
     }
 
+
+    
     // static GetNextClearingClick: (cancelable?: boolean) => Promise<number>;
     // static GetNextClearingClickFiltered: (allowedIds: number[], cancelable?: boolean) => Promise<number>;
     // static SetMessageBoxText: (text: string) => void;

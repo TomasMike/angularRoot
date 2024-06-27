@@ -1,6 +1,6 @@
 import { GameManager } from "../../classes/GameManager";
 import { ClearingHelper } from "../../classes/helpers/ClearingHelper";
-import { GenericHelper } from "../../classes/helpers/GenericHelper";
+import { GeneralHelper } from "../../classes/helpers/GeneralHelper";
 import { ComponentTypeEnum, RaceEnum } from "../../classes/models/Enums";
 import { IRace } from "../IRace";
 
@@ -11,7 +11,7 @@ export class MechanicalMarquiseRace implements IRace
     Setup(): Promise<void>
     {
         // 4.3.2 Step 2: Place Keep. Place the keep token in a random corner clearing.
-        var startingClearing = GenericHelper.RandomIntFromInterval(1, 4);
+        var startingClearing = GeneralHelper.RandomIntFromInterval(1, 4);
         GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing);
 
         // 4.3.3 Step 3: Garrison. Place a warrior in each clearing except the clearing in the diagonally opposite corner from the clearing with the keep token. Place an extra warrior in the clearing with the keep token.
@@ -31,7 +31,7 @@ export class MechanicalMarquiseRace implements IRace
 
         startingBuildings.forEach(b =>
         {
-            var c = clearingForBuildings[GenericHelper.RandomIntFromInterval(0, clearingForBuildings.length - 1)];
+            var c = clearingForBuildings[GeneralHelper.RandomIntFromInterval(0, clearingForBuildings.length - 1)];
             GameManager.SpawnPiece(b, c);
             clearingForBuildings.filter(_ => _ !== c);
         }
