@@ -2,6 +2,8 @@ import { IRace } from "../races/IRace";
 import { EyrieDynastiesRace } from "../races/EyrieDynastiesRace";
 import { MarquiseDeCatRace } from "../races/MarquiseDeCatRace";
 import { RaceEnum } from "./models/Enums";
+import { TArray } from "./types/TArray";
+import { Card } from "./models/Card";
 // import { KeepersInIronRace } from "../races/KeepersInIronRace";
 // import { LizardCultRace } from "../races/LizardCultRace";
 // import { LordOfTheHundredsRace } from "../races/LordOfTheHundredsRace";
@@ -17,12 +19,14 @@ export class Player
     Race!: IRace;
     RaceEnum: RaceEnum;
     IsMechanical: boolean;
+    Hand: TArray<Card>;
 
     constructor(number: number, race: RaceEnum)
     {
         this.Number = number;
         this.RaceEnum = race;
         this.IsMechanical = false;
+        this.Hand = new TArray<Card>;
 
     }
 

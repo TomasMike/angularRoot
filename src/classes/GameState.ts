@@ -12,7 +12,8 @@ export class GameState
     Players: TArray<Player>;
     ActivePlayerId: number;
     GameWorkflowState: GameWorkflowStateEnum;
-    Deck: TArray<Card>;
+    DrawDeck: TArray<Card>;
+    DiscardPile: TArray<Card>;
 
     constructor()
     {
@@ -21,17 +22,18 @@ export class GameState
         this.Players = new TArray;
         this.ActivePlayerId = 1;
         this.GameWorkflowState = GameWorkflowStateEnum.PlayersPickingRaces;
-        this.Deck = new TArray<Card>;
+        this.DrawDeck = new TArray<Card>;
+        this.DiscardPile = new TArray<Card>;
 
         for (let index = 0; index < 15; index++)
         {
-            this.Deck.push(new Card(CardSuitEnum.Bird, `Placeholder Card ${(index * 4) + 1}`));
-            this.Deck.push(new Card(CardSuitEnum.Fox, `Placeholder Card ${(index * 4) + 2}`));
-            this.Deck.push(new Card(CardSuitEnum.Mouse, `Placeholder Card ${(index * 4) + 3}`));
-            this.Deck.push(new Card(CardSuitEnum.Rabbit, `Placeholder Card ${(index * 4) + 4}`));
+            this.DrawDeck.push(new Card(CardSuitEnum.Bird, `Placeholder Card ${(index * 4) + 1}`));
+            this.DrawDeck.push(new Card(CardSuitEnum.Fox, `Placeholder Card ${(index * 4) + 2}`));
+            this.DrawDeck.push(new Card(CardSuitEnum.Mouse, `Placeholder Card ${(index * 4) + 3}`));
+            this.DrawDeck.push(new Card(CardSuitEnum.Rabbit, `Placeholder Card ${(index * 4) + 4}`));
         }
 
-        GeneralHelper.Randomize(this.Deck);
+        this.DrawDeck.Randomize();
     }
 }
 

@@ -5,7 +5,11 @@
   "projects": {
     "your-angular-project": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+           "style": "less"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -25,9 +29,13 @@
             ],
             "styles": [
               "src/styles/styles.css",
+              "src/styles/styles.less",
               "src/styles/angularMaterial.css"
             ],
-            "scripts": [],
+            "scripts": [
+                "lessc src/styles/styles.less src/styles/styles.css"
+                
+            ],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -59,6 +67,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+            
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {

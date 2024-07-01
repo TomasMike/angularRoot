@@ -28,7 +28,6 @@ import { CommonModule } from '@angular/common';
     <div id="debugButtonsPanel">
         <!-- <div><button (click)="Start()">Start</button></div> -->
         <!-- <div><button (click)="Reset()">Reset</button></div> -->
-        <div><button (click)="Spawn()">Spawn</button></div>
         <div><button (click)="MoveButtonClick()">{{getMoveBtnText()}}</button></div>
         <div>
             <button  (click)="Execute(cmd.value)">Execute</button>
@@ -59,7 +58,6 @@ export class GameComponent
 
     constructor(public dialog: MatDialog)
     {
-
         this.clearingClickHandler = new EventEmitter<number>();
         this.CancelButtonClickHandler = new EventEmitter<number>();
         this.moveMode = MoveMode.None;
@@ -74,13 +72,6 @@ export class GameComponent
                 return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
             });
 
-
-        // GameManager.Hook(
-        //     this.GetNextClearingClickAsync,
-        //     this.GetNextClearingClickFilteredAsync,
-        //     this.SetMessageText);
-
-
         console.log("GameComponent.constructor");
     }
 
@@ -89,8 +80,6 @@ export class GameComponent
 
     GetGS()
     {
-        //    console.log(`calling GetGS, returning`);
-        //    console.log(GameManager.GameState);
         return GameManager.GameState;
     }
 
@@ -114,24 +103,7 @@ export class GameComponent
         }
     }
 
-    Spawn()
-    {
-        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, 1);
-        GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, 2);
-        GameManager.SpawnPiece(ComponentTypeEnum.WoodlandAlliance_Warrior, 3);
-        GameManager.SpawnPiece(ComponentTypeEnum.Vagabond_Pawn, 4);
-        GameManager.SpawnPiece(ComponentTypeEnum.RiverfolkCompany_Warrior, 5);
-        GameManager.SpawnPiece(ComponentTypeEnum.LizardCult_Warrior, 6);
-        GameManager.SpawnPiece(ComponentTypeEnum.UndergroundDuchy_Warrior, 7);
-        GameManager.SpawnPiece(ComponentTypeEnum.CorvidConspiracy_Warrior, 8);
-        GameManager.SpawnPiece(ComponentTypeEnum.LordOfTheHundreds_Warrior, 9);
-        GameManager.SpawnPiece(ComponentTypeEnum.KeepersInIron_Warrior, 10);
-    }
-
-
     //#endregion
-
-
 
     SetMessageText(text: string): void
     {
@@ -160,10 +132,7 @@ export class GameComponent
         GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.PlayerSetup;
         GameManager.GameState.Clearings = ClearingHelper.InitClearings();
 
-        // var q = new Asker(
-        //     this,
-        //     (c?: boolean) => { return this.GetNextClearingClickAsync(c); },
-        //     (allowedIds:number[],c?: boolean) => { return this.GetNextClearingClickFilteredAsync(allowedIds,c); });
+
 
         //setup players
         let usedStartingClearings: number[] = [];
@@ -171,15 +140,22 @@ export class GameComponent
 
         for (let index = 0; index < GameManager.GameState.Players.length; index++)
         {
-
             const p = GameManager.GameState.Players[index];
+
+            for (let index = 0; index < 3; index++)
+            {
+                p.Hand.push(GameManager.DrawCard());
+                p.Hand.push(GameManager.DrawCard());
+                p.Hand.push(GameManager.DrawCard());
+            }
+
             p.SetRace();
             var sc = await p.Race.Setup(this.Asker, usedStartingClearings);
             usedStartingClearings.push(sc);
         }
 
         GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.Game;
-    
+
 
 
     }
@@ -367,7 +343,7 @@ export class GameComponent
         });
     }
 
-    ShowPlayerRacePicker():boolean
+    ShowPlayerRacePicker(): boolean
     {
         return GameManager.GameState.GameWorkflowState === GameWorkflowStateEnum.PlayersPickingRaces;
     }

@@ -1,0 +1,122 @@
+/* You can add global styles to this file, and also import other style files */
+#board p {
+	margin: 0px;
+}
+.MarquiseDeCat {
+	background-color: orange;
+}
+.EyrieDynasties {
+	background-color: rgb(111 111 255);
+}
+.WoodlandAlliance {
+	background-color: green;
+}
+.Vagabond {
+	background-color: rgb(137 137 125);
+}
+.LizardCult {
+	background-color: yellow;
+}
+.RiverfolkCompany {
+	background-color: turquoise;
+}
+.UndergroundDuchy {
+	background-color: chocolate;
+}
+.CorvidConspiracy {
+	background-color: darkorchid;
+}
+.LordOfTheHundreds {
+	background-color: red;
+}
+.KeepersInIron {
+	background-color: rgb(103, 95, 95);
+	color: white;
+}
+
+#game {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.highlightedClearing.clearing {
+	border: 20px solid cyan;
+	animation: border-pulsate 2s infinite;
+}
+
+.mouseClearing div.clearingSuit {
+	background-color: orange;
+}
+
+.foxClearing div.clearingSuit {
+	background-color: red;
+}
+
+.rabbitClearing div.clearingSuit {
+	background-color: yellow;
+}
+
+.clearingHeaderWrapper div {
+	/* display: inline-block; */
+	border-bottom: 1px black solid;
+}
+
+.clearingHeaderWrapper div.clearingId {
+	float: left;
+	width: 15px;
+	text-align: center;
+}
+
+.clearingHeaderWrapper div.clearingSuit {
+	padding-left: 2px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.pieceGrouping {
+	padding-left: 2px;
+}
+
+@keyframes border-pulsate {
+	0% {
+		border-color: rgb(255, 55, 0);
+	}
+	50% {
+		border-color: rgba(22, 205, 89, 0.936);
+	}
+	100% {
+		border-color: rgb(43, 0, 255);
+	}
+}
+
+.playerBoard {
+	border: 1px solid black;
+    width: 500px;
+}
+
+.decreeRow div {
+	height: 15px;
+	width: 15px;
+	display: "inline";
+}
+.decreeRow td {
+	width: 25%;
+	background-color: white;
+
+    .Bird
+    {
+        background-color: blue;
+    }
+    .Rabbit
+    {
+        background-color: yellow;
+    }
+    .Mouse
+    {
+        background-color: orange;
+    }
+    .Fox
+    {
+        background-color: red;
+    }
+}

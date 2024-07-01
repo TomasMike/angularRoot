@@ -33,4 +33,27 @@ export class TArray<T> extends Array<T>
     {
         return this as T[];
     }
+
+    public Pull()
+    {
+        let a :number[];
+        a = [1,2,3];
+    }
+
+    public Randomize()
+    {
+        let currentIndex = this.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+      
+          // Pick a remaining element...
+          let randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+      
+          // And swap it with the current element.
+          [this[currentIndex], this[randomIndex]] = [
+            this[randomIndex], this[currentIndex]];
+        }
+    }
 }

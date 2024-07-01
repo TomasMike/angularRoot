@@ -3,6 +3,7 @@ import { CardSuitEnum } from "./Enums";
 export class Card
 {
     Suit: CardSuitEnum;
+    SuitText: string;
     Name:string;
 
     constructor(suit: CardSuitEnum,name:string)
@@ -10,6 +11,7 @@ export class Card
 
         this.Suit = suit;
         this.Name = name;
+        this.SuitText = CardSuitEnum[this.Suit];
     }
 }
 

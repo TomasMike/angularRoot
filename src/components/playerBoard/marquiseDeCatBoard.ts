@@ -11,20 +11,41 @@ import { retry } from "rxjs";
     selector: 'marquiseDeCatBoard',
     standalone: true,
     template: `<div class="MarquiseDeCat">
-        <div>WoodReserve:{{this.Race == null ? "" :this.Race.WoodReserve }}</div>
-        <div>WarriorsReserve:{{this.Race == null ? "" :this.Race.WarriorsReserve }}</div>
-        <div>RecruiterReserve:{{this.Race == null ? "" :this.Race.RecruiterReserve }}</div>
-        <div>WorkshopReserve:{{this.Race == null ? "" :this.Race.WorkshopReserve }}</div>
-        <div>SawmillReserve:{{this.Race == null ? "" :this.Race.SawmillReserve }}</div>
-        <div>
-            <button (click)="Battle()" disabled="this.CanBattle()" >Battle</button>
-            <button (click)="March()">March</button>
-            <button (click)="Recruit()">Recruit</button>
-            <button (click)="Build()">Build</button>
-            <button (click)="Overwork()">Overwork</button>
-            <button (click)="Battle()">Battle</button>
-        </div>
-
+        <table>
+            @if (this.Race !== undefined && this.Race !== null) 
+            {
+                <tr>
+                    <td>WoodReserve:</td>
+                    <td>{{this.Race.WoodReserve}}</td>
+                </tr>
+                <tr>
+                    <td>WarriorsReserve:</td>
+                    <td>{{this.Race.WarriorsReserve}}/25</td>
+                </tr>
+                <tr>
+                    <td>RecruiterReserve:</td>
+                    <td>{{this.Race.RecruiterReserve}}</td>
+                </tr>
+                <tr>
+                    <td>WorkshopReserve:</td>
+                    <td>{{this.Race.WorkshopReserve}}</td>
+                </tr>
+                <tr>
+                    <td>SawmillReserve:</td>
+                    <td>{{this.Race.SawmillReserve}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button (click)="Battle()" disabled="this.CanBattle()" >Battle</button>
+                        <button (click)="March()">March</button>
+                        <button (click)="Recruit()">Recruit</button>
+                        <button (click)="Build()">Build</button>
+                        <button (click)="Overwork()">Overwork</button>
+                        <button (click)="Battle()">Battle</button>
+                    </td>
+                </tr>
+            }
+         </table>
     </div>`,
     imports: [CommonModule]
 })
@@ -35,7 +56,7 @@ export class MarquiseDeCatBoardComponent
 
     get Race(): MarquiseDeCatRace | null
     {
-        return this.player === undefined ? null:this.player.Race as MarquiseDeCatRace;
+        return this.player === undefined ? null : this.player.Race as MarquiseDeCatRace;
     }
 
 
@@ -44,7 +65,7 @@ export class MarquiseDeCatBoardComponent
 
     constructor()
     {
-     
+
 
 
         //     MarquiseDeCat,

@@ -6,6 +6,8 @@ import { TArray } from "./types/TArray";
 import { ClearingModel } from "./models/ClearingModel";
 import { AskPlayerQuestionTypeEnum, ComponentTypeEnum, RaceEnum } from "./models/Enums";
 import { ComponentHelper } from "./helpers/ComponentHelper";
+import { Card } from "./models/Card";
+import { GeneralHelper } from "./helpers/GeneralHelper";
 
 @Injectable({
     providedIn: "root"
@@ -25,7 +27,7 @@ export class GameManager
     }
 
 
-    
+
     // static GetNextClearingClick: (cancelable?: boolean) => Promise<number>;
     // static GetNextClearingClickFiltered: (allowedIds: number[], cancelable?: boolean) => Promise<number>;
     // static SetMessageBoxText: (text: string) => void;
@@ -109,6 +111,23 @@ export class GameManager
         return this.GameState.Players.First(_ => _.Number === this.GameState.ActivePlayerId);
     }
 
+    static DrawCard(): Card
+    {
+        if (this.GameState.DrawDeck.length === 0)
+        {
+            while (this.GameState.DiscardPile.length > 0)
+            {
+                this.GameState.DrawDeck.push(this.GameState.DiscardPile.pop() as Card);
+            }
+
+            this.GameState.DrawDeck.Randomize();
+
+        }
+
+        return this.GameState.DrawDeck.pop() as Card;
+    }
+
+
     static GetAllowedMoveFromClearings()
     {
         // array.forEach(element => {
@@ -152,6 +171,8 @@ export class GameManager
 
         }
     }
+
+
 
 }
 

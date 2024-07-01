@@ -47,7 +47,7 @@ export class EyrieDynastiesRace implements IRace
         }]);
 
 
-    private Decree: {
+    Decree: {
         recruit: Card[],
         move: Card[],
         battle: Card[],
@@ -82,11 +82,15 @@ export class EyrieDynastiesRace implements IRace
 
     async Setup(asker: Asker, usedStartingClearings: number[]): Promise<number>
     {
+        let debug = true;
         console.log("eyrie setup");
         let startingClearing = -1;
 
         //7.3.2 Place Roost and Starting Warriors. Place 1 roost and 6 warriors in a corner clearing that is not the starting corner clearing of another player and, if possible, is diagonally opposite from a starting corner clearing. This is your starting clearing.
-        startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetAvailableStartingClearings(usedStartingClearings), "Select staring clearing");
+        if (debug)
+            startingClearing = ClearingHelper.GetAvailableStartingClearings(usedStartingClearings)[0];
+        else
+            startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetAvailableStartingClearings(usedStartingClearings), "Select staring clearing");
 
         GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Building_Roost, startingClearing);
 
@@ -95,12 +99,8 @@ export class EyrieDynastiesRace implements IRace
             GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, startingClearing);
         }
 
-
         // 7.3.3 Step 3: Choose Leader. Choose 1 of the 4 Eyrie leader cards and place it in your Leader Card slot. Gather the remaining leaders face up near you.
-        this.SetupNewLeader(asker);
-
-
-
+        this.SetupNewLeader(asker,debug);
 
         // 7.3.4 Step 4: Tuck Viziers. Tuck your 2 Loyal Vizier cards, showing their suit, into the Decree columns above your faction board as listed on your leader.
         for (let index = 0; index < 2; index++)
@@ -109,6 +109,15 @@ export class EyrieDynastiesRace implements IRace
         }
 
         // 7.3.5 Step 5: Fill Roosts Track. Place your 6 remaining roosts on your Roosts track from right to left.
+
+
+
+        if (debug)
+        {
+
+        }
+
+
         return startingClearing;
     }
 
@@ -133,11 +142,15 @@ export class EyrieDynastiesRace implements IRace
         }
     }
 
-    SetupNewLeader(asker: Asker)
+    SetupNewLeader(asker: Asker, debug: boolean = false)
     {
         var extraInfo = EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => `[${_.value}]-${_.text}`).join(',');
+        let leader: number;
 
-        let leader = Number(asker.AskPrompt(`Choose leader `, EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => _.value.toString()), false, extraInfo) as string);
+        if (debug)
+            leader = 0;
+        else
+            leader = Number(asker.AskPrompt(`Choose leader `, EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => _.value.toString()), false, extraInfo) as string);
 
         this.ActiveLeader = leader;
 
@@ -150,7 +163,7 @@ export class EyrieDynastiesRace implements IRace
     {
         //7.4.1 Emergency Orders. If you have no cards in your hand, draw one card.
         //7.4.2 Add to the Decree. You must add one or two cards to the Decree, but only one card added may be a bird card. You may play each card to any column, and each column can hold any number of cards.
-        
+
         //7.4.3 A New Roost. If you have no roosts on the map, place a roost and three warriors in a clearing with the fewest warriors where all those pieces can be placed. 
     }
     Day(): void
