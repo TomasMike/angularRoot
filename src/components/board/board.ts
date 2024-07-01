@@ -28,7 +28,7 @@ export class BoardComponent implements OnInit
 
     ngOnInit(): void
     {
-        console.log("test");
+        //console.log("test qwe");
         var data = GameManager.GetGameData();
         if (data != null) {
 

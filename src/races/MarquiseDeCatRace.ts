@@ -5,6 +5,7 @@ import { ClearingHelper } from "../classes/helpers/ClearingHelper";
 import { ComponentHelper } from "../classes/helpers/ComponentHelper";
 import { ComponentTypeEnum, RaceEnum } from "../classes/models/Enums";
 import { IRace } from "./IRace";
+import { Player } from "../classes/Player";
 
 
 export class MarquiseDeCatRace implements IRace
@@ -16,6 +17,7 @@ export class MarquiseDeCatRace implements IRace
     SawmillReserve: number;
     RecruiterReserve: number;
     WorkshopReserve: number;
+    Player: Player;
 
     // get WoodReserve() 
     // { 
@@ -23,20 +25,24 @@ export class MarquiseDeCatRace implements IRace
     // }
     // private set WoodReserve(n: number) { this._woodReserve = n; }
 
-    constructor()
+    constructor(player: Player)
     {
         this.WoodReserve = 8;
         this.WarriorsReserve = 25;
         this.SawmillReserve = 6;
         this.RecruiterReserve = 6;
         this.WorkshopReserve = 6;
+        this.Player = player;
 
     }
 
     StartingClearing?: number | undefined;
 
+    private a!: Asker;
+
     async Setup(asker: Asker, usedStartingClearings: number[]): Promise<number>
     {
+        this.a = asker;
         console.log("Marquise setup");
 
         //6.3.2 ask for starting cleraing - place keep there
@@ -72,7 +78,7 @@ export class MarquiseDeCatRace implements IRace
     }
     Morning(): void
     {
-        throw new Error("Method not implemented.");
+        
     }
     Day(): void
     {

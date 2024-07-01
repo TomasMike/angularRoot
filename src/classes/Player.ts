@@ -34,8 +34,8 @@ export class Player
     {
         switch (this.RaceEnum)
         {
-            case RaceEnum.MarquiseDeCat: this.Race = new MarquiseDeCatRace(); break;
-            case RaceEnum.EyrieDynasties: this.Race = new EyrieDynastiesRace(); break;
+            case RaceEnum.MarquiseDeCat: this.Race = new MarquiseDeCatRace(this); break;
+            case RaceEnum.EyrieDynasties: this.Race = new EyrieDynastiesRace(this); break;
             // case RaceEnum.WoodlandAlliance: this.Race = new WoodlandAllianceRace(); break;
             // case RaceEnum.Vagabond: this.Race = new VagabondRace(); break;
             // case RaceEnum.LizardCult: this.Race = new LizardCultRace(); break;

@@ -5,6 +5,7 @@ import { CardSuitEnum, ComponentTypeEnum, EnumHelper, EyrieActionEnum, RaceEnum 
 import { IRace } from "./IRace";
 import { Card, VizierCard } from "../classes/models/Card";
 import { TArray } from "../classes/types/TArray";
+import { Player } from "../classes/Player";
 
 
 export enum EyrieLeaderEnum
@@ -69,12 +70,17 @@ export class EyrieDynastiesRace implements IRace
     UnusedLeaders: EyrieLeaderEnum[];
     UsedLeaders: EyrieLeaderEnum[];
 
-    constructor()
+    Player:Player;
+
+    private a!: Asker;
+
+    constructor(player:Player)
     {
         this.WarriorsReserve = 20;
         this.RoostReserve = 7;
         this.UnusedLeaders = [];
         this.UsedLeaders = [];
+        this.Player = player;
     }
     StartingClearing?: number | undefined;
 
@@ -82,6 +88,7 @@ export class EyrieDynastiesRace implements IRace
 
     async Setup(asker: Asker, usedStartingClearings: number[]): Promise<number>
     {
+        this.a = asker;
         let debug = true;
         console.log("eyrie setup");
         let startingClearing = -1;
@@ -162,7 +169,11 @@ export class EyrieDynastiesRace implements IRace
     Morning(): void
     {
         //7.4.1 Emergency Orders. If you have no cards in your hand, draw one card.
+        if(this.Player.Hand.length === 0)
+            this.Player.Hand.push(GameManager.DrawCard());
+
         //7.4.2 Add to the Decree. You must add one or two cards to the Decree, but only one card added may be a bird card. You may play each card to any column, and each column can hold any number of cards.
+        this.a.AskPrompt("test promt");
 
         //7.4.3 A New Roost. If you have no roosts on the map, place a roost and three warriors in a clearing with the fewest warriors where all those pieces can be placed. 
     }

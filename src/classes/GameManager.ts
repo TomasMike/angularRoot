@@ -18,7 +18,6 @@ export class GameManager
 
     constructor()
     {
-        console.log("GameManager.constuctor");
     }
 
     static GetGameData(): GameState

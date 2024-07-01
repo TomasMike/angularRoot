@@ -1,19 +1,15 @@
-import { Component, EventEmitter, Input, inject } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BoardComponent } from '../board/board';
 import { GameManager } from '../../classes/GameManager';
 import { Asker } from "../../classes/Asker";
-import { GameState } from '../../classes/GameState';
 import { MatDialog, } from '@angular/material/dialog';
 import { MoveDialog } from '../dialog/moveDialog';
 import { Observable } from 'rxjs/internal/Observable';
-import { ComponentTypeEnum, GameWorkflowStateEnum, RaceEnum } from '../../classes/models/Enums';
-import { fromEvent, interval, mergeAll, race } from 'rxjs';
+import { GameWorkflowStateEnum, RaceEnum } from '../../classes/models/Enums';
+import { race } from 'rxjs';
 import { MatSelectModule } from "@angular/material/select";
 import { RacePickingSectionComponent } from '../startupPanel/racePickingSection'
-import { TArray } from '../../classes/types/TArray';
-import { Player } from '../../classes/Player';
-import { ClearingModel } from '../../classes/models/ClearingModel';
 import { ClearingHelper } from '../../classes/helpers/ClearingHelper';
 import { PlayerBoardComponent } from '../playerBoard/playerBoard';
 import { CommonModule } from '@angular/common';
@@ -40,7 +36,11 @@ import { CommonModule } from '@angular/common';
     {
         <racePickingSection (StartClicked)="Start()" />
     }
-
+    <div>
+        <ul>
+            <li *ngFor="let l of Log">{{l}}</li>
+        </ul>
+    </div>
     <div>
         <player-board  *ngFor="let p of this.GetGS().Players" [player]="p" ></player-board>
     </div>
@@ -54,13 +54,15 @@ export class GameComponent
     moveMode: MoveMode;
     CancelButtonClickHandler: EventEmitter<number>;
     Asker: Asker;
-
+    Log: string[];
 
     constructor(public dialog: MatDialog)
     {
         this.clearingClickHandler = new EventEmitter<number>();
         this.CancelButtonClickHandler = new EventEmitter<number>();
         this.moveMode = MoveMode.None;
+        this.Log = [];
+
         this.Asker = new Asker(
             this,
             (c?: boolean, question?: string) => 
@@ -72,7 +74,6 @@ export class GameComponent
                 return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
             });
 
-        console.log("GameComponent.constructor");
     }
 
     //#region PRIVATE
@@ -132,8 +133,6 @@ export class GameComponent
         GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.PlayerSetup;
         GameManager.GameState.Clearings = ClearingHelper.InitClearings();
 
-
-
         //setup players
         let usedStartingClearings: number[] = [];
         console.log("setup start");
@@ -155,6 +154,22 @@ export class GameComponent
         }
 
         GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.Game;
+
+        for (let index = 0; true; index++)
+        {
+            this.Log.push(`Round ${index} start.`);
+
+            for (let index = 1; index < GameManager.GameState.Players.length; index++)
+            {
+                
+                var p = GameManager.GameState.Players[index];
+                this.Log.push(`${RaceEnum[p.RaceEnum]} start.`);
+
+                p.Race.Morning();
+
+
+            }
+        }
 
 
 

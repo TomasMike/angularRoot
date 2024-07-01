@@ -4,6 +4,7 @@ export class Asker
     that: object;
     AskOneClearing: (cancelable?: boolean, question?: string) => Promise<number>;
     AskOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>;
+
     constructor(
         that: object,
         askOneClearing: (cancelable?: boolean, question?: string) => Promise<number>,
@@ -14,16 +15,14 @@ export class Asker
         this.AskOneClearingFiltered = askOneClearingFiltered;
     }
 
-
-    
-/**
- * 
- * @param question 
- * @param validAnswers 
- * @param cancelable true if not defined
- * @param extraInfo 
- * @returns 
- */
+    /**
+     * 
+     * @param question 
+     * @param validAnswers 
+     * @param cancelable true if not defined
+     * @param extraInfo 
+     * @returns 
+     */
     AskPrompt(question: string, validAnswers?: string[], cancelable?: boolean, extraInfo?: string)
     {
         let answeredWrongly = false;
@@ -35,11 +34,10 @@ export class Asker
 
         while (true)
         {
-
             let message = answeredWrongly ? "Wrong!" : "";
-            message +=  `\n${question}`;
-            if(extraInfo !== null)
-                message+= `\n${extraInfo}`;
+            message += `\n${question}`;
+            if (extraInfo !== null)
+                message += `\n${extraInfo}`;
 
             let a = prompt(message);
 
