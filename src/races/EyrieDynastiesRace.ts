@@ -166,14 +166,15 @@ export class EyrieDynastiesRace implements IRace
             .map(_ => _.value);
     }
 
-    Morning(): void
+    async Morning(): Promise<void>
     {
         //7.4.1 Emergency Orders. If you have no cards in your hand, draw one card.
         if(this.Player.Hand.length === 0)
             this.Player.Hand.push(GameManager.DrawCard());
 
         //7.4.2 Add to the Decree. You must add one or two cards to the Decree, but only one card added may be a bird card. You may play each card to any column, and each column can hold any number of cards.
-        this.a.AskPrompt("test promt");
+        var p = this.a.AskAddDecree();
+        await p;
 
         //7.4.3 A New Roost. If you have no roosts on the map, place a roost and three warriors in a clearing with the fewest warriors where all those pieces can be placed. 
     }

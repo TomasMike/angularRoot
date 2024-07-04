@@ -4,15 +4,17 @@ export class Asker
     that: object;
     AskOneClearing: (cancelable?: boolean, question?: string) => Promise<number>;
     AskOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>;
-
+    AskAddDecree:()=>Promise<string>;
     constructor(
         that: object,
         askOneClearing: (cancelable?: boolean, question?: string) => Promise<number>,
-        askOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>)
+        askOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>,
+        askAddDecree:()=>Promise<string>)
     {
         this.that = that;
         this.AskOneClearing = askOneClearing;
         this.AskOneClearingFiltered = askOneClearingFiltered;
+        this.AskAddDecree = askAddDecree;
     }
 
     /**

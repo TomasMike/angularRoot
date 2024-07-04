@@ -8,7 +8,7 @@ export interface IRace
     StartingClearing?: number;
 
     Setup(asker: Asker, availableStartingClearings: number[]): Promise<number>;
-    Morning(): void;
+    Morning(): Promise<void>;
     Day(): void;
     Evening(): void;
     HandleComponentSpawn(type: ComponentTypeEnum):boolean;

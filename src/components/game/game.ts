@@ -4,7 +4,7 @@ import { BoardComponent } from '../board/board';
 import { GameManager } from '../../classes/GameManager';
 import { Asker } from "../../classes/Asker";
 import { MatDialog, } from '@angular/material/dialog';
-import { MoveDialog } from '../dialog/moveDialog';
+import { MoveAmountDialog } from '../dialog/moveAmountDialog';
 import { Observable } from 'rxjs/internal/Observable';
 import { GameWorkflowStateEnum, RaceEnum } from '../../classes/models/Enums';
 import { race } from 'rxjs';
@@ -13,6 +13,7 @@ import { RacePickingSectionComponent } from '../startupPanel/racePickingSection'
 import { ClearingHelper } from '../../classes/helpers/ClearingHelper';
 import { PlayerBoardComponent } from '../playerBoard/playerBoard';
 import { CommonModule } from '@angular/common';
+import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
 @Component({
     selector: 'game',
     standalone: true,
@@ -72,12 +73,11 @@ export class GameComponent
             (allowedIds: number[], question?: string, c?: boolean) => 
             {
                 return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
-            });
-
+            },
+            () => { return this.AskerAddDecree(); });
     }
 
     //#region PRIVATE
-
 
     GetGS()
     {
@@ -105,6 +105,7 @@ export class GameComponent
     }
 
     //#endregion
+    //#region DEBUG METHODS
 
     SetMessageText(text: string): void
     {
@@ -117,11 +118,22 @@ export class GameComponent
         //var q = this.Asker.AskPrompt("kolko?",["1","2"],false);
         //console.log(q);
     }
+    Reset() { }
+    async Execute(command: string)
+    {
+        // var q = await this.GetNextClearingClickAsync();
+        // console.log(q);
+        // var id = Number(command);
+        // var r = GameManager.GetClearingById(id).GetWhoRulesClearing();
+
+        // console.log(`Clearing[${id}] is ruled by [${r === null ? "noone" : RaceEnum[r]}]`)
+
+        // GameManager.ExecCommand(command);
+    }
+    //#endregion
 
 
-
-
-
+    //#region GAME LOOP
     /**
      * Main start of game
      * @param players 
@@ -159,13 +171,14 @@ export class GameComponent
         {
             this.Log.push(`Round ${index} start.`);
 
-            for (let index = 1; index < GameManager.GameState.Players.length; index++)
+            for (let index = 0; index < GameManager.GameState.Players.length; index++)
             {
-                
+
                 var p = GameManager.GameState.Players[index];
                 this.Log.push(`${RaceEnum[p.RaceEnum]} start.`);
 
-                p.Race.Morning();
+                var pr =  p.Race.Morning();
+                await pr;
 
 
             }
@@ -174,33 +187,29 @@ export class GameComponent
 
 
     }
-
-    Reset() { }
-
+    //#endregion
 
 
-    async Execute(command: string)
-    {
-        // var q = await this.GetNextClearingClickAsync();
-        // console.log(q);
-        // var id = Number(command);
-        // var r = GameManager.GetClearingById(id).GetWhoRulesClearing();
 
-        // console.log(`Clearing[${id}] is ruled by [${r === null ? "noone" : RaceEnum[r]}]`)
 
-        // GameManager.ExecCommand(command);
-    }
 
-    ResetMoveMode(wasCanceled: boolean = true)
-    {
-        this.messageText = "";
-        this.moveMode = MoveMode.None;
-        if (wasCanceled) console.log("move cancelled");
-    };
+
+
+
 
 
     async Move()
     {
+        let mt = this.messageText;
+        let mm = this.moveMode;
+        let ResetMoveMode = function (wasCanceled: boolean = true)
+        {
+            mt = "";
+            mm = MoveMode.None;
+            if (wasCanceled) console.log("move cancelled");
+        }
+
+
         console.info("in move");
         var moveFrom: number = -1;
         var moveTo: number = -1;
@@ -212,7 +221,7 @@ export class GameComponent
 
         if (moveFrom === -1)
         {
-            this.ResetMoveMode();
+            ResetMoveMode();
             return;//cancelled action
         }
 
@@ -223,13 +232,13 @@ export class GameComponent
 
         if (moveTo === -1)
         {
-            this.ResetMoveMode();
+            ResetMoveMode();
             return;//cancelled action
         }
 
         console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
 
-        let dialogRef = this.dialog.open(MoveDialog, {
+        let dialogRef = this.dialog.open(MoveAmountDialog, {
             data: GameManager.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
         });
 
@@ -247,12 +256,12 @@ export class GameComponent
 
         if (qq === -1)
         {
-            this.ResetMoveMode();
+            ResetMoveMode();
             return;
         }
 
         GameManager.Move(moveFrom, moveTo, qq);
-        this.ResetMoveMode(false);
+        ResetMoveMode(false);
     }
 
     public async GetNextClearingClickAsync(cancelable?: boolean, question?: string)
@@ -276,6 +285,35 @@ export class GameComponent
 
         return retVal;
     }
+
+    //#region ASKER METHODS
+
+    async AskerMoveAmount(moveFrom: number)
+    {
+        let dialogRef = this.dialog.open(MoveAmountDialog, {
+            data: GameManager.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
+        });
+    }
+
+    async AskerAddDecree()
+    {
+
+
+        let dialogRef = this.dialog.open(AddDecreeDialog, {
+            data: { player: GameManager.GetActivePlayer() }
+        });
+
+        let retVal: string = "";
+        var p = this.getNextValueFromSub(dialogRef.afterClosed()).then(i =>
+        {
+            retVal = i;
+        });
+
+        await p;
+        return retVal;
+    }
+    //#endregion
+
 
     async GetNextClearingClickFilteredAsync(allowedIds: number[], question?: string, cancelable?: boolean)
     {

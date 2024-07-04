@@ -29,13 +29,13 @@ import { MatInputModule } from '@angular/material/input';
         MatDialogClose,
     ],
 })
-export class MoveDialog
+export class MoveAmountDialog
 {
     val: number = 1;
     moveMaxAmount!: number;
 
     constructor(
-        public dialogRef: MatDialogRef<MoveDialog>,
+        public dialogRef: MatDialogRef<MoveAmountDialog>,
         @Inject(MAT_DIALOG_DATA) public data: number,
     )
     {

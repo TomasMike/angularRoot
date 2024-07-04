@@ -76,7 +76,7 @@ export class MarquiseDeCatRace implements IRace
         return startingClearing;
 
     }
-    Morning(): void
+    async Morning(): Promise<void>
     {
         
     }

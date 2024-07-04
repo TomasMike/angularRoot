@@ -27,10 +27,10 @@ export class GameState
 
         for (let index = 0; index < 15; index++)
         {
-            this.DrawDeck.push(new Card(CardSuitEnum.Bird, `Placeholder Card ${(index * 4) + 1}`));
-            this.DrawDeck.push(new Card(CardSuitEnum.Fox, `Placeholder Card ${(index * 4) + 2}`));
-            this.DrawDeck.push(new Card(CardSuitEnum.Mouse, `Placeholder Card ${(index * 4) + 3}`));
-            this.DrawDeck.push(new Card(CardSuitEnum.Rabbit, `Placeholder Card ${(index * 4) + 4}`));
+            this.DrawDeck.push(new Card(CardSuitEnum.Bird, `Placeholder Card ${(index * 4) + 1}`,1));
+            this.DrawDeck.push(new Card(CardSuitEnum.Fox, `Placeholder Card ${(index * 4) + 2}`,1));
+            this.DrawDeck.push(new Card(CardSuitEnum.Mouse, `Placeholder Card ${(index * 4) + 3}`,1));
+            this.DrawDeck.push(new Card(CardSuitEnum.Rabbit, `Placeholder Card ${(index * 4) + 4}`,1));
         }
 
         this.DrawDeck.Randomize();
