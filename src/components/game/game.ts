@@ -17,7 +17,7 @@ import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
 @Component({
     selector: 'game',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, BoardComponent, MatSelectModule, RacePickingSectionComponent, PlayerBoardComponent],
+    imports: [CommonModule, BoardComponent, MatSelectModule, RacePickingSectionComponent, PlayerBoardComponent],
     //templateUrl: './game.html',
     template: `
     <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
@@ -41,6 +41,9 @@ import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
         <ul>
             <li *ngFor="let l of Log">{{l}}</li>
         </ul>
+    </div>
+    <div>
+        <p>Draw Deck:{{this.GetGS().DrawDeck.length-1}}</p>
     </div>
     <div>
         <player-board  *ngFor="let p of this.GetGS().Players" [player]="p" ></player-board>
@@ -74,8 +77,66 @@ export class GameComponent
             {
                 return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
             },
-            () => { return this.AskerAddDecree(); });
+            (canCancel: boolean) => { return this.AskerAddDecree(canCancel); });
     }
+
+    //#region GAME LOOP
+    /**
+     * Main start of game
+     * @param players 
+     */
+    async Start()
+    {
+        console.log("GameComponent.Start");
+
+        GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.PlayerSetup;
+        GameManager.GameState.Clearings = ClearingHelper.InitClearings();
+
+        //setup players
+        let usedStartingClearings: number[] = [];
+        console.log("setup start");
+
+        for (let index = 0; index < GameManager.GameState.Players.length; index++)
+        {
+            const p = GameManager.GameState.Players[index];
+
+            for (let index = 0; index < 3; index++)
+            {
+                p.Hand.Draw(GameManager.DrawCard());
+                p.Hand.Draw(GameManager.DrawCard());
+                p.Hand.Draw(GameManager.DrawCard());
+            }
+
+            p.SetRace();
+            var sc = await p.Race.Setup(this.Asker, usedStartingClearings);
+            usedStartingClearings.push(sc);
+        }
+
+        GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.Game;
+
+        for (let index = 0; true; index++)
+        {
+            this.Log.push(`Round ${index} start.`);
+
+            for (let index = 0; index < GameManager.GameState.Players.length; index++)
+            {
+
+                var p = GameManager.GameState.Players[index];
+                this.Log.push(`${RaceEnum[p.RaceEnum]} start.`);
+
+                await p.Race.Morning();
+                await p.Race.Day();
+                await p.Race.Evening();
+
+
+            }
+        }
+
+
+
+    }
+    //#endregion
+
 
     //#region PRIVATE
 
@@ -133,61 +194,7 @@ export class GameComponent
     //#endregion
 
 
-    //#region GAME LOOP
-    /**
-     * Main start of game
-     * @param players 
-     */
-    async Start()
-    {
-        console.log("GameComponent.Start");
 
-        GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.PlayerSetup;
-        GameManager.GameState.Clearings = ClearingHelper.InitClearings();
-
-        //setup players
-        let usedStartingClearings: number[] = [];
-        console.log("setup start");
-
-        for (let index = 0; index < GameManager.GameState.Players.length; index++)
-        {
-            const p = GameManager.GameState.Players[index];
-
-            for (let index = 0; index < 3; index++)
-            {
-                p.Hand.push(GameManager.DrawCard());
-                p.Hand.push(GameManager.DrawCard());
-                p.Hand.push(GameManager.DrawCard());
-            }
-
-            p.SetRace();
-            var sc = await p.Race.Setup(this.Asker, usedStartingClearings);
-            usedStartingClearings.push(sc);
-        }
-
-        GameManager.GameState.GameWorkflowState = GameWorkflowStateEnum.Game;
-
-        for (let index = 0; true; index++)
-        {
-            this.Log.push(`Round ${index} start.`);
-
-            for (let index = 0; index < GameManager.GameState.Players.length; index++)
-            {
-
-                var p = GameManager.GameState.Players[index];
-                this.Log.push(`${RaceEnum[p.RaceEnum]} start.`);
-
-                var pr =  p.Race.Morning();
-                await pr;
-
-
-            }
-        }
-
-
-
-    }
-    //#endregion
 
 
 
@@ -239,7 +246,7 @@ export class GameComponent
         console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
 
         let dialogRef = this.dialog.open(MoveAmountDialog, {
-            data: GameManager.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
+            data: ClearingHelper.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
         });
 
         var qq: number = -1;
@@ -291,16 +298,14 @@ export class GameComponent
     async AskerMoveAmount(moveFrom: number)
     {
         let dialogRef = this.dialog.open(MoveAmountDialog, {
-            data: GameManager.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
+            data: ClearingHelper.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
         });
     }
 
-    async AskerAddDecree()
+    async AskerAddDecree(canCancel: boolean)
     {
-
-
         let dialogRef = this.dialog.open(AddDecreeDialog, {
-            data: { player: GameManager.GetActivePlayer() }
+            data: { player: GameManager.GetActivePlayer(), cancelable: canCancel }
         });
 
         let retVal: string = "";
@@ -376,7 +381,7 @@ export class GameComponent
 
             allowedIds.forEach(i =>
             {
-                GameManager.GetClearingById(i).Highlighted = false;
+                ClearingHelper.GetClearingById(i).Highlighted = false;
             });
 
             callback(value);

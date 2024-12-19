@@ -3,28 +3,57 @@ import { ComponentHelper } from "../helpers/ComponentHelper";
 import { ExtensionFaker } from "../helpers/ExtensionFaker";
 import { Dictionary } from "../types/Dictionary";
 import { TArray } from "../types/TArray";
-import { ClearingSuitEnum, ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "./Enums";
+import { Card } from "./Card";
+import { CardSuitEnum, ClearingSuitEnum, ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "./Enums";
 import { PieceGroupingModel } from "./PieceGroupingModel";
 
 export class ClearingModel
 {
     Id: number;
-    Suit: string;
+    Suit: ClearingSuitEnum;
     Left: number;
     Top: number;
     Pieces: TArray<PieceGroupingModel>;
     Highlighted: boolean;
-
+    SuitText: string;
 
     constructor(id: number, color: ClearingSuitEnum, left: number, top: number)
     {
         this.Id = id;
-        this.Suit = ClearingSuitEnum[color];
+        this.Suit = color;
+        this.SuitText = ClearingSuitEnum[color];
         this.Left = left;
         this.Top = top;
         this.Pieces = new TArray;
         this.Highlighted = false;
     }
+
+    GetCardSuitOfClearing():CardSuitEnum
+    {
+        switch(this.Suit)
+        {
+            case ClearingSuitEnum.Fox: return CardSuitEnum.Fox;
+            case ClearingSuitEnum.Mouse: return CardSuitEnum.Mouse;
+            case ClearingSuitEnum.Rabbit: return CardSuitEnum.Rabbit;
+        }
+    }
+
+    IsCardMatchingClearing(card: Card): boolean
+    {
+        return card.Suit === CardSuitEnum.Bird
+            || (card.Suit === CardSuitEnum.Fox && this.Suit === ClearingSuitEnum.Fox)
+            || (card.Suit === CardSuitEnum.Mouse && this.Suit === ClearingSuitEnum.Mouse)
+            || (card.Suit === CardSuitEnum.Rabbit && this.Suit === ClearingSuitEnum.Rabbit)
+    }
+
+    IsCardSuitMatchingClearing(suit: CardSuitEnum): boolean
+    {
+        return suit === CardSuitEnum.Bird
+            || (suit === CardSuitEnum.Fox && this.Suit === ClearingSuitEnum.Fox)
+            || (suit === CardSuitEnum.Mouse && this.Suit === ClearingSuitEnum.Mouse)
+            || (suit === CardSuitEnum.Rabbit && this.Suit === ClearingSuitEnum.Rabbit)
+    }
+
 
     AddPieces(type: ComponentTypeEnum, amount: number = 1): void
     {
@@ -113,7 +142,7 @@ export class ClearingModel
     }
 
 
-    CanRaceFightHere(r:RaceEnum):boolean
+    CanRaceFightHere(r: RaceEnum): boolean
     {
         return this.Pieces.some(p => p.GetComponentRace() != r);
 

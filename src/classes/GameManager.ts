@@ -59,7 +59,7 @@ export class GameManager
 
     static SpawnPiece(type: ComponentTypeEnum, clearingId: number): void
     {
-        var c = this.GetClearingById(clearingId);
+        var c = ClearingHelper.GetClearingById(clearingId);
 
         var r = this.GameState.Players.First(_ => _.RaceEnum === ComponentHelper.GetRaceFromComponentTypeEnum(type)).Race;
 
@@ -82,8 +82,8 @@ export class GameManager
         var activePlayerRace = GameManager.GetActivePlayer().RaceEnum;
         var wType = ComponentHelper.GetWarriorComponentTypeByRace(activePlayerRace);
 
-        this.GetClearingById(idFrom).RemovePieces(wType, amount);
-        this.GetClearingById(idTo).AddPieces(wType, amount);
+        ClearingHelper.GetClearingById(idFrom).RemovePieces(wType, amount);
+        ClearingHelper.GetClearingById(idTo).AddPieces(wType, amount);
         // var toPieces = this.GetClearingById(idTo).Pieces;
 
 
@@ -95,15 +95,7 @@ export class GameManager
 
     }
 
-    static GetClearingById(id: number): ClearingModel
-    {
-        var c = this.GameState.Clearings.find(_ => _.Id === id);
-
-        if (c === undefined)
-            throw new Error(`Clearing with id=[${id}] doesnt exist.`);
-
-        return c;
-    }
+ 
 
     static GetActivePlayer(): Player
     {

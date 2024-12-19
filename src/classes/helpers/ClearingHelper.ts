@@ -1,5 +1,7 @@
+import { GameManager } from "../GameManager";
 import { ClearingModel } from "../models/ClearingModel";
 import { ClearingSuitEnum, RaceEnum } from "../models/Enums";
+import { TArray } from "../types/TArray";
 
 export class ClearingHelper
 {
@@ -16,9 +18,9 @@ export class ClearingHelper
         return [1, 2, 3, 4];
     }
 
-    static InitClearings(): ClearingModel[]
+    static InitClearings(): TArray<ClearingModel>
     {
-        return [
+        return new TArray([
             new ClearingModel(1, ClearingSuitEnum.Fox, 40, 40),
             new ClearingModel(2, ClearingSuitEnum.Mouse, 420, 90),
             new ClearingModel(3, ClearingSuitEnum.Rabbit, 390, 390),
@@ -31,7 +33,7 @@ export class ClearingHelper
             new ClearingModel(10, ClearingSuitEnum.Rabbit, 200, 110),
             new ClearingModel(11, ClearingSuitEnum.Mouse, 300, 200),
             new ClearingModel(12, ClearingSuitEnum.Fox, 130, 230),
-        ];
+        ]);
     }
 
     static GetNeighbourClearings(clearingId: number)
@@ -47,6 +49,16 @@ export class ClearingHelper
         });
 
         return r;
+    }
+
+    static GetClearingById(id: number): ClearingModel
+    {
+        var c = GameManager.GameState.Clearings.find(_ => _.Id === id);
+
+        if (c === undefined)
+            throw new Error(`Clearing with id=[${id}] doesnt exist.`);
+
+        return c;
     }
 
     private static Paths: { a: number, b: number }[] =

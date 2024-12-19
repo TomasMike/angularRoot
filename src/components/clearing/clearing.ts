@@ -10,7 +10,7 @@ import { RaceEnum } from "../../classes/models/Enums";
     standalone: true,
     selector: "clearing",
     template: `
-    <div id="{{Clearing.Id}}" class="{{GetHightlightClass()}} clearing {{Clearing.Suit.toLocaleLowerCase()}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
+    <div id="{{Clearing.Id}}" class="{{GetHightlightClass()}} clearing {{Clearing.SuitText.toLocaleLowerCase()}}Clearing" style="top:{{Clearing.Top}}px;left:{{Clearing.Left}}px;" (click)="onClickHandler()">
         <div class="clearingHeaderWrapper">
             <div class="clearingId {{GetRulingClass()}}">{{Clearing.Id}}</div>
             <div class="clearingSuit">{{Clearing.Suit}}</div>

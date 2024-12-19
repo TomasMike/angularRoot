@@ -1,3 +1,4 @@
+
 export class TArray<T> extends Array<T>
 {
     constructor(a:T[]=[])
@@ -36,9 +37,12 @@ export class TArray<T> extends Array<T>
 
     public Pull()
     {
+
         let a :number[];
         a = [1,2,3];
     }
+
+    
 
     public Randomize()
     {
@@ -56,4 +60,6 @@ export class TArray<T> extends Array<T>
             this[randomIndex], this[currentIndex]];
         }
     }
+
+
 }

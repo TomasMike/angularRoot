@@ -28,9 +28,14 @@ import { Player } from "../../classes/Player";
 export class PlayerPickerStripComponent
 {
     @Input() player!: Player;
+    races: { value: RaceEnum, text: string }[] = [];
+    constructor()
+    {
+        this.races  = EnumHelper.GetEnumArray(RaceEnum);
+    }
 
     //selectedValue: string = "";
-    races: { value: RaceEnum, text: string }[] = EnumHelper.GetEnumArray(RaceEnum);
+    
 
 
 

@@ -1,3 +1,4 @@
+import { Card } from "../models/Card";
 import { TArray } from "../types/TArray";
 
 export class GeneralHelper
@@ -7,6 +8,9 @@ export class GeneralHelper
     {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
+
+   
+
 
     
 }

@@ -77,7 +77,8 @@ export enum ComponentTypeEnum
 
 }
 
-export enum AskPlayerQuestionTypeEnum{
+export enum AskPlayerQuestionTypeEnum
+{
     PickOneClearing,
     PickOneClearingFiltered,
     SelectNumber,
@@ -92,7 +93,7 @@ export enum GameWorkflowStateEnum
 
 export enum CardSuitEnum
 {
-    Rabbit,Fox,Mouse,Bird
+    Rabbit, Fox, Mouse, Bird
 }
 
 export enum EyrieActionEnum
@@ -103,20 +104,28 @@ export enum EyrieActionEnum
     Build
 }
 
-export class EnumHelper {
-    public static GetEnumArray<T extends {}>(e:T):{value:number,text:string}[]
+export enum CardTypeEnum
+{
+    Standard,//standard cards that all players play with
+    EyrieVizier,
+}
+
+export class EnumHelper
+{
+    public static GetEnumArray<T extends {}>(e: T): { value: number, text: string }[]
     {
         var k = Object.keys(e);
-        if(k.length % 2 != 0)
+        if (k.length % 2 != 0)
             throw new Error();
 
-        var a = k.length /2;
+        var a = k.length / 2;
 
-        var retVal : {value:number,text:string}[] = [];
+        var retVal: { value: number, text: string }[] = [];
 
-        for (let index = a; index < k.length; index++) {
-            retVal.push({value:index-a,text:k[index]});
-            
+        for (let index = a; index < k.length; index++)
+        {
+            retVal.push({ value: index - a, text: k[index] });
+
         }
         return retVal;
     }

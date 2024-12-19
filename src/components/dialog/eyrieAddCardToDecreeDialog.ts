@@ -25,14 +25,15 @@ import { MatDividerModule } from '@angular/material/divider';
         <mat-divider></mat-divider>
         <h3 >Pick card to put in the column:</h3>
         <mat-radio-group aria-label="Select card" [(ngModel)]="selectedCardId"  >
-            <mat-radio-button value="{{c.Id}}"  *ngFor="let c of this.player.Hand" >{{c.Name}}</mat-radio-button>
+            <mat-radio-button value="{{c.Id}}"  *ngFor="let c of this.player.Hand.GetCards();let i = index" >{{i+1}}. {{c.Name}},{{c.Id}}</mat-radio-button>
         </mat-radio-group>
         <!-- <button [disabled]="this.val <= 1" (click)="change(-1)">-</button>{{this.val}}<button [disabled]="this.val >= this.moveMaxAmount" (click)="change(1)">+</button> -->
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="{{this.selectedAction}};{{}}">OK</button>
-    <!-- <button mat-button [mat-dialog-close]="val">Ok</button> -->
+    <!-- <button mat-button [mat-dialog-close]="{{this.selectedAction}};{{}}">OK</button> -->
+    <button mat-button [disabled]="!this.cancelable" [mat-dialog-close]="-1">Cancel</button>
+    <button mat-button [disabled]="selectedAction == null && selectedCardId == null" [mat-dialog-close]="selectedAction + ';' + selectedCardId">Ok</button>
 </mat-dialog-actions>
     `,
     standalone: true,
@@ -52,16 +53,17 @@ import { MatDividerModule } from '@angular/material/divider';
 export class AddDecreeDialog
 {
     player!: Player;
-
+    cancelable:boolean;
     selectedAction!:number;
     selectedCardId!:number;
 
     constructor(
         public dialogRef: MatDialogRef<AddDecreeDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: { player: Player },
+        @Inject(MAT_DIALOG_DATA) public data: { player: Player,cancelable:boolean },
     )
     {
         this.player = data.player;
+        this.cancelable = data.cancelable ?? false;
     }
 
 }

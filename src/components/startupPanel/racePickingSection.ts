@@ -33,8 +33,8 @@ export class RacePickingSectionComponent
     constructor()
     {
         //if(this.qwe == null) throw new Error();
-        this.players = new TArray<Player>();
-        this.players.push(new Player(1, RaceEnum.MarquiseDeCat));
+        this.players = GameManager.GameState.Players;
+        //this.players.push(new Player(1, RaceEnum.MarquiseDeCat));
     }
 
     AddPlayer()
@@ -53,7 +53,7 @@ export class RacePickingSectionComponent
     }
     Start()
     {
-        GameManager.GameState.Players = this.players;
+        //GameManager.GameState.Players = this.players;
         this.StartClicked.emit();
     }
 }

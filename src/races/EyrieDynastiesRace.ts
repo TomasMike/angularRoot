@@ -1,11 +1,12 @@
 import { GameManager } from "../classes/GameManager";
 import { Asker } from "../classes/Asker";
 import { ClearingHelper } from "../classes/helpers/ClearingHelper";
-import { CardSuitEnum, ComponentTypeEnum, EnumHelper, EyrieActionEnum, RaceEnum } from "../classes/models/Enums";
+import { CardSuitEnum, CardTypeEnum, ComponentTypeEnum, EnumHelper, EyrieActionEnum, RaceEnum } from "../classes/models/Enums";
 import { IRace } from "./IRace";
 import { Card, VizierCard } from "../classes/models/Card";
 import { TArray } from "../classes/types/TArray";
 import { Player } from "../classes/Player";
+import { GeneralHelper } from "../classes/helpers/GeneralHelper";
 
 
 export enum EyrieLeaderEnum
@@ -69,18 +70,21 @@ export class EyrieDynastiesRace implements IRace
     ActiveLeader!: EyrieLeaderEnum;
     UnusedLeaders: EyrieLeaderEnum[];
     UsedLeaders: EyrieLeaderEnum[];
+    CardsInDecree: Card[]
 
-    Player:Player;
+    Player: Player;
 
     private a!: Asker;
 
-    constructor(player:Player)
+    constructor(player: Player)
     {
         this.WarriorsReserve = 20;
         this.RoostReserve = 7;
         this.UnusedLeaders = [];
         this.UsedLeaders = [];
         this.Player = player;
+        this.CardsInDecree = [];
+
     }
     StartingClearing?: number | undefined;
 
@@ -90,7 +94,7 @@ export class EyrieDynastiesRace implements IRace
     {
         this.a = asker;
         let debug = true;
-        console.log("eyrie setup");
+        console.log("eyrie setup start");
         let startingClearing = -1;
 
         //7.3.2 Place Roost and Starting Warriors. Place 1 roost and 6 warriors in a corner clearing that is not the starting corner clearing of another player and, if possible, is diagonally opposite from a starting corner clearing. This is your starting clearing.
@@ -107,29 +111,97 @@ export class EyrieDynastiesRace implements IRace
         }
 
         // 7.3.3 Step 3: Choose Leader. Choose 1 of the 4 Eyrie leader cards and place it in your Leader Card slot. Gather the remaining leaders face up near you.
-        this.SetupNewLeader(asker,debug);
-
         // 7.3.4 Step 4: Tuck Viziers. Tuck your 2 Loyal Vizier cards, showing their suit, into the Decree columns above your faction board as listed on your leader.
-        for (let index = 0; index < 2; index++)
-        {
-            this.AddCardToDecree(new VizierCard(CardSuitEnum.Bird, "Vizier Card"), this.Leaders.First(l => l.name == this.ActiveLeader).vizierActions[index]);
-        }
+        this.SetupNewLeader(asker, debug);
 
         // 7.3.5 Step 5: Fill Roosts Track. Place your 6 remaining roosts on your Roosts track from right to left.
 
-
-
-        if (debug)
-        {
-
-        }
-
-
+        console.log("eyrie setup end");
         return startingClearing;
+    }
+
+    async Morning(): Promise<void>
+    {
+        console.log("eyrie morning start");
+
+        //7.4.1 Emergency Orders. If you have no cards in your hand, draw one card.
+        if (this.Player.Hand.IsEmpty())
+            this.Player.Hand.Draw(GameManager.DrawCard());
+
+        //7.4.2 Add to the Decree. You must add one or two cards to the Decree, but only one card added may be a bird card. You may play each card to any column, and each column can hold any number of cards.
+        await this.PickCardToAddToDecree(false);
+        await this.PickCardToAddToDecree(true);
+
+        //7.4.3 A New Roost. If you have no roosts on the map, place a roost and three warriors in a clearing with the fewest warriors where all those pieces can be placed. 
+
+        console.log("eyrie morning end");
+    }
+    async Day(): Promise<void>
+    {
+        console.log("eyrie Day start");
+        //TODO CRAFTING
+
+        //decrees recruit
+        var requiredSuitsToRecruit = this.Decree.recruit.map(_ => _.Suit);
+        {
+            if (this.WarriorsReserve === 0)
+            {
+                //turmoil
+            }
+
+            var possibleClearingsToRecruit = GameManager.GameState.Clearings
+                .Where(c => requiredSuitsToRecruit.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
+                .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Building_Roost))
+
+            if (possibleClearingsToRecruit.length === 0)
+            {
+                //turmoil
+            }
+
+            var p = await this.a.AskOneClearingFiltered(possibleClearingsToRecruit.map(c => c.Id));
+
+            GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
+
+            if (this.ActiveLeader === EyrieLeaderEnum.Charismatic)
+            {
+                if (this.WarriorsReserve === 0)
+                {
+                    //turmoil
+                }
+
+                GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
+            }
+
+            var usedSuit = ClearingHelper.GetClearingById(p).GetCardSuitOfClearing();
+
+            // non bird suit was used
+            //if(requiredSuitsToRecruit.some(s => s === usedSuit))
+
+
+        } while (requiredSuitsToRecruit.length > 0)
+
+        //var requiredSuitsToMove = this.Decree.move.map(_ => _.Suit);
+
+
+
+
+          //  this.a.AskOneClearing
+
+        console.log("eyrie Day end");
+    }
+    Evening(): void
+    {
+        console.log("eyrie Evening start");
+        console.log("eyrie Evening end");
     }
 
     AddCardToDecree(card: Card, action: EyrieActionEnum)
     {
+        if (card.Type === CardTypeEnum.Standard)
+            this.Player.Hand.RemoveCard(card.Id);
+
+
+
         switch (action)
         {
             case EyrieActionEnum.Recruit:
@@ -147,6 +219,8 @@ export class EyrieDynastiesRace implements IRace
             default:
                 break;
         }
+
+
     }
 
     SetupNewLeader(asker: Asker, debug: boolean = false)
@@ -161,31 +235,18 @@ export class EyrieDynastiesRace implements IRace
 
         this.ActiveLeader = leader;
 
+        for (let index = 0; index < 2; index++)
+        {
+            this.AddCardToDecree(new VizierCard(CardSuitEnum.Bird, "Vizier Card"), this.Leaders.First(l => l.name == this.ActiveLeader).vizierActions[index]);
+        }
+
+        //rule fact, you must go through all leaders before using any leader a second time
         this.UnusedLeaders = EnumHelper.GetEnumArray(EyrieLeaderEnum)
             .filter(_ => _.value !== leader)
             .map(_ => _.value);
     }
 
-    async Morning(): Promise<void>
-    {
-        //7.4.1 Emergency Orders. If you have no cards in your hand, draw one card.
-        if(this.Player.Hand.length === 0)
-            this.Player.Hand.push(GameManager.DrawCard());
 
-        //7.4.2 Add to the Decree. You must add one or two cards to the Decree, but only one card added may be a bird card. You may play each card to any column, and each column can hold any number of cards.
-        var p = this.a.AskAddDecree();
-        await p;
-
-        //7.4.3 A New Roost. If you have no roosts on the map, place a roost and three warriors in a clearing with the fewest warriors where all those pieces can be placed. 
-    }
-    Day(): void
-    {
-        throw new Error("Method not implemented.");
-    }
-    Evening(): void
-    {
-        throw new Error("Method not implemented.");
-    }
 
     HandleComponentSpawn(type: ComponentTypeEnum): boolean
     {
@@ -204,6 +265,32 @@ export class EyrieDynastiesRace implements IRace
             default:
                 throw new Error();
         }
+
+        return true;
+    }
+
+    async PickCardToAddToDecree(canCancel: boolean): Promise<boolean>
+    {
+        var selection = await this.a.AskAddDecree(canCancel);
+
+        if (selection == "-1")
+            return false;
+
+        if (selection.indexOf(';') == -1)
+            throw new Error("bad return value from askadddecree");
+
+        //prve je EyrieActionEnum 0 based, druhe je id karty
+        var commands = selection.split(';');
+
+        if (commands.length != 2)
+            throw new Error("bad return value from askadddecree");
+
+        var action = Number(commands[0]) as EyrieActionEnum;
+        var cardId = Number(commands[1]);
+
+        var card = this.Player.Hand.GetCardById(cardId);
+
+        this.AddCardToDecree(card, action);
 
         return true;
     }

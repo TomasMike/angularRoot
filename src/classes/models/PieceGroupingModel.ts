@@ -3,6 +3,9 @@ import { ComponentHelper } from "../helpers/ComponentHelper"
 import { ComponentTypeEnum, RaceEnum } from "./Enums";
 import { ComponentInfo } from "../ComponentInfo";
 
+/**
+ * a group of same components of one player, like 5 warriors, 1 sawmill
+ */
 export class PieceGroupingModel
 {
     componentType: ComponentTypeEnum;
