@@ -143,6 +143,8 @@ export class EyrieDynastiesRace implements IRace
 
         //decrees recruit
         var requiredSuitsToRecruit = this.Decree.recruit.map(_ => _.Suit);
+        
+        do
         {
             if (this.WarriorsReserve === 0)
             {
@@ -175,7 +177,16 @@ export class EyrieDynastiesRace implements IRace
             var usedSuit = ClearingHelper.GetClearingById(p).GetCardSuitOfClearing();
 
             // non bird suit was used
-            //if(requiredSuitsToRecruit.some(s => s === usedSuit))
+            if(requiredSuitsToRecruit.some(s => s === usedSuit))
+            {
+                requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === usedSuit);
+            }
+            else
+            {
+                //we used bird
+                requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === CardSuitEnum.Bird);
+            }
+
 
 
         } while (requiredSuitsToRecruit.length > 0)
@@ -185,7 +196,6 @@ export class EyrieDynastiesRace implements IRace
 
 
 
-          //  this.a.AskOneClearing
 
         console.log("eyrie Day end");
     }
