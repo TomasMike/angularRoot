@@ -103,8 +103,6 @@ export class GameComponent
             for (let index = 0; index < 3; index++)
             {
                 p.Hand.Draw(GameManager.DrawCard());
-                p.Hand.Draw(GameManager.DrawCard());
-                p.Hand.Draw(GameManager.DrawCard());
             }
 
             p.SetRace();

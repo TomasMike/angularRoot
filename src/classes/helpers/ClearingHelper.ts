@@ -119,4 +119,18 @@ export class ClearingHelper
         //there is one that its opposite clearing is used, must use that one.
         else return withoutTwoFreeOpopsiteOnes;
     }
+
+    static CanThisRaceMoveFromThisClearing(race: RaceEnum, clearingId: number)
+    {
+        var c = ClearingHelper.GetClearingById(clearingId);
+
+        return (
+            c.Pieces.some(p => p.GetComponentRace() === race) &&
+            (
+                c.GetWhoRulesClearing() === race ||
+                this.GetNeighbourClearings(clearingId).some(id => ClearingHelper.GetClearingById(id).GetWhoRulesClearing() === race)
+            )
+        )
+
+    }
 }

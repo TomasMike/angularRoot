@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+  background-color: rgba(0, 0, 0, 0.276);
+}
 #board p {
   margin: 0px;
 }
@@ -85,7 +88,7 @@
 .decreeRow div {
   height: 15px;
   width: 15px;
-  display: "inline";
+  display: table-cell;
 }
 .decreeRow td {
   width: 25%;
@@ -95,11 +98,28 @@
   background-color: blue;
 }
 .decreeRow td .Rabbit {
-  background-color: yellow;
+  background-color: rgb(249, 249, 119);
 }
 .decreeRow td .Mouse {
   background-color: orange;
 }
 .decreeRow td .Fox {
   background-color: red;
+}
+
+.RabbitCard label
+{
+    background-color:yellow;
+}
+.FoxCard label
+{
+    background-color:red;
+}
+.MouseCard label
+{
+    background-color:orange;
+}
+.BirdCard label
+{
+    background-color:cornflowerblue;
 }

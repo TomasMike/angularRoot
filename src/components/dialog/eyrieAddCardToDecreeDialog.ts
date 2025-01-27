@@ -7,11 +7,20 @@ import { Player } from "../../classes/Player";
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { CommonModule } from "@angular/common";
 import { MatDividerModule } from '@angular/material/divider';
+import { EyrieDynastiesRace } from "../../races/EyrieDynastiesRace";
 
 @Component({
     selector: 'eyrieAddCardToDecreeDialog',
+    styles:`
+    .currentDecree{
+        width: 100%;
+    }
+    .currentDecree,.currentDecree td {
+       border:1px solid black;
+    }
+    `,
     template: `
-<h2 mat-dialog-title>March</h2>
+<h2 mat-dialog-title>Add to Decree</h2>
 <mat-dialog-content>
     <div>
         <h3 >Pick decree column:</h3>
@@ -25,9 +34,39 @@ import { MatDividerModule } from '@angular/material/divider';
         <mat-divider></mat-divider>
         <h3 >Pick card to put in the column:</h3>
         <mat-radio-group aria-label="Select card" [(ngModel)]="selectedCardId"  >
-            <mat-radio-button value="{{c.Id}}"  *ngFor="let c of this.player.Hand.GetCards();let i = index" >{{i+1}}. {{c.Name}},{{c.Id}}</mat-radio-button>
+            <mat-radio-button class="{{c.StyleClass}}" value="{{c.Id}}"  *ngFor="let c of this.player.Hand.GetCards();let i = index" >{{i+1}}. {{c.Name}},{{c.Id}}</mat-radio-button>
         </mat-radio-group>
-        <!-- <button [disabled]="this.val <= 1" (click)="change(-1)">-</button>{{this.val}}<button [disabled]="this.val >= this.moveMaxAmount" (click)="change(1)">+</button> -->
+        <h3>Current Decree</h3>
+        <table class="currentDecree" style="width: 100%;border:1px solid black">
+            <tr>
+                <td>Recruit</td>
+                <td>Move</td>
+                <td>Battle</td>
+                <td>Build</td>
+            </tr>
+            <tr class="decreeRow">
+                    <td>
+                        @for (item of this.Race.Decree.recruit; track $index) {
+                            <div class="{{item.SuitText}}"></div>
+                        }
+                    </td>
+                    <td>
+                        @for (item of this.Race.Decree.move; track $index) {
+                            <div class="{{item.SuitText}}"></div>
+                        }
+                    </td>
+                    <td>
+                        @for (item of this.Race.Decree.battle; track $index) {
+                            <div class="{{item.SuitText}}"></div>
+                        }
+                    </td>
+                    <td>
+                        @for (item of this.Race.Decree.build; track $index) {
+                            <div class="{{item.Suit}}"></div>
+                        }
+                    </td>
+                </tr>
+        </table>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>
@@ -53,6 +92,7 @@ import { MatDividerModule } from '@angular/material/divider';
 export class AddDecreeDialog
 {
     player!: Player;
+    Race:EyrieDynastiesRace
     cancelable:boolean;
     selectedAction!:number;
     selectedCardId!:number;
@@ -63,6 +103,7 @@ export class AddDecreeDialog
     )
     {
         this.player = data.player;
+        this.Race = this.player.Race as EyrieDynastiesRace;
         this.cancelable = data.cancelable ?? false;
     }
 

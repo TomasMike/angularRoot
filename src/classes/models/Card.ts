@@ -4,6 +4,7 @@ export class Card
 {
     Suit: CardSuitEnum;
     SuitText: string;
+    StyleClass:string;
     Name: string;
     Id: number;
     Type:CardTypeEnum;
@@ -15,6 +16,7 @@ export class Card
         this.Name = name;
         this.Id = id;
         this.Type = type;
+        this.StyleClass = this.SuitText + "Card";
     }
 }
 
