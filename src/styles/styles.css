@@ -88,7 +88,7 @@ html {
 .decreeRow div {
   height: 15px;
   width: 15px;
-  display: table-cell;
+  display: "inline";
 }
 .decreeRow td {
   width: 25%;
@@ -98,28 +98,11 @@ html {
   background-color: blue;
 }
 .decreeRow td .Rabbit {
-  background-color: rgb(249, 249, 119);
+  background-color: yellow;
 }
 .decreeRow td .Mouse {
   background-color: orange;
 }
 .decreeRow td .Fox {
   background-color: red;
-}
-
-.RabbitCard label
-{
-    background-color:yellow;
-}
-.FoxCard label
-{
-    background-color:red;
-}
-.MouseCard label
-{
-    background-color:orange;
-}
-.BirdCard label
-{
-    background-color:cornflowerblue;
 }

@@ -21,16 +21,16 @@ import { RaceEnum } from "../../classes/models/Enums";
     </div>
     `,
     styles: `
-    .clearing{
-        width:50px;
-        height:50px;
-        border-width:2px;
-        border-style:solid;
-        position:absolute;
-        color:black;
-        background-color:white;
-        font-size:9px;
-    }
+    // .clearing{
+    //     width:50px;
+    //     height:50px;
+    //     border-width:2px;
+    //     border-style:solid;
+    //     position:absolute;
+    //     color:black;
+    //     background-color:white;
+    //     font-size:9px;
+    // }
 
     p{
         margin:0px;

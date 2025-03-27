@@ -9,12 +9,14 @@ import { ComponentInfo } from "../ComponentInfo";
 export class PieceGroupingModel
 {
     componentType: ComponentTypeEnum;
+    componentTypeText: string;
     count: number;
 
     constructor(type: ComponentTypeEnum, amount: number = 1)
     {
         this.componentType = type;
         this.count = amount;
+        this.componentTypeText = ComponentTypeEnum[this.componentType];
     }
 
     GetComponentRaceText(): string

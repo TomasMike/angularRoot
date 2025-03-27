@@ -34,7 +34,7 @@ import { EyrieDynastiesRace } from "../../races/EyrieDynastiesRace";
         <mat-divider></mat-divider>
         <h3 >Pick card to put in the column:</h3>
         <mat-radio-group aria-label="Select card" [(ngModel)]="selectedCardId"  >
-            <mat-radio-button class="{{c.StyleClass}}" value="{{c.Id}}"  *ngFor="let c of this.player.Hand.GetCards();let i = index" >{{i+1}}. {{c.Name}},{{c.Id}}</mat-radio-button>
+            <mat-radio-button class="{{c.StyleClass}}" value="{{c.Id}}"  *ngFor="let c of this.player.Hand.GetCards();let i = index" >{{i+1}}. {{c.SuitText}}|{{c.Name}},{{c.Id}}</mat-radio-button>
         </mat-radio-group>
         <h3>Current Decree</h3>
         <table class="currentDecree" style="width: 100%;border:1px solid black">

@@ -145,57 +145,61 @@ export class EyrieDynastiesRace implements IRace
         var requiredSuitsToRecruit = this.Decree.recruit.map(_ => _.Suit);
         console.log("eyrie Day Recruit start");
 
-        do
+
+        if (requiredSuitsToRecruit.length > 0)
         {
-            //if we dont have any warrs in reserve, we cannot recruit -> turmoil
-            if (this.WarriorsReserve === 0)
+            do
             {
-                //turmoil
-            }
-
-            //is there at least one clearing where we can successfully recruit?
-            //this is a list of clearing ids where we can
-            var possibleClearingsToRecruit = GameManager.GameState.Clearings
-                .Where(c => requiredSuitsToRecruit.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
-                .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Building_Roost))
-
-            //if not, turmoil
-            if (possibleClearingsToRecruit.length === 0)
-            {
-                //turmoil
-            }
-
-            //pick clearing to recruit
-            var p = await this.a.AskOneClearingFiltered(possibleClearingsToRecruit.map(c => c.Id));
-
-            GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
-
-            //with charismatic leader, we must recruit twice, if we have only one warrior, we recruit one, the turmoil
-            if (this.ActiveLeader === EyrieLeaderEnum.Charismatic)
-            {
+                //if we dont have any warrs in reserve, we cannot recruit -> turmoil
                 if (this.WarriorsReserve === 0)
                 {
                     //turmoil
                 }
 
+                //is there at least one clearing where we can successfully recruit?
+                //this is a list of clearing ids where we can
+                var possibleClearingsToRecruit = GameManager.GameState.Clearings
+                    .Where(c => requiredSuitsToRecruit.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
+                    .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Building_Roost))
+
+                //if not, turmoil
+                if (possibleClearingsToRecruit.length === 0)
+                {
+                    //turmoil
+                }
+
+                //pick clearing to recruit
+                var p = await this.a.AskOneClearingFiltered(possibleClearingsToRecruit.map(c => c.Id));
+
                 GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
-            }
 
-            //get color of clearing we recruited on, remove the color from required colors
-            var usedSuit = ClearingHelper.GetClearingById(p).GetCardSuitOfClearing();
+                //with charismatic leader, we must recruit twice, if we have only one warrior, we recruit one, the turmoil
+                if (this.ActiveLeader === EyrieLeaderEnum.Charismatic)
+                {
+                    if (this.WarriorsReserve === 0)
+                    {
+                        //turmoil
+                    }
 
-            // non bird suit was used
-            if (requiredSuitsToRecruit.some(s => s === usedSuit))
-            {
-                requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === usedSuit);
-            }
-            else
-            {
-                //we used bird
-                requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === CardSuitEnum.Bird);
-            }
+                    GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
+                }
 
-        } while (requiredSuitsToRecruit.length > 0)
+                //get color of clearing we recruited on, remove the color from required colors
+                var usedSuit = ClearingHelper.GetClearingById(p).GetCardSuitOfClearing();
+
+                // non bird suit was used
+                if (requiredSuitsToRecruit.some(s => s === usedSuit))
+                {
+                    requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === usedSuit);
+                }
+                else
+                {
+                    //we used bird
+                    requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === CardSuitEnum.Bird);
+                }
+
+            } while (requiredSuitsToRecruit.length > 0)
+        }
 
         console.log("eyrie Day Recruit end");
 
@@ -204,24 +208,24 @@ export class EyrieDynastiesRace implements IRace
         do 
         {
             var possibleClearingsToMoveFrom = GameManager.GameState.Clearings
-            .Where(c => requiredSuitsToMoveFrom.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
-            .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Warrior)) //has the clearing eyrie warrs
-            .Where(c => ClearingHelper.CanThisRaceMoveFromThisClearing(RaceEnum.EyrieDynasties,c.Id)); //the eyrie can move from
-    
+                .Where(c => requiredSuitsToMoveFrom.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
+                .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Warrior)) //has the clearing eyrie warrs
+                .Where(c => ClearingHelper.CanThisRaceMoveFromThisClearing(RaceEnum.EyrieDynasties, c.Id)); //the eyrie can move from
+
             if (possibleClearingsToMoveFrom.length === 0)
             {
                 //turmoil
             }
 
-             //pick clearing to recruit
-             var p = await this.a.AskOneClearingFiltered(possibleClearingsToMoveFrom.map(c => c.Id));
+            //pick clearing to recruit
+            var p = await this.a.AskOneClearingFiltered(possibleClearingsToMoveFrom.map(c => c.Id));
 
         } while (requiredSuitsToMoveFrom.length > 0);
 
 
-        
 
-        
+
+
 
         console.log("eyrie Day end");
     }

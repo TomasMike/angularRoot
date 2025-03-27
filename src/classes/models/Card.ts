@@ -8,6 +8,7 @@ export class Card
     Name: string;
     Id: number;
     Type:CardTypeEnum;
+    DisplayText:string;
 
     constructor(suit: CardSuitEnum, name: string, id: number,type:CardTypeEnum = CardTypeEnum.Standard)
     {
@@ -17,6 +18,7 @@ export class Card
         this.Id = id;
         this.Type = type;
         this.StyleClass = this.SuitText + "Card";
+        this.DisplayText = `${this.SuitText}|${this.Name}`;
     }
 }
 
