@@ -1,6 +1,6 @@
 import { Asker } from "../classes/Asker";
 import { ComponentTypeEnum, RaceEnum } from "../classes/models/Enums";
-import { GameComponent } from "../components/game/game";
+import { GameComponent } from "../components/rootGame/rootGame";
 
 export interface IRace
 {

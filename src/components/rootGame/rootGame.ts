@@ -15,7 +15,7 @@ import { PlayerBoardComponent } from '../playerBoard/playerBoard';
 import { CommonModule } from '@angular/common';
 import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
 @Component({
-    selector: 'game',
+    selector: 'rootGame',
     standalone: true,
     imports: [CommonModule, BoardComponent, MatSelectModule, RacePickingSectionComponent, PlayerBoardComponent],
     //templateUrl: './game.html',
@@ -49,7 +49,7 @@ import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
         <player-board  *ngFor="let p of this.GetGS().Players" [player]="p" ></player-board>
     </div>
     `,
-    styleUrl: './game.css'
+    styleUrl: './rootGame.css'
 })
 export class GameComponent
 {
@@ -180,7 +180,7 @@ export class GameComponent
     Reset() { }
     async Execute(command: string)
     {
-        // var q = await this.GetNextClearingClickAsync();
+        // var q = await this.GetNextCle`aringClickAsync();
         // console.log(q);
         // var id = Number(command);
         // var r = GameManager.GetClearingById(id).GetWhoRulesClearing();
