@@ -5,17 +5,20 @@ export class Asker
     AskOneClearing: (cancelable?: boolean, question?: string) => Promise<number>;
     AskOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>;
     AskAddDecree:(canCancel:boolean)=>Promise<string>;
+    DoAMove:()=>Promise<number>;
     
     constructor(
         that: object,
         askOneClearing: (cancelable?: boolean, question?: string) => Promise<number>,
         askOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>,
-        askAddDecree:(canCancel:boolean)=>Promise<string>)
+        askAddDecree:(canCancel:boolean)=>Promise<string>,
+        doAMove:()=>Promise<number>)
     {
         this.that = that;
         this.AskOneClearing = askOneClearing;
         this.AskOneClearingFiltered = askOneClearingFiltered;
         this.AskAddDecree = askAddDecree;
+        this.DoAMove = doAMove;
     }
 
     /**

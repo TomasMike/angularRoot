@@ -100,13 +100,18 @@ export class ClearingHelper
     static GetClearingsToMoveFrom(race: RaceEnum): number[]
     {
         var retVal: number[] = [];
+
+        for(var i = 1;i <= 12;i++)
+        {
+            if(ClearingHelper.CanThisRaceMoveFromThisClearing(race,i))
+                retVal.push(i);
+        }
+
         return retVal;
     }
 
-
     static GetAvailableStartingClearings(usedStartingClearings: number[]): number[]
     {
-
         let withoutUsedOnes = this.GetCornerClearings().filter(c => !usedStartingClearings.includes(c));
 
         if (withoutUsedOnes.length === 1) return withoutUsedOnes;

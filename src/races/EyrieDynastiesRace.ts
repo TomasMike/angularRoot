@@ -145,7 +145,6 @@ export class EyrieDynastiesRace implements IRace
         var requiredSuitsToRecruit = this.Decree.recruit.map(_ => _.Suit);
         console.log("eyrie Day Recruit start");
 
-
         if (requiredSuitsToRecruit.length > 0)
         {
             do
@@ -203,24 +202,30 @@ export class EyrieDynastiesRace implements IRace
 
         console.log("eyrie Day Recruit end");
 
+        console.log("eyrie Day Move start");
+
         var requiredSuitsToMoveFrom = this.Decree.recruit.map(_ => _.Suit);
 
-        do 
+        if (requiredSuitsToMoveFrom.length > 0)
         {
-            var possibleClearingsToMoveFrom = GameManager.GameState.Clearings
-                .Where(c => requiredSuitsToMoveFrom.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
-                .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Warrior)) //has the clearing eyrie warrs
-                .Where(c => ClearingHelper.CanThisRaceMoveFromThisClearing(RaceEnum.EyrieDynasties, c.Id)); //the eyrie can move from
-
-            if (possibleClearingsToMoveFrom.length === 0)
+            do 
             {
-                //turmoil
-            }
+                var possibleClearingsToMoveFrom = GameManager.GameState.Clearings
+                    .Where(c => requiredSuitsToMoveFrom.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
+                    .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Warrior)) //has the clearing eyrie warrs
+                    .Where(c => ClearingHelper.CanThisRaceMoveFromThisClearing(RaceEnum.EyrieDynasties, c.Id)); //the eyrie can move from
 
-            //pick clearing to recruit
-            var p = await this.a.AskOneClearingFiltered(possibleClearingsToMoveFrom.map(c => c.Id));
+                if (possibleClearingsToMoveFrom.length === 0)
+                {
+                    //turmoil
+                }
 
-        } while (requiredSuitsToMoveFrom.length > 0);
+                //pick clearing to recruit
+                var p = await this.a.AskOneClearingFiltered(possibleClearingsToMoveFrom.map(c => c.Id));
+
+            } while (requiredSuitsToMoveFrom.length > 0);
+        }
+
 
 
 

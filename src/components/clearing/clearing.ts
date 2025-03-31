@@ -53,7 +53,7 @@ export class ClearingComponent implements OnInit
         return this.Clearing.Highlighted ? "highlightedClearing" : "";
     }
 
-    GetRulingClass()
+    GetRulingClass(): string
     {
         var r = this.Clearing.GetWhoRulesClearing();
         return r == null ? "" : RaceEnum[r];

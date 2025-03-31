@@ -77,7 +77,8 @@ export class GameComponent
             {
                 return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
             },
-            (canCancel: boolean) => { return this.AskerAddDecree(canCancel); });
+            (canCancel: boolean) => { return this.AskerAddDecree(canCancel); },
+        ()=>{return this.Move();});
     }
 
     //#region GAME LOOP
@@ -203,7 +204,7 @@ export class GameComponent
 
 
 
-    async Move()
+    async Move(availableClearingsToMoveFrom:number[]|null)
     {
         let mt = this.messageText;
         let mm = this.moveMode;
@@ -219,7 +220,9 @@ export class GameComponent
         var moveFrom: number = -1;
         var moveTo: number = -1;
 
-        var availableClearingsToMoveFrom = [1, 2, 3]; //temp
+        if (availableClearingsToMoveFrom == null)
+            availableClearingsToMoveFrom = []; //temp
+        
         var pFrom = this._getNextClearingClickFiltered(availableClearingsToMoveFrom, true).then(i => moveFrom = i);
         this.messageText = "select clearing to move from";
         await pFrom;

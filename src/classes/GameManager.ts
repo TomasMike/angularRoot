@@ -27,7 +27,7 @@ export class GameManager
 
 
 
-    // static GetNextClearingClick: (cancelable?: boolean) => Promise<number>;
+    //static GetNextClearingClick: (cancelable?: boolean) => Promise<number>;
     // static GetNextClearingClickFiltered: (allowedIds: number[], cancelable?: boolean) => Promise<number>;
     // static SetMessageBoxText: (text: string) => void;
 
