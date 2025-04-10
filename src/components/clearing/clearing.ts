@@ -21,16 +21,66 @@ import { RaceEnum } from "../../classes/models/Enums";
     </div>
     `,
     styles: `
-    // .clearing{
-    //     width:50px;
-    //     height:50px;
-    //     border-width:2px;
-    //     border-style:solid;
-    //     position:absolute;
-    //     color:black;
-    //     background-color:white;
-    //     font-size:9px;
-    // }
+    .clearing {
+        &.highlightedClearing {
+            outline: 10px solid cyan;
+            animation: border-pulsate 2s infinite;
+            
+        }
+
+        width: 50px;
+        height: 50px;
+        outline: solid black 2px;
+        position: absolute;
+        color: black;
+        background-color: white;
+        font-size: 9px;
+    }
+
+    @keyframes border-pulsate {
+	0% {
+		outline-color:red;
+	}
+	50% {
+		border-color: rgba(22, 205, 89, 0.936);
+	}
+	100% {
+		border-color: rgb(43, 0, 255);
+	}
+}
+
+    .mouseClearing div.clearingSuit {
+        background-color: orange;
+    }
+
+    .foxClearing div.clearingSuit {
+        background-color: red;
+    }
+
+    .rabbitClearing div.clearingSuit {
+        background-color: yellow;
+    }
+
+    .clearingHeaderWrapper div {
+        /* display: inline-block; */
+        border-bottom: 1px black solid;
+    }
+
+    .clearingHeaderWrapper div.clearingId {
+        float: left;
+        width: 15px;
+        text-align: center;
+    }
+
+    .clearingHeaderWrapper div.clearingSuit {
+        padding-left: 2px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .pieceGrouping {
+        padding-left: 2px;
+    }
 
     p{
         margin:0px;

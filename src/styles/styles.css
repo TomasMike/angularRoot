@@ -5,6 +5,10 @@ html {
 #board p {
   margin: 0px;
 }
+#game {
+  display: flex;
+  flex-wrap: wrap;
+}
 .MarquiseDeCat {
   background-color: orange;
 }
@@ -36,40 +40,55 @@ html {
   background-color: #675f5f;
   color: white;
 }
-#game {
-  display: flex;
-  flex-wrap: wrap;
+/*.clearing {
+	&.highlightedClearing {
+		outline: 10px solid cyan;
+		animation: border-pulsate 2s infinite;
+        
+	}
+
+	width: 50px;
+	height: 50px;
+    outline: solid black 2px;
+	position: absolute;
+	color: black;
+	background-color: white;
+	font-size: 9px;
 }
-.highlightedClearing.clearing {
-  border: 20px solid cyan;
-  animation: border-pulsate 2s infinite;
-}
+
 .mouseClearing div.clearingSuit {
-  background-color: orange;
+	background-color: orange;
 }
+
 .foxClearing div.clearingSuit {
-  background-color: red;
+	background-color: red;
 }
+
 .rabbitClearing div.clearingSuit {
-  background-color: yellow;
+	background-color: yellow;
 }
+
 .clearingHeaderWrapper div {
-  /* display: inline-block; */
-  border-bottom: 1px black solid;
+	
+	border-bottom: 1px black solid;
 }
+
 .clearingHeaderWrapper div.clearingId {
-  float: left;
-  width: 15px;
-  text-align: center;
+	float: left;
+	width: 15px;
+	text-align: center;
 }
+
 .clearingHeaderWrapper div.clearingSuit {
-  padding-left: 2px;
-  overflow: hidden;
-  text-align: center;
+	padding-left: 2px;
+	overflow: hidden;
+	text-align: center;
 }
+
 .pieceGrouping {
-  padding-left: 2px;
+	padding-left: 2px;
 }
+*/
 @keyframes border-pulsate {
   0% {
     border-color: #ff3700;

@@ -5,6 +5,12 @@ html {
 #board p {
 	margin: 0px;
 }
+#game {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+//race themed
 .MarquiseDeCat {
 	background-color: orange;
 }
@@ -37,80 +43,9 @@ html {
 	color: white;
 }
 
-#game {
-	display: flex;
-	flex-wrap: wrap;
-}
 
-.clearing {
-	&.highlightedClearing {
-		border: 10px solid cyan;
-		animation: border-pulsate 2s infinite;
-        border-radius: 10px;
-	}
 
-    
-        
 
-	width: 50px;
-	height: 50px;
-	border-width: 2px;
-	border-style: solid;
-	position: absolute;
-	color: black;
-	background-color: white;
-	font-size: 9px;
-}
-
-.highlightedClearing.clearing {
-	border: 20px solid cyan;
-	animation: border-pulsate 2s infinite;
-}
-
-.mouseClearing div.clearingSuit {
-	background-color: orange;
-}
-
-.foxClearing div.clearingSuit {
-	background-color: red;
-}
-
-.rabbitClearing div.clearingSuit {
-	background-color: yellow;
-}
-
-.clearingHeaderWrapper div {
-	/* display: inline-block; */
-	border-bottom: 1px black solid;
-}
-
-.clearingHeaderWrapper div.clearingId {
-	float: left;
-	width: 15px;
-	text-align: center;
-}
-
-.clearingHeaderWrapper div.clearingSuit {
-	padding-left: 2px;
-	overflow: hidden;
-	text-align: center;
-}
-
-.pieceGrouping {
-	padding-left: 2px;
-}
-
-@keyframes border-pulsate {
-	0% {
-		border-color: rgb(255, 55, 0);
-	}
-	50% {
-		border-color: rgba(22, 205, 89, 0.936);
-	}
-	100% {
-		border-color: rgb(43, 0, 255);
-	}
-}
 
 .playerBoard {
 	border: 1px solid black;

@@ -14,40 +14,59 @@ import { ClearingHelper } from '../../classes/helpers/ClearingHelper';
 import { PlayerBoardComponent } from '../playerBoard/playerBoard';
 import { CommonModule } from '@angular/common';
 import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
+import { TArray } from '../../classes/types/TArray';
 @Component({
     selector: 'rootGame',
     standalone: true,
     imports: [CommonModule, BoardComponent, MatSelectModule, RacePickingSectionComponent, PlayerBoardComponent],
     //templateUrl: './game.html',
     template: `
-    <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
-    <div id="message">{{messageText}}</div>
-    <div id="debugButtonsPanel">
-        <!-- <div><button (click)="Start()">Start</button></div> -->
-        <!-- <div><button (click)="Reset()">Reset</button></div> -->
-        <div><button (click)="MoveButtonClick()">{{getMoveBtnText()}}</button></div>
-        <div>
-            <button  (click)="Execute(cmd.value)">Execute</button>
-            <input #cmd type="text" id="cmd">
-        </div>
-        <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
-        <div><button (click)="Test()">Test</button></div>
-    </div>
-    @if(ShowPlayerRacePicker())
-    {
-        <racePickingSection (StartClicked)="Start()" />
-    }
-    <div>
-        <ul>
-            <li *ngFor="let l of Log">{{l}}</li>
-        </ul>
-    </div>
-    <div>
-        <p>Draw Deck:{{this.GetGS().DrawDeck.length-1}}</p>
-    </div>
-    <div>
-        <player-board  *ngFor="let p of this.GetGS().Players" [player]="p" ></player-board>
-    </div>
+    <table>
+       <tbody>
+        <tr>
+            <td>
+                <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
+                <div id="message">{{messageText}}</div>
+                <div id="debugButtonsPanel">
+                    <!-- <div><button (click)="Start()">Start</button></div> -->
+                    <!-- <div><button (click)="Reset()">Reset</button></div> -->
+                    <div><button (click)="MoveButtonClick()">{{getMoveBtnText()}}</button></div>
+                    <div>
+                        <button  (click)="Execute(cmd.value)">Execute</button>
+                        <input #cmd type="text" id="cmd">
+                    </div>
+                    <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
+                    <div><button (click)="Test()">Test</button></div>
+                </div>
+               
+            </td>
+            <td>
+                @if(ShowPlayerRacePicker())
+                {
+                    <racePickingSection (StartClicked)="Start()" />
+                }
+                <div>
+                    <ul>
+                        <li *ngFor="let l of Log">{{l}}</li>
+                    </ul>
+                </div>
+                <div>
+                    <p>Draw Deck:{{this.GetGS().DrawDeck.length-1}}</p>
+                </div>
+                <div>
+                    <player-board  *ngFor="let p of this.GetGS().Players" [player]="p" ></player-board>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+           
+            </td>
+        </tr>
+       </tbody>
+    </table>
+   
+    
     `,
     styleUrl: './rootGame.css'
 })
@@ -77,8 +96,8 @@ export class GameComponent
             {
                 return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
             },
-            (canCancel: boolean) => { return this.AskerAddDecree(canCancel); },
-        ()=>{return this.Move();});
+            (cancelable: boolean) => { return this.AskerAddDecree(cancelable); },
+            (cancelable?: boolean, allowedIds?: number[], question?: string) => { return this.Move(cancelable, allowedIds, question); });
     }
 
     //#region GAME LOOP
@@ -193,19 +212,28 @@ export class GameComponent
     //#endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
-    async Move(availableClearingsToMoveFrom:number[]|null)
+    async Move(cancellable?: boolean, availableClearingsToMoveFrom?: number[], question?: string)
     {
+        //if we get no clearing ids use all
+        availableClearingsToMoveFrom = availableClearingsToMoveFrom || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        var availableClearingsToMoveFromTArray = new TArray<number>();
+        var movingPlayer = GameManager.GetActivePlayer();
+
+        var availableMovementOptions:string[]=[];
+        for (let index = 0; index < availableClearingsToMoveFrom.length; index++)
+        {
+
+            var q = ClearingHelper.GetPossibleMoveOptionsFromThisClearing(movingPlayer.Race.RaceEnum, availableClearingsToMoveFrom[index]);
+            console.log(q);
+            
+            availableMovementOptions.push(...q.filter(v=> v!=="-1"));
+            
+            // availableClearingsToMoveFromTArray.push(availableClearingsToMoveFrom[index]);
+        }
+
+        console.log("can move from");
+        console.log(availableClearingsToMoveFromTArray);
+
         let mt = this.messageText;
         let mm = this.moveMode;
         let ResetMoveMode = function (wasCanceled: boolean = true)
@@ -220,10 +248,12 @@ export class GameComponent
         var moveFrom: number = -1;
         var moveTo: number = -1;
 
-        if (availableClearingsToMoveFrom == null)
-            availableClearingsToMoveFrom = []; //temp
-        
-        var pFrom = this._getNextClearingClickFiltered(availableClearingsToMoveFrom, true).then(i => moveFrom = i);
+
+        var finalStaringCl =  availableMovementOptions.map((v)=>{return Number.parseInt(v.substring(0,v.indexOf(";")))})
+
+
+
+        var pFrom = this.GetNextClearingClickFilteredAsync(finalStaringCl, undefined, cancellable).then(i => moveFrom = i);
         this.messageText = "select clearing to move from";
         await pFrom;
 
@@ -232,6 +262,7 @@ export class GameComponent
             ResetMoveMode();
             return;//cancelled action
         }
+
 
         //todo filter where can move to
         var pMoveTo = this._getNextClearingClick().then(i => moveTo = i);
@@ -340,25 +371,15 @@ export class GameComponent
 
 
 
-    /**
-     * get next click on clearing
-     */
-    private async _getNextClearingClick(cancelable: boolean = false): Promise<number>
-    {
-        return new Promise<number>(async callback =>
-        {
-            var r = cancelable ? race(this.clearingClickHandler, this.CancelButtonClickHandler) : this.clearingClickHandler;
-            var s = r.subscribe(i =>
-            {
-                s.unsubscribe();
-                callback(i);
-            });
-        });
-    }
+
 
     private async _getNextClearingClickFiltered(allowedIds: number[], cancelable: boolean = false): Promise<number>
     {
 
+        // allowedIds.forEach(i =>
+        //     {
+        //         ClearingHelper.GetClearingById(i).Highlighted = false;
+        //     });
 
         return new Promise<number>(async callback =>
         {
@@ -387,6 +408,22 @@ export class GameComponent
 
             callback(value);
         })
+    }
+
+    /**
+     * get next click on clearing
+     */
+    private async _getNextClearingClick(cancelable: boolean = false): Promise<number>
+    {
+        return new Promise<number>(async callback =>
+        {
+            var r = cancelable ? race(this.clearingClickHandler, this.CancelButtonClickHandler) : this.clearingClickHandler;
+            var s = r.subscribe(i =>
+            {
+                s.unsubscribe();
+                callback(i);
+            });
+        });
     }
 
 

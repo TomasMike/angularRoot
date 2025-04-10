@@ -21,18 +21,18 @@ export class ClearingHelper
     static InitClearings(): TArray<ClearingModel>
     {
         return new TArray([
-            new ClearingModel(1, ClearingSuitEnum.Fox, 40, 40),
-            new ClearingModel(2, ClearingSuitEnum.Mouse, 420, 90),
-            new ClearingModel(3, ClearingSuitEnum.Rabbit, 390, 390),
-            new ClearingModel(4, ClearingSuitEnum.Rabbit, 40, 360),
-            new ClearingModel(5, ClearingSuitEnum.Rabbit, 250, 40),
-            new ClearingModel(6, ClearingSuitEnum.Fox, 440, 220),
-            new ClearingModel(7, ClearingSuitEnum.Mouse, 270, 320),
-            new ClearingModel(8, ClearingSuitEnum.Fox, 170, 400),
-            new ClearingModel(9, ClearingSuitEnum.Mouse, 30, 170),
-            new ClearingModel(10, ClearingSuitEnum.Rabbit, 200, 110),
-            new ClearingModel(11, ClearingSuitEnum.Mouse, 300, 200),
-            new ClearingModel(12, ClearingSuitEnum.Fox, 130, 230),
+            new ClearingModel(1, ClearingSuitEnum.Fox, 60, 60),
+            new ClearingModel(2, ClearingSuitEnum.Mouse, 440, 110),
+            new ClearingModel(3, ClearingSuitEnum.Rabbit, 410, 410),
+            new ClearingModel(4, ClearingSuitEnum.Rabbit, 60, 380),
+            new ClearingModel(5, ClearingSuitEnum.Rabbit, 270, 60),
+            new ClearingModel(6, ClearingSuitEnum.Fox, 460, 240),
+            new ClearingModel(7, ClearingSuitEnum.Mouse, 290, 340),
+            new ClearingModel(8, ClearingSuitEnum.Fox, 190, 420),
+            new ClearingModel(9, ClearingSuitEnum.Mouse, 50, 190),
+            new ClearingModel(10, ClearingSuitEnum.Rabbit, 220, 130),
+            new ClearingModel(11, ClearingSuitEnum.Mouse, 320, 220),
+            new ClearingModel(12, ClearingSuitEnum.Fox, 150, 250),
         ]);
     }
 
@@ -101,9 +101,9 @@ export class ClearingHelper
     {
         var retVal: number[] = [];
 
-        for(var i = 1;i <= 12;i++)
+        for (var i = 1; i <= 12; i++)
         {
-            if(ClearingHelper.CanThisRaceMoveFromThisClearing(race,i))
+            if (ClearingHelper.GetPossibleMoveOptionsFromThisClearing(race, i))
                 retVal.push(i);
         }
 
@@ -125,17 +125,29 @@ export class ClearingHelper
         else return withoutTwoFreeOpopsiteOnes;
     }
 
-    static CanThisRaceMoveFromThisClearing(race: RaceEnum, clearingId: number)
+    static GetPossibleMoveOptionsFromThisClearing(race: RaceEnum, clearingId: number): string[]
     {
         var c = ClearingHelper.GetClearingById(clearingId);
 
-        return (
-            c.Pieces.some(p => p.GetComponentRace() === race) &&
-            (
-                c.GetWhoRulesClearing() === race ||
-                this.GetNeighbourClearings(clearingId).some(id => ClearingHelper.GetClearingById(id).GetWhoRulesClearing() === race)
-            )
-        )
+        if (c.Pieces.every(p => p.GetComponentRace() !== race))
+            return ["-1"];
+
+        var neighClearings = ClearingHelper.GetNeighbourClearings(clearingId);
+
+        var doesCurrentPlayerRuleStartClearing = c.GetWhoRulesClearing() === race;
+
+
+        var retVal:string[] = [];
+        neighClearings.forEach(cl =>
+        {
+            if (ClearingHelper.GetClearingById(cl).GetWhoRulesClearing() === race //does player whos moving rules destination clearing
+            ||doesCurrentPlayerRuleStartClearing)//OR player whos moving rules starting clearing
+            retVal.push(`${clearingId};${cl}`);
+        });
+
+        return retVal;
+
+  
 
     }
 }

@@ -145,6 +145,8 @@ export class EyrieDynastiesRace implements IRace
         var requiredSuitsToRecruit = this.Decree.recruit.map(_ => _.Suit);
         console.log("eyrie Day Recruit start");
 
+        var isTurmoil: boolean = false;
+
         if (requiredSuitsToRecruit.length > 0)
         {
             do
@@ -152,7 +154,8 @@ export class EyrieDynastiesRace implements IRace
                 //if we dont have any warrs in reserve, we cannot recruit -> turmoil
                 if (this.WarriorsReserve === 0)
                 {
-                    //turmoil
+                    isTurmoil=true;
+                    break;
                 }
 
                 //is there at least one clearing where we can successfully recruit?
@@ -164,11 +167,12 @@ export class EyrieDynastiesRace implements IRace
                 //if not, turmoil
                 if (possibleClearingsToRecruit.length === 0)
                 {
-                    //turmoil
+                    isTurmoil=true;
+                    break;
                 }
 
                 //pick clearing to recruit
-                var p = await this.a.AskOneClearingFiltered(possibleClearingsToRecruit.map(c => c.Id));
+                var p = await this.a.AskOneClearingFiltered(possibleClearingsToRecruit.map(c => c.Id), "Pick a clearing to recruit.", false);
 
                 GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
 
@@ -177,7 +181,8 @@ export class EyrieDynastiesRace implements IRace
                 {
                     if (this.WarriorsReserve === 0)
                     {
-                        //turmoil
+                        isTurmoil=true;
+                        break;
                     }
 
                     GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
@@ -213,7 +218,7 @@ export class EyrieDynastiesRace implements IRace
                 var possibleClearingsToMoveFrom = GameManager.GameState.Clearings
                     .Where(c => requiredSuitsToMoveFrom.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
                     .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Warrior)) //has the clearing eyrie warrs
-                    .Where(c => ClearingHelper.CanThisRaceMoveFromThisClearing(RaceEnum.EyrieDynasties, c.Id)); //the eyrie can move from
+                    .Where(c => ClearingHelper.GetPossibleMoveOptionsFromThisClearing(RaceEnum.EyrieDynasties, c.Id)); //the eyrie can move from
 
                 if (possibleClearingsToMoveFrom.length === 0)
                 {
@@ -221,7 +226,7 @@ export class EyrieDynastiesRace implements IRace
                 }
 
                 //pick clearing to recruit
-                var p = await this.a.AskOneClearingFiltered(possibleClearingsToMoveFrom.map(c => c.Id));
+                await this.a.DoAMove(false, possibleClearingsToMoveFrom.map(c => c.Id));
 
             } while (requiredSuitsToMoveFrom.length > 0);
         }

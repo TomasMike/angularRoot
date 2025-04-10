@@ -18,9 +18,15 @@ import { EyrieDynastiesRace } from "../../races/EyrieDynastiesRace";
     .currentDecree,.currentDecree td {
        border:1px solid black;
     }
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        margin: 15px 0;
+        align-items: flex-start;
+    }
     `,
     template: `
-<h2 mat-dialog-title>Add to Decree</h2>
+<h2 mat-dialog-title>Add to Decree {{(this.cancelable ? "2nd card (optional)":"1st card (mandatory)")}}</h2>
 <mat-dialog-content>
     <div>
         <h3 >Pick decree column:</h3>
@@ -33,7 +39,7 @@ import { EyrieDynastiesRace } from "../../races/EyrieDynastiesRace";
 
         <mat-divider></mat-divider>
         <h3 >Pick card to put in the column:</h3>
-        <mat-radio-group aria-label="Select card" [(ngModel)]="selectedCardId"  >
+        <mat-radio-group aria-label="Select card" [(ngModel)]="selectedCardId" class="radio-group" >
             <mat-radio-button class="{{c.StyleClass}}" value="{{c.Id}}"  *ngFor="let c of this.player.Hand.GetCards();let i = index" >{{i+1}}. {{c.SuitText}}|{{c.Name}},{{c.Id}}</mat-radio-button>
         </mat-radio-group>
         <h3>Current Decree</h3>
@@ -62,7 +68,7 @@ import { EyrieDynastiesRace } from "../../races/EyrieDynastiesRace";
                     </td>
                     <td>
                         @for (item of this.Race.Decree.build; track $index) {
-                            <div class="{{item.Suit}}"></div>
+                            <div class="{{item.SuitText}}"></div>
                         }
                     </td>
                 </tr>
