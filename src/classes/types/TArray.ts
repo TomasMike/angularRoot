@@ -42,6 +42,16 @@ export class TArray<T> extends Array<T>
         a = [1, 2, 3];
     }
 
+    public Distinct()
+    {
+        var foundItems:T[] = [];
+        this.forEach(element => {
+            if(!this.some(s => s === element))
+                foundItems.push(element);
+        });
+        return foundItems;
+    }
+
     RemoveFirstMatching<S extends T>(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): TArray<S>
     {
         var foundI = -1;

@@ -70,6 +70,7 @@ import { EyrieDynastiesRace } from "../../races/EyrieDynastiesRace";
                         @for (item of this.Race.Decree.build; track $index) {
                             <div class="{{item.SuitText}}"></div>
                         }
+                        
                     </td>
                 </tr>
         </table>

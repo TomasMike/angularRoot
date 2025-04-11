@@ -47,6 +47,19 @@ export class ExtensionFaker
 
         throw new Error("No element matched predicate.");
     }
+
+    public static Distinct<T>(arr: T[]): T[]
+    {
+        var r: T[] = [];
+
+        arr.forEach(element =>
+        {
+            if (!r.some(s => s === element))
+                r.push(element);
+        });
+        return r;
+
+    }
 }
 
 

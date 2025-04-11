@@ -15,6 +15,7 @@ import { PlayerBoardComponent } from '../playerBoard/playerBoard';
 import { CommonModule } from '@angular/common';
 import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
 import { TArray } from '../../classes/types/TArray';
+import { ExtensionFaker } from '../../classes/helpers/ExtensionFaker';
 @Component({
     selector: 'rootGame',
     standalone: true,
@@ -212,95 +213,103 @@ export class GameComponent
     //#endregion
 
 
-    async Move(cancellable?: boolean, availableClearingsToMoveFrom?: number[], question?: string)
+    async Move(cancelable?: boolean, availableClearingsToMoveFrom?: number[], question?: string): Promise<boolean>
     {
-        //if we get no clearing ids use all
-        availableClearingsToMoveFrom = availableClearingsToMoveFrom || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-        var availableClearingsToMoveFromTArray = new TArray<number>();
-        var movingPlayer = GameManager.GetActivePlayer();
+        var canceled = false;
 
-        var availableMovementOptions:string[]=[];
-        for (let index = 0; index < availableClearingsToMoveFrom.length; index++)
+        while (true)
         {
+            canceled = false;
 
-            var q = ClearingHelper.GetPossibleMoveOptionsFromThisClearing(movingPlayer.Race.RaceEnum, availableClearingsToMoveFrom[index]);
-            console.log(q);
-            
-            availableMovementOptions.push(...q.filter(v=> v!=="-1"));
-            
-            // availableClearingsToMoveFromTArray.push(availableClearingsToMoveFrom[index]);
+            //if we get no clearing ids use all
+            availableClearingsToMoveFrom = availableClearingsToMoveFrom || [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            var availableClearingsToMoveFromTArray = new TArray<number>();
+            var movingPlayer = GameManager.GetActivePlayer();
+
+            var availableMovementOptions: number[][] = [];
+            for (let index = 0; index < availableClearingsToMoveFrom.length; index++)
+            {
+
+                var q = ClearingHelper.GetPossibleMoveOptionsFromThisClearing(movingPlayer.Race.RaceEnum, availableClearingsToMoveFrom[index]);
+                console.log(q);
+
+                availableMovementOptions.push(...q.filter(v => v[0] === -1));
+
+                // availableClearingsToMoveFromTArray.push(availableClearingsToMoveFrom[index]);
+            }
+
+            console.log("can move from");
+            console.log(availableClearingsToMoveFromTArray);
+
+            let mt = this.messageText;
+            let mm = this.moveMode;
+            let ResetMoveMode = function (wasCanceled: boolean = true)
+            {
+                mt = "";
+                mm = MoveMode.None;
+                if (wasCanceled) console.log("move cancelled");
+            }
+
+            console.info("in move");
+            var moveFrom: number = -1;
+            var moveTo: number = -1;
+
+            var finalStaringCl = ExtensionFaker.Distinct(availableMovementOptions.map((v) => v[0]));
+
+            var pFrom = this.GetNextClearingClickFilteredAsync(finalStaringCl, undefined, cancelable).then(i => moveFrom = i);
+            this.messageText = "select clearing to move from";
+            await pFrom;
+            console.log("after getting from");
+            if (moveFrom === -1)
+            {
+                ResetMoveMode();
+                canceled = true;
+                continue;//cancelled action
+            }
+
+            var finalDestCl = ExtensionFaker.Distinct(availableMovementOptions.filter((v) => v[0] === moveFrom).map(v=>v[1])); 
+
+            //todo filter where can move to
+            var pMoveTo = this.GetNextClearingClickFilteredAsync(finalDestCl,undefined,cancelable).then(i => moveTo = i);
+            this.messageText = `moving from [${moveFrom}] select clearing to move into`;
+            await pMoveTo;
+            console.log("after getting to");
+            if (moveTo === -1)
+            {
+                ResetMoveMode();
+                canceled = true;
+                continue;
+                //return;//cancelled action
+            }
+
+            console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
+
+            let dialogRef = this.dialog.open(MoveAmountDialog, {
+                data: ClearingHelper.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
+            });
+
+            var qq: number = -1;
+            var qwe = this.getNextValueFromSub(dialogRef.afterClosed()).then(i =>
+            {
+                if (i === undefined)
+                    qq = -1;
+                else
+                    qq = Number(i);
+            });
+
+            await qwe;
+            console.log(`output from modal is ${qq} `);
+
+            if (qq === -1)
+            {
+                ResetMoveMode();
+                canceled = true;
+                continue;
+            }
+
+            GameManager.Move(moveFrom, moveTo, qq);
+            ResetMoveMode(false);
         }
-
-        console.log("can move from");
-        console.log(availableClearingsToMoveFromTArray);
-
-        let mt = this.messageText;
-        let mm = this.moveMode;
-        let ResetMoveMode = function (wasCanceled: boolean = true)
-        {
-            mt = "";
-            mm = MoveMode.None;
-            if (wasCanceled) console.log("move cancelled");
-        }
-
-
-        console.info("in move");
-        var moveFrom: number = -1;
-        var moveTo: number = -1;
-
-
-        var finalStaringCl =  availableMovementOptions.map((v)=>{return Number.parseInt(v.substring(0,v.indexOf(";")))})
-
-
-
-        var pFrom = this.GetNextClearingClickFilteredAsync(finalStaringCl, undefined, cancellable).then(i => moveFrom = i);
-        this.messageText = "select clearing to move from";
-        await pFrom;
-
-        if (moveFrom === -1)
-        {
-            ResetMoveMode();
-            return;//cancelled action
-        }
-
-
-        //todo filter where can move to
-        var pMoveTo = this._getNextClearingClick().then(i => moveTo = i);
-        this.messageText = "select clearing to move into";
-        await pMoveTo;
-
-        if (moveTo === -1)
-        {
-            ResetMoveMode();
-            return;//cancelled action
-        }
-
-        console.log(`user selected to move from [${moveFrom}] and to [${moveTo}]`);
-
-        let dialogRef = this.dialog.open(MoveAmountDialog, {
-            data: ClearingHelper.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
-        });
-
-        var qq: number = -1;
-        var qwe = this.getNextValueFromSub(dialogRef.afterClosed()).then(i =>
-        {
-            if (i === undefined)
-                qq = -1;
-            else
-                qq = Number(i);
-        });
-
-        await qwe;
-        console.log(`output from modal is ${qq} `);
-
-        if (qq === -1)
-        {
-            ResetMoveMode();
-            return;
-        }
-
-        GameManager.Move(moveFrom, moveTo, qq);
-        ResetMoveMode(false);
     }
 
     public async GetNextClearingClickAsync(cancelable?: boolean, question?: string)

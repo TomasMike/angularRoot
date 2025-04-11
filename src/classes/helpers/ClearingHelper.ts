@@ -125,24 +125,24 @@ export class ClearingHelper
         else return withoutTwoFreeOpopsiteOnes;
     }
 
-    static GetPossibleMoveOptionsFromThisClearing(race: RaceEnum, clearingId: number): string[]
+    static GetPossibleMoveOptionsFromThisClearing(race: RaceEnum, clearingId: number): number[][]
     {
         var c = ClearingHelper.GetClearingById(clearingId);
 
         if (c.Pieces.every(p => p.GetComponentRace() !== race))
-            return ["-1"];
+            return [[-1]];
 
         var neighClearings = ClearingHelper.GetNeighbourClearings(clearingId);
 
         var doesCurrentPlayerRuleStartClearing = c.GetWhoRulesClearing() === race;
 
 
-        var retVal:string[] = [];
+        var retVal:number[][] = [];
         neighClearings.forEach(cl =>
         {
             if (ClearingHelper.GetClearingById(cl).GetWhoRulesClearing() === race //does player whos moving rules destination clearing
             ||doesCurrentPlayerRuleStartClearing)//OR player whos moving rules starting clearing
-            retVal.push(`${clearingId};${cl}`);
+            retVal.push([clearingId,cl]);
         });
 
         return retVal;

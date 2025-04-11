@@ -225,8 +225,9 @@ export class EyrieDynastiesRace implements IRace
                     //turmoil
                 }
 
-                //pick clearing to recruit
-                await this.a.DoAMove(false, possibleClearingsToMoveFrom.map(c => c.Id));
+                //pick clearing to move from
+                var q =  this.a.DoAMove(false, possibleClearingsToMoveFrom.map(c => c.Id));
+                await q;
 
             } while (requiredSuitsToMoveFrom.length > 0);
         }
