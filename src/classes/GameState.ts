@@ -1,5 +1,4 @@
 import { Player } from "./Player";
-import { GeneralHelper } from "./helpers/GeneralHelper";
 import { Card } from "./models/Card";
 import { ClearingModel } from "./models/ClearingModel";
 import { CardSuitEnum, GameWorkflowStateEnum, RaceEnum } from "./models/Enums";
@@ -14,6 +13,7 @@ export class GameState
     GameWorkflowState: GameWorkflowStateEnum;
     DrawDeck: TArray<Card>;
     DiscardPile: TArray<Card>;
+    History: string[];
 
     constructor()
     {
@@ -24,17 +24,18 @@ export class GameState
         this.GameWorkflowState = GameWorkflowStateEnum.PlayersPickingRaces;
         this.DrawDeck = new TArray<Card>;
         this.DiscardPile = new TArray<Card>;
+        this.History = [];
 
         this.Players.push(new Player(1, RaceEnum.EyrieDynasties));
 
-        // for (let index = 0; index < 15; index++)
-        // {
-        //     this.DrawDeck.push(new Card(CardSuitEnum.Bird, `Placeholder Card ${(index * 4) + 1}`, (index * 4) + 1));
-        //     this.DrawDeck.push(new Card(CardSuitEnum.Fox, `Placeholder Card ${(index * 4) + 2}`, (index * 4) + 2));
-        //     this.DrawDeck.push(new Card(CardSuitEnum.Mouse, `Placeholder Card ${(index * 4) + 3}`, (index * 4) + 3));
-        //     this.DrawDeck.push(new Card(CardSuitEnum.Rabbit, `Placeholder Card ${(index * 4) + 4}`, (index * 4) + 4));
-        // }
 
+        this.CardInit();
+
+    }
+
+
+    private CardInit()
+    {
         var i = 1;
         this.DrawDeck.push(new Card(CardSuitEnum.Bird, "Armorers", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Bird, "Armorers", i++));
@@ -51,7 +52,7 @@ export class GameState
         this.DrawDeck.push(new Card(CardSuitEnum.Bird, "Ambush", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Bird, "Ambush", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Bird, "Dominance", i++));
-        
+
         this.DrawDeck.push(new Card(CardSuitEnum.Rabbit, "Better Burrow Bank", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Rabbit, "Better Burrow Bank", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Rabbit, "Cobbler", i++));
@@ -79,7 +80,7 @@ export class GameState
         this.DrawDeck.push(new Card(CardSuitEnum.Mouse, "Mouse-in-a-Sack", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Mouse, "Ambush", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Mouse, "Dominance", i++));
-        
+
         this.DrawDeck.push(new Card(CardSuitEnum.Fox, "Stand and Deliver!", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Fox, "Stand and Deliver!", i++));
         this.DrawDeck.push(new Card(CardSuitEnum.Fox, "Tax Collector", i++));
@@ -96,6 +97,15 @@ export class GameState
         this.DrawDeck.push(new Card(CardSuitEnum.Fox, "Dominance", i++));
 
         this.DrawDeck.Randomize();
+
+    }
+
+    public Log(message: string): void
+    {
+        if (message === null || message.length === 0)
+            return;
+
+        this.History.push(message);
     }
 }
 

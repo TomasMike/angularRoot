@@ -30,7 +30,7 @@ export class TArray<T> extends Array<T>
         return s;
     }
 
-    public GetArray(): T[]
+    public ToArray(): T[]
     {
         return this as T[];
     }

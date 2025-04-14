@@ -1,3 +1,4 @@
+import { MoveResult } from "./models/MoveResult";
 
 export class Asker
 {
@@ -5,14 +6,14 @@ export class Asker
     AskOneClearing: (cancelable?: boolean, question?: string) => Promise<number>;
     AskOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>;
     AskAddDecree: (canCancel: boolean) => Promise<string>;
-    DoAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<boolean>;
+    DoAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<MoveResult|null>;
 
     constructor(
         that: object,
         askOneClearing: (cancelable?: boolean, question?: string) => Promise<number>,
         askOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>,
         askAddDecree: (canCancel: boolean) => Promise<string>,
-        doAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<boolean>)
+        doAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<MoveResult|null>)
     {
         this.that = that;
         this.AskOneClearing = askOneClearing;

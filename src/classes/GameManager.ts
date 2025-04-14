@@ -7,7 +7,7 @@ import { ClearingModel } from "./models/ClearingModel";
 import { AskPlayerQuestionTypeEnum, ComponentTypeEnum, RaceEnum } from "./models/Enums";
 import { ComponentHelper } from "./helpers/ComponentHelper";
 import { Card } from "./models/Card";
-import { GeneralHelper } from "./helpers/GeneralHelper";
+import { GeneralHelper } from "./helpers/BattleHelper";
 
 @Injectable({
     providedIn: "root"
@@ -15,6 +15,7 @@ import { GeneralHelper } from "./helpers/GeneralHelper";
 export class GameManager
 {
     static GameState: GameState = new GameState();
+    static History:string[] = [];
 
     constructor()
     {
@@ -24,39 +25,7 @@ export class GameManager
     {
         return this.GameState;
     }
-
-
-
-    //static GetNextClearingClick: (cancelable?: boolean) => Promise<number>;
-    // static GetNextClearingClickFiltered: (allowedIds: number[], cancelable?: boolean) => Promise<number>;
-    // static SetMessageBoxText: (text: string) => void;
-
-    // static Hook(getNextClearingClickMethod: (cancelable?: boolean) => Promise<number>, getNextClearingClickFilteredMethod: (allowedIds: number[], cancelable?: boolean) => Promise<number>, setMessageBoxText: (text: string) => void): void
-    // {
-    //     this.GetNextClearingClick = getNextClearingClickMethod;
-    //     this.GetNextClearingClickFiltered = getNextClearingClickFilteredMethod;
-    //     this.SetMessageBoxText = setMessageBoxText;
-    // }
-
-
-
-    // AskPlayer(question: string, questionType: AskPlayerQuestionTypeEnum)
-    // {
-    //     switch (questionType)
-    //     {
-    //         case AskPlayerQuestionTypeEnum.PickOneClearing:
-    //             return GameManager.GetNextClearingClick(false);
-    //         default: return null;
-    //     }
-    // }
-
-    // AskPlayerAnyClearing(): Promise<number>
-    // {
-    //     var p = GameManager.GetNextClearingClick(false);
-    //     //p.then(() => GameManager.SetMessageBoxText(""));
-    //     return p;
-    // }
-
+   
     static SpawnPiece(type: ComponentTypeEnum, clearingId: number): void
     {
         var c = ClearingHelper.GetClearingById(clearingId);
@@ -118,17 +87,7 @@ export class GameManager
         return this.GameState.DrawDeck.pop() as Card;
     }
 
-
-    static GetAllowedMoveFromClearings()
-    {
-        // array.forEach(element => {
-
-        // });
-        // this.gameState.Clearings
-        // this.gameState.ActivePlayerId
-    }
-
-
+   
 
     static ToggleClearingHighlight(a: number[] | string, b: boolean)
     {

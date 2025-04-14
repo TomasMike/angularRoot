@@ -28,9 +28,9 @@ export class ClearingModel
         this.Highlighted = false;
     }
 
-    GetCardSuitOfClearing():CardSuitEnum
+    GetCardSuitOfClearing(): CardSuitEnum
     {
-        switch(this.Suit)
+        switch (this.Suit)
         {
             case ClearingSuitEnum.Fox: return CardSuitEnum.Fox;
             case ClearingSuitEnum.Mouse: return CardSuitEnum.Mouse;
@@ -144,8 +144,18 @@ export class ClearingModel
 
     CanRaceFightHere(r: RaceEnum): boolean
     {
-        return this.Pieces.some(p => p.GetComponentRace() != r);
-
+        return this.Pieces.some(p => p.componentType === ComponentHelper.GetWarriorComponentTypeByRace(r))
+            && this.Pieces.some(p => p.GetComponentRace() != r);
     }
+
+    GetPossibleDefenders(r: RaceEnum)
+    {
+        var playerIds:number[] = [];
+
+        this.Pieces.forEach(p => {
+            // if(playerIds.includes(p.))
+        });
+    }
+
 }
 

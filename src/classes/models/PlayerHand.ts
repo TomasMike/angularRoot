@@ -38,3 +38,6 @@ export class PlayerHand
         return this._cards.First(_ => _.Id == id);
     }
 }
+
+
+

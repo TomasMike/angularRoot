@@ -1,6 +1,6 @@
 import { GameManager } from "../../classes/GameManager";
 import { ClearingHelper } from "../../classes/helpers/ClearingHelper";
-import { GeneralHelper } from "../../classes/helpers/GeneralHelper";
+import { GeneralHelper } from "../../classes/helpers/BattleHelper";
 import { ComponentTypeEnum, RaceEnum } from "../../classes/models/Enums";
 import { IRace } from "../IRace";
 

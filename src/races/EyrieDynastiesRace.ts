@@ -6,8 +6,6 @@ import { IRace } from "./IRace";
 import { Card, VizierCard } from "../classes/models/Card";
 import { TArray } from "../classes/types/TArray";
 import { Player } from "../classes/Player";
-import { GeneralHelper } from "../classes/helpers/GeneralHelper";
-
 
 export enum EyrieLeaderEnum
 {
@@ -147,6 +145,7 @@ export class EyrieDynastiesRace implements IRace
 
         var isTurmoil: boolean = false;
 
+        //#region DECREE RECRUIT
         if (requiredSuitsToRecruit.length > 0)
         {
             do
@@ -154,7 +153,7 @@ export class EyrieDynastiesRace implements IRace
                 //if we dont have any warrs in reserve, we cannot recruit -> turmoil
                 if (this.WarriorsReserve === 0)
                 {
-                    isTurmoil=true;
+                    isTurmoil = true;
                     break;
                 }
 
@@ -167,7 +166,7 @@ export class EyrieDynastiesRace implements IRace
                 //if not, turmoil
                 if (possibleClearingsToRecruit.length === 0)
                 {
-                    isTurmoil=true;
+                    isTurmoil = true;
                     break;
                 }
 
@@ -181,7 +180,7 @@ export class EyrieDynastiesRace implements IRace
                 {
                     if (this.WarriorsReserve === 0)
                     {
-                        isTurmoil=true;
+                        isTurmoil = true;
                         break;
                     }
 
@@ -189,12 +188,12 @@ export class EyrieDynastiesRace implements IRace
                 }
 
                 //get color of clearing we recruited on, remove the color from required colors
-                var usedSuit = ClearingHelper.GetClearingById(p).GetCardSuitOfClearing();
+                var usedSuitToRecruit = ClearingHelper.GetClearingById(p).GetCardSuitOfClearing();
 
                 // non bird suit was used
-                if (requiredSuitsToRecruit.some(s => s === usedSuit))
+                if (requiredSuitsToRecruit.some(s => s === usedSuitToRecruit))
                 {
-                    requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === usedSuit);
+                    requiredSuitsToRecruit = new TArray<CardSuitEnum>(requiredSuitsToRecruit).RemoveFirstMatching(s => s === usedSuitToRecruit);
                 }
                 else
                 {
@@ -208,7 +207,8 @@ export class EyrieDynastiesRace implements IRace
         console.log("eyrie Day Recruit end");
 
         console.log("eyrie Day Move start");
-
+        //#endregion DECREE RECRUIT
+        //#region DECREE MOVE
         var requiredSuitsToMoveFrom = this.Decree.recruit.map(_ => _.Suit);
 
         if (requiredSuitsToMoveFrom.length > 0)
@@ -226,12 +226,53 @@ export class EyrieDynastiesRace implements IRace
                 }
 
                 //pick clearing to move from
-                var q =  this.a.DoAMove(false, possibleClearingsToMoveFrom.map(c => c.Id));
-                await q;
+                var moveResult = await this.a.DoAMove(false, possibleClearingsToMoveFrom.map(c => c.Id));
+
+                if (moveResult == null)
+                {
+                    throw Error("move in decree cannot be cancelled");
+                }
+
+                var usedSuitToMoveFrom = ClearingHelper.GetClearingById(moveResult.From).GetCardSuitOfClearing();
+
+                if (requiredSuitsToMoveFrom.some(s => s === usedSuitToMoveFrom))
+                {
+                    requiredSuitsToMoveFrom = new TArray<CardSuitEnum>(requiredSuitsToMoveFrom).RemoveFirstMatching(s => s === usedSuitToRecruit);
+                }
+                else
+                {
+                    //we used bird
+                    requiredSuitsToMoveFrom = new TArray<CardSuitEnum>(requiredSuitsToMoveFrom).RemoveFirstMatching(s => s === CardSuitEnum.Bird);
+                }
+
+                //requiredSuitsToMoveFrom.remove
 
             } while (requiredSuitsToMoveFrom.length > 0);
         }
+        //#endregion DECREE MOVE
+        //#region DECREE BATTLE
+        var requiredSuitsToBattleIn = this.Decree.battle.map(_ => _.Suit);
 
+        if (requiredSuitsToBattleIn.length > 0)
+        {
+            do
+            {
+                var possibleClearingsToBattleIn = GameManager.GameState.Clearings
+                    .Where(c => requiredSuitsToBattleIn.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
+                    .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Warrior)) //has the clearing eyrie warrs
+                    .Where(c => c.CanRaceFightHere(RaceEnum.EyrieDynasties)); //the eyrie can battle in
+
+                if(possibleClearingsToBattleIn.length === 0)
+                {
+                    //turmoil
+                }
+
+                var p = await this.a.AskOneClearingFiltered(possibleClearingsToBattleIn.map(c=>c.Id),"pick a clearing to battle")
+                this.a.AskPrompt
+                
+            } while (requiredSuitsToBattleIn.length > 0);
+
+        }
 
 
 

@@ -16,6 +16,8 @@ import { CommonModule } from '@angular/common';
 import { AddDecreeDialog } from '../dialog/eyrieAddCardToDecreeDialog';
 import { TArray } from '../../classes/types/TArray';
 import { ExtensionFaker } from '../../classes/helpers/ExtensionFaker';
+import { RaceHelper } from '../../classes/helpers/RaceHelper';
+import { MoveResult } from '../../classes/models/MoveResult';
 @Component({
     selector: 'rootGame',
     standalone: true,
@@ -39,6 +41,9 @@ import { ExtensionFaker } from '../../classes/helpers/ExtensionFaker';
                     <div><button #can id="cancel" (click)="this.CancelButtonClickHandler.emit(-1)">cancel</button></div>
                     <div><button (click)="Test()">Test</button></div>
                 </div>
+                <div>
+
+                </div>
                
             </td>
             <td>
@@ -48,7 +53,7 @@ import { ExtensionFaker } from '../../classes/helpers/ExtensionFaker';
                 }
                 <div>
                     <ul>
-                        <li *ngFor="let l of Log">{{l}}</li>
+                        <li *ngFor="let l of this.GetGS().History">{{l}}</li>
                     </ul>
                 </div>
                 <div>
@@ -78,14 +83,14 @@ export class GameComponent
     moveMode: MoveMode;
     CancelButtonClickHandler: EventEmitter<number>;
     Asker: Asker;
-    Log: string[];
+    History: string[];
 
     constructor(public dialog: MatDialog)
     {
         this.clearingClickHandler = new EventEmitter<number>();
         this.CancelButtonClickHandler = new EventEmitter<number>();
         this.moveMode = MoveMode.None;
-        this.Log = [];
+        this.History = [];
 
         this.Asker = new Asker(
             this,
@@ -135,13 +140,12 @@ export class GameComponent
 
         for (let index = 0; true; index++)
         {
-            this.Log.push(`Round ${index} start.`);
+            this.Log(`Round ${index} start.`);
 
             for (let index = 0; index < GameManager.GameState.Players.length; index++)
             {
-
                 var p = GameManager.GameState.Players[index];
-                this.Log.push(`${RaceEnum[p.RaceEnum]} start.`);
+                this.Log(`${RaceEnum[p.RaceEnum]} start.`);
 
                 await p.Race.Morning();
                 await p.Race.Day();
@@ -213,11 +217,11 @@ export class GameComponent
     //#endregion
 
 
-    async Move(cancelable?: boolean, availableClearingsToMoveFrom?: number[], question?: string): Promise<boolean>
+    async Move(cancelable?: boolean, availableClearingsToMoveFrom?: number[], question?: string): Promise<MoveResult|null>
     {
         var canceled = false;
 
-        while (true)
+        while (!cancelable || !canceled)
         {
             canceled = false;
 
@@ -231,9 +235,8 @@ export class GameComponent
             {
 
                 var q = ClearingHelper.GetPossibleMoveOptionsFromThisClearing(movingPlayer.Race.RaceEnum, availableClearingsToMoveFrom[index]);
-                console.log(q);
 
-                availableMovementOptions.push(...q.filter(v => v[0] === -1));
+                availableMovementOptions.push(...q.filter(v => v[0] !== -1));
 
                 // availableClearingsToMoveFromTArray.push(availableClearingsToMoveFrom[index]);
             }
@@ -267,10 +270,10 @@ export class GameComponent
                 continue;//cancelled action
             }
 
-            var finalDestCl = ExtensionFaker.Distinct(availableMovementOptions.filter((v) => v[0] === moveFrom).map(v=>v[1])); 
+            var finalDestCl = ExtensionFaker.Distinct(availableMovementOptions.filter((v) => v[0] === moveFrom).map(v => v[1]));
 
             //todo filter where can move to
-            var pMoveTo = this.GetNextClearingClickFilteredAsync(finalDestCl,undefined,cancelable).then(i => moveTo = i);
+            var pMoveTo = this.GetNextClearingClickFilteredAsync(finalDestCl, undefined, cancelable).then(i => moveTo = i);
             this.messageText = `moving from [${moveFrom}] select clearing to move into`;
             await pMoveTo;
             console.log("after getting to");
@@ -288,29 +291,38 @@ export class GameComponent
                 data: ClearingHelper.GetClearingById(moveFrom).GetAmountOfWarOfPlayer(GameManager.GetActivePlayer().RaceEnum)
             });
 
-            var qq: number = -1;
+            var amountMoving: number = -1;
             var qwe = this.getNextValueFromSub(dialogRef.afterClosed()).then(i =>
             {
                 if (i === undefined)
-                    qq = -1;
+                    amountMoving = -1;
                 else
-                    qq = Number(i);
+                    amountMoving = Number(i);
             });
 
             await qwe;
-            console.log(`output from modal is ${qq} `);
+            console.log(`output from modal is ${amountMoving} `);
 
-            if (qq === -1)
+            if (amountMoving === -1)
             {
                 ResetMoveMode();
                 canceled = true;
                 continue;
             }
 
-            GameManager.Move(moveFrom, moveTo, qq);
-            ResetMoveMode(false);
+            GameManager.Move(moveFrom, moveTo, amountMoving);
+            this.Log(`${RaceHelper.RaceNameAsText(movingPlayer.Race.RaceEnum)} moving ${amountMoving} warrior/s from [${moveFrom}] to [${moveTo}]`)
+            return new MoveResult(moveFrom,moveTo,amountMoving);
         }
+
+        return null;
     }
+
+    public Log(message: string): void
+    {
+        this.GetGS().Log(message);
+    }
+
 
     public async GetNextClearingClickAsync(cancelable?: boolean, question?: string)
     {

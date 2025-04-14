@@ -6,6 +6,7 @@ import { ComponentHelper } from "../classes/helpers/ComponentHelper";
 import { ComponentTypeEnum, RaceEnum } from "../classes/models/Enums";
 import { IRace } from "./IRace";
 import { Player } from "../classes/Player";
+import { RaceHelper } from "../classes/helpers/RaceHelper";
 
 
 export class MarquiseDeCatRace implements IRace
@@ -35,6 +36,10 @@ export class MarquiseDeCatRace implements IRace
         this.Player = player;
 
     }
+    // Racestring(): string
+    // {
+    //     return RaceHelper.RaceNameAsText(this.RaceEnum);
+    // }
 
     StartingClearing?: number | undefined;
 
