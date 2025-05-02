@@ -45,6 +45,8 @@ export enum ComponentTypeEnum
     WoodlandAlliance_Token_Sympathy,
 
     Vagabond_Pawn,
+    // Vagabond_Pawn1,
+    // Vagabond_Pawn2,
 
     LizardCult_Warrior,
     LizardCult_Building_Garden_Fox,

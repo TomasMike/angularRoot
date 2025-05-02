@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 import { ComponentInfo } from "../ComponentInfo";
 import { Dictionary } from "../types/Dictionary";
 import { ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "../models/Enums";
+import { Player } from "../Player";
+import { PieceGroupingModel } from "../models/PieceGroupingModel";
+import { GameManager } from "../GameManager";
 
 @Injectable({
     providedIn: "root"
@@ -31,6 +34,8 @@ export class ComponentHelper
             case ComponentTypeEnum.WoodlandAlliance_Building_Base_Mouse: return new ComponentInfo(RaceEnum.WoodlandAlliance, ComponentGroupEnum.Building, "Mouse Base");
             case ComponentTypeEnum.WoodlandAlliance_Token_Sympathy: return new ComponentInfo(RaceEnum.WoodlandAlliance, ComponentGroupEnum.Token, "Sympathy");
             case ComponentTypeEnum.Vagabond_Pawn: return new ComponentInfo(RaceEnum.Vagabond, ComponentGroupEnum.Pawn, "Vagabond");
+            // case ComponentTypeEnum.Vagabond_Pawn1: return new ComponentInfo(RaceEnum.Vagabond, ComponentGroupEnum.Pawn, "Vagabond1");
+            // case ComponentTypeEnum.Vagabond_Pawn2: return new ComponentInfo(RaceEnum.Vagabond, ComponentGroupEnum.Pawn, "Vagabond2");
             case ComponentTypeEnum.LizardCult_Warrior: return new ComponentInfo(RaceEnum.LizardCult, ComponentGroupEnum.Warrior);
             case ComponentTypeEnum.LizardCult_Building_Garden_Fox: return new ComponentInfo(RaceEnum.LizardCult, ComponentGroupEnum.Building, "Fox Garden");
             case ComponentTypeEnum.LizardCult_Building_Garden_Rabbit: return new ComponentInfo(RaceEnum.LizardCult, ComponentGroupEnum.Building, "Rabbit Garden");
@@ -65,7 +70,8 @@ export class ComponentHelper
             case RaceEnum.MarquiseDeCat: return ComponentTypeEnum.MarquiseDeCat_Warrior;
             case RaceEnum.EyrieDynasties: return ComponentTypeEnum.EyrieDynasties_Warrior;
             case RaceEnum.WoodlandAlliance: return ComponentTypeEnum.WoodlandAlliance_Warrior;
-            case RaceEnum.Vagabond: return ComponentTypeEnum.Vagabond_Pawn;
+            case RaceEnum.Vagabond: 
+                return ComponentTypeEnum.Vagabond_Pawn;
             case RaceEnum.LizardCult: return ComponentTypeEnum.LizardCult_Warrior;
             case RaceEnum.RiverfolkCompany: return ComponentTypeEnum.RiverfolkCompany_Warrior;
             case RaceEnum.UndergroundDuchy: return ComponentTypeEnum.UndergroundDuchy_Warrior;
@@ -79,5 +85,20 @@ export class ComponentHelper
     public static GetRaceFromComponentTypeEnum(type:ComponentTypeEnum)
     {
         return ComponentHelper.GetComponentInfo(type).Race;
+    }
+
+    public static GetPlayerOwner(pgm:PieceGroupingModel):Player
+    {
+        if(pgm.GetComponentInfo().Race === RaceEnum.Vagabond)
+        {
+            var v = GameManager.GameState.Players.Where(p => p.RaceEnum == RaceEnum.Vagabond)
+
+            if(v.length == 0)
+                throw new Error();
+            else if(v.length == 1)
+                return v[0];
+        }
+
+        return GameManager.GameState.Players.First( p => p.RaceEnum === pgm.GetComponentInfo().Race)
     }
 }

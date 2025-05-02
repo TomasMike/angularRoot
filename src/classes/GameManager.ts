@@ -7,7 +7,6 @@ import { ClearingModel } from "./models/ClearingModel";
 import { AskPlayerQuestionTypeEnum, ComponentTypeEnum, RaceEnum } from "./models/Enums";
 import { ComponentHelper } from "./helpers/ComponentHelper";
 import { Card } from "./models/Card";
-import { GeneralHelper } from "./helpers/BattleHelper";
 
 @Injectable({
     providedIn: "root"
@@ -30,6 +29,7 @@ export class GameManager
     {
         var c = ClearingHelper.GetClearingById(clearingId);
 
+        //check race special conditions for spawwning ?
         var r = this.GameState.Players.First(_ => _.RaceEnum === ComponentHelper.GetRaceFromComponentTypeEnum(type)).Race;
 
         if (!r.HandleComponentSpawn(type))

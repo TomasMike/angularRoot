@@ -6,6 +6,7 @@ import { IRace } from "./IRace";
 import { Card, VizierCard } from "../classes/models/Card";
 import { TArray } from "../classes/types/TArray";
 import { Player } from "../classes/Player";
+import { BattleHelper } from "../classes/helpers/BattleHelper";
 
 export enum EyrieLeaderEnum
 {
@@ -268,7 +269,11 @@ export class EyrieDynastiesRace implements IRace
                 }
 
                 var p = await this.a.AskOneClearingFiltered(possibleClearingsToBattleIn.map(c=>c.Id),"pick a clearing to battle")
-                this.a.AskPrompt
+                
+                var q  =ClearingHelper.GetClearingById(p).GetPossibleDefenders
+                
+                this.a.AskPrompt("pick race to battle",)
+                // BattleHelper.
                 
             } while (requiredSuitsToBattleIn.length > 0);
 

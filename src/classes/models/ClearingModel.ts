@@ -57,6 +57,7 @@ export class ClearingModel
 
     AddPieces(type: ComponentTypeEnum, amount: number = 1): void
     {
+        
         var g = this.Pieces.find(_ => _.componentType === type);
 
         if (g === undefined)
@@ -148,12 +149,12 @@ export class ClearingModel
             && this.Pieces.some(p => p.GetComponentRace() != r);
     }
 
-    GetPossibleDefenders(r: RaceEnum)
+    GetPossibleDefenders(attacker: RaceEnum)
     {
         var playerIds:number[] = [];
 
         this.Pieces.forEach(p => {
-            // if(playerIds.includes(p.))
+            //if(playerIds.includes(p.GetComponentInfo))
         });
     }
 

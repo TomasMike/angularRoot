@@ -19,6 +19,16 @@ export class TArray<T> extends Array<T>
         return q as S;
     }
 
+    FirstOrNull<S extends T>(p: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): S
+    {
+        var q = this.find(p);
+
+        if (q === undefined)
+            return null as S;
+
+        return q as S;
+    }
+
     Where<S extends T>(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): TArray<S>
     {
         var q = this.filter(predicate);
