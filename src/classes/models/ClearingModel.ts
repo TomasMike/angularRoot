@@ -1,3 +1,4 @@
+import { GameManager } from "../GameManager";
 import { ClearingHelper } from "../helpers/ClearingHelper";
 import { ComponentHelper } from "../helpers/ComponentHelper";
 import { ExtensionFaker } from "../helpers/ExtensionFaker";
@@ -55,19 +56,23 @@ export class ClearingModel
     }
 
 
-    AddPieces(type: ComponentTypeEnum, amount: number = 1): void
+    AddPieces(type: ComponentTypeEnum, amount: number = 1,pNumber?:number): void
     {
-        
-        var g = this.Pieces.find(_ => _.componentType === type);
+        if(typeof pNumber === 'undefined')
+        {
+            pNumber = GameManager.GameState.Players.First(p => p.RaceEnum === ComponentHelper.GetComponentInfo(type).Race).Number;
+        }
 
-        if (g === undefined)
+        var group = this.Pieces.find(_ => _.componentType === type);
+
+        if (group === undefined)
         {
 
-            this.Pieces.push(new PieceGroupingModel(type, amount));
+            this.Pieces.push(new PieceGroupingModel(type, amount,pNumber));
         }
         else
         {
-            g.count += amount;
+            group.count += amount;
         }
     }
 

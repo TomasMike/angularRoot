@@ -55,7 +55,7 @@ export class MarquiseDeCatRace implements IRace
 
 
         startingClearing = await asker.AskOneClearingFiltered(ClearingHelper.GetAvailableStartingClearings(usedStartingClearings), "Select staring clearing");
-        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing);
+        GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Token_Keep, startingClearing,this.Player.Number);
         // usedStartingClearings.push(startingClearing);
 
         //6.3.3 Place a warrior in each clearing except the clearing in the diagonally opposite corner from the clearing with the keep token.
@@ -63,27 +63,27 @@ export class MarquiseDeCatRace implements IRace
         GameManager.GameState.Clearings.forEach(c =>
         {
             if (c.Id !== ClearingHelper.GetOppositeClearingId(startingClearing))
-                GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, c.Id);
+                GameManager.SpawnPiece(ComponentTypeEnum.MarquiseDeCat_Warrior, c.Id, this.Player.Number);
         });
 
         //6.3.4Place 1 sawmill, 1 workshop, and 1 recruiter. You may place them among the clearing with the keep token  nd any adjacent clearings, in any combination. 
         GameManager.SpawnPiece(
             ComponentTypeEnum.MarquiseDeCat_Building_Sawmill,
-            await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Sawmill`));
+            await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Sawmill`), this.Player.Number);
 
         GameManager.SpawnPiece(
             ComponentTypeEnum.MarquiseDeCat_Building_Recruiter,
-            await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Recruiter`));
+            await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Recruiter`), this.Player.Number);
         GameManager.SpawnPiece(
             ComponentTypeEnum.MarquiseDeCat_Building_Workshop,
-            await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Workshop`));
+            await asker.AskOneClearingFiltered(ClearingHelper.GetNeighbourClearings(startingClearing).concat([startingClearing]), `Select clearing to place Workshop`), this.Player.Number);
 
         return startingClearing;
 
     }
     async Morning(): Promise<void>
     {
-        
+
     }
     Day(): void
     {

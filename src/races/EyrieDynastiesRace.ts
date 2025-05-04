@@ -106,7 +106,7 @@ export class EyrieDynastiesRace implements IRace
 
         for (let index = 1; index <= 6; index++)
         {
-            GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, startingClearing);
+            GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, startingClearing, this.Player.Number);
         }
 
         // 7.3.3 Step 3: Choose Leader. Choose 1 of the 4 Eyrie leader cards and place it in your Leader Card slot. Gather the remaining leaders face up near you.
@@ -174,7 +174,7 @@ export class EyrieDynastiesRace implements IRace
                 //pick clearing to recruit
                 var p = await this.a.AskOneClearingFiltered(possibleClearingsToRecruit.map(c => c.Id), "Pick a clearing to recruit.", false);
 
-                GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
+                GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p, this.Player.Number);
 
                 //with charismatic leader, we must recruit twice, if we have only one warrior, we recruit one, the turmoil
                 if (this.ActiveLeader === EyrieLeaderEnum.Charismatic)
@@ -185,7 +185,7 @@ export class EyrieDynastiesRace implements IRace
                         break;
                     }
 
-                    GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p);
+                    GameManager.SpawnPiece(ComponentTypeEnum.EyrieDynasties_Warrior, p, this.Player.Number);
                 }
 
                 //get color of clearing we recruited on, remove the color from required colors
@@ -263,22 +263,24 @@ export class EyrieDynastiesRace implements IRace
                     .Where(c => c.Pieces.some(p => p.componentType === ComponentTypeEnum.EyrieDynasties_Warrior)) //has the clearing eyrie warrs
                     .Where(c => c.CanRaceFightHere(RaceEnum.EyrieDynasties)); //the eyrie can battle in
 
-                if(possibleClearingsToBattleIn.length === 0)
+                if (possibleClearingsToBattleIn.length === 0)
                 {
                     //turmoil
                 }
 
-                var p = await this.a.AskOneClearingFiltered(possibleClearingsToBattleIn.map(c=>c.Id),"pick a clearing to battle")
-                
-                var q  =ClearingHelper.GetClearingById(p).GetPossibleDefenders
-                
-                this.a.AskPrompt("pick race to battle",)
-                // BattleHelper.
-                
+                var p = await this.a.AskOneClearingFiltered(possibleClearingsToBattleIn.map(c => c.Id), "pick a clearing to battle")
+
+                var q = ClearingHelper.GetClearingById(p).GetPossibleDefenders(RaceEnum.EyrieDynasties);
+
+                this.a.AskPrompt("pick race to battle");
+                BattleHelper.Battle
+
             } while (requiredSuitsToBattleIn.length > 0);
 
         }
-
+        //#endregion DECREE BATTLE
+        //#region DECREE BUILD
+        //#endregion DECREE BUILD
 
 
 

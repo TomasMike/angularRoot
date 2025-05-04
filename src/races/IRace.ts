@@ -7,6 +7,7 @@ export interface IRace
 {
     RaceEnum: RaceEnum;
     StartingClearing?: number;
+    // Player
     
 
     Setup(asker: Asker, availableStartingClearings: number[]): Promise<number>;

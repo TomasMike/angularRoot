@@ -14,7 +14,7 @@ import { Card } from "./models/Card";
 export class GameManager
 {
     static GameState: GameState = new GameState();
-    static History:string[] = [];
+    static History: string[] = [];
 
     constructor()
     {
@@ -24,8 +24,10 @@ export class GameManager
     {
         return this.GameState;
     }
-   
-    static SpawnPiece(type: ComponentTypeEnum, clearingId: number): void
+
+
+
+    static SpawnPiece(type: ComponentTypeEnum, clearingId: number, pNumber?: number): void
     {
         var c = ClearingHelper.GetClearingById(clearingId);
 
@@ -37,7 +39,7 @@ export class GameManager
             return;
         }
 
-        c.AddPieces(type);
+        c.AddPieces(type, 1, pNumber);
     }
 
     static ExecCommand(command: string): void
@@ -46,13 +48,20 @@ export class GameManager
 
     }
 
+    static test(a: number, b: number | null)
+    {
+
+    }
+
     static Move(idFrom: number, idTo: number, amount: number)
     {
-        var activePlayerRace = GameManager.GetActivePlayer().RaceEnum;
-        var wType = ComponentHelper.GetWarriorComponentTypeByRace(activePlayerRace);
+        var activePlayer = GameManager.GetActivePlayer();
+        var wType = ComponentHelper.GetWarriorComponentTypeByRace(activePlayer.RaceEnum);
+
+        ComponentHelper.GetComponentInfo(wType);
 
         ClearingHelper.GetClearingById(idFrom).RemovePieces(wType, amount);
-        ClearingHelper.GetClearingById(idTo).AddPieces(wType, amount);
+        ClearingHelper.GetClearingById(idTo).AddPieces(wType, amount, activePlayer.Number);
         // var toPieces = this.GetClearingById(idTo).Pieces;
 
 
@@ -64,7 +73,7 @@ export class GameManager
 
     }
 
- 
+
 
     static GetActivePlayer(): Player
     {
@@ -87,7 +96,7 @@ export class GameManager
         return this.GameState.DrawDeck.pop() as Card;
     }
 
-   
+
 
     static ToggleClearingHighlight(a: number[] | string, b: boolean)
     {

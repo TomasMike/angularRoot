@@ -11,17 +11,19 @@ export class PieceGroupingModel
     componentType: ComponentTypeEnum;
     componentTypeText: string;
     count: number;
+    playerNumber: number;
 
-    constructor(type: ComponentTypeEnum, amount: number = 1)
+    constructor(type: ComponentTypeEnum, amount: number = 1, pNumber: number)
     {
         this.componentType = type;
         this.count = amount;
         this.componentTypeText = ComponentTypeEnum[this.componentType];
+        this.playerNumber = pNumber;
     }
 
     GetComponentRaceText(): string
     {
-        return RaceEnum[this.GetComponentRace()].toString()
+        return RaceEnum[this.GetComponentRace()].toString();
     }
 
     GetComponentRace(): RaceEnum
