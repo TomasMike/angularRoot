@@ -279,7 +279,9 @@ export class EyrieDynastiesRace implements IRace
 
         }
         //#endregion DECREE BATTLE
+
         //#region DECREE BUILD
+        var requiredSuitsToBattleIn = this.Decree.build.map(_ => _.Suit);
         //#endregion DECREE BUILD
 
 
