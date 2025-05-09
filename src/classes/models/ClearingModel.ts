@@ -2,6 +2,7 @@ import { GameManager } from "../GameManager";
 import { ClearingHelper } from "../helpers/ClearingHelper";
 import { ComponentHelper } from "../helpers/ComponentHelper";
 import { ExtensionFaker } from "../helpers/ExtensionFaker";
+import { GeneralHelper } from "../helpers/GeneralHelper";
 import { Dictionary } from "../types/Dictionary";
 import { TArray } from "../types/TArray";
 import { Card } from "./Card";
@@ -56,9 +57,9 @@ export class ClearingModel
     }
 
 
-    AddPieces(type: ComponentTypeEnum, amount: number = 1,pNumber?:number): void
+    AddPieces(type: ComponentTypeEnum, amount: number = 1, pNumber?: number): void
     {
-        if(typeof pNumber === 'undefined')
+        if (typeof pNumber === 'undefined')
         {
             pNumber = GameManager.GameState.Players.First(p => p.RaceEnum === ComponentHelper.GetComponentInfo(type).Race).Number;
         }
@@ -68,7 +69,7 @@ export class ClearingModel
         if (group === undefined)
         {
 
-            this.Pieces.push(new PieceGroupingModel(type, amount,pNumber));
+            this.Pieces.push(new PieceGroupingModel(type, amount, pNumber));
         }
         else
         {
@@ -156,10 +157,22 @@ export class ClearingModel
 
     GetPossibleDefenders(attacker: RaceEnum)
     {
-        var playerIds:number[] = [];
+        var attackerId = GeneralHelper.GetPlayerByRaceEnum(attacker).Number;
 
-        this.Pieces.forEach(p => {
-            //if(playerIds.includes(p.GetComponentInfo))
+
+        var playerIds: number[] = [];
+
+        this.Pieces.forEach(p =>
+        {
+            var cRace = p.GetComponentRace();
+            
+
+            if (cRace === attacker)
+                continue;
+
+            if(playerIds)
+
+            if (playerIds.includes(p.GetComponentInfo().))
         });
     }
 
