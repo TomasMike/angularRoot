@@ -4,7 +4,9 @@ import { Player } from "../Player";
 
 export class GeneralHelper
 {
-    // min and max included 
+    /**
+     * Min and max included
+     */
     public static RandomIntFromInterval(min: number, max: number)
     {
         return Math.floor(Math.random() * (max - min + 1) + min);
@@ -27,5 +29,15 @@ export class GeneralHelper
         {
             return GameManager.GameState.Players.First(p => p.RaceEnum === race);
         }
+    }
+
+    public static GetPlayerById(id:number):Player
+    {
+        return GameManager.GameState.Players.First(_ => _.Number === id);
+    }
+
+    public static IsUndefined(o:any):boolean
+    {
+        return typeof(o) === "undefined";
     }
 }

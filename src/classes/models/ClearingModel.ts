@@ -7,6 +7,7 @@ import { Dictionary } from "../types/Dictionary";
 import { TArray } from "../types/TArray";
 import { Card } from "./Card";
 import { CardSuitEnum, ClearingSuitEnum, ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "./Enums";
+import { AskerPromptOption } from "./Option";
 import { PieceGroupingModel } from "./PieceGroupingModel";
 
 export class ClearingModel
@@ -155,7 +156,7 @@ export class ClearingModel
             && this.Pieces.some(p => p.GetComponentRace() != r);
     }
 
-    GetPossibleDefenders(attacker: RaceEnum)
+    GetPossibleDefenders(attacker: RaceEnum): number[]
     {
         var attackerId = GeneralHelper.GetPlayerByRaceEnum(attacker).Number;
 
@@ -164,17 +165,45 @@ export class ClearingModel
 
         this.Pieces.forEach(p =>
         {
-            var cRace = p.GetComponentRace();
-            
+            var cNum = p.playerNumber;
 
-            if (cRace === attacker)
-                continue;
 
-            if(playerIds)
-
-            if (playerIds.includes(p.GetComponentInfo().))
+            if (cNum !== attackerId)
+            {
+                if (!playerIds.includes(cNum))
+                {
+                    playerIds.push(cNum);
+                }
+            }
         });
+
+        return playerIds;
     }
+
+    GetPossibleDefendersForAskPrompt(attacker: RaceEnum): AskerPromptOption[]
+    {
+        var attackerId = GeneralHelper.GetPlayerByRaceEnum(attacker).Number;
+
+
+        var options: AskerPromptOption[] = [];
+
+        this.Pieces.forEach(p =>
+        {
+            var cNum = p.playerNumber;
+
+
+            if (cNum !== attackerId)
+            {
+                if (options.every(o => o.Id !== cNum))
+                {
+                    options.push(new AskerPromptOption(p.GetComponentInfo().ComponentDisplayText, cNum));
+                }
+            }
+        });
+
+        return options;
+    }
+
 
 }
 

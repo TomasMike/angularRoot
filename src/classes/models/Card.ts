@@ -29,3 +29,5 @@ export class VizierCard extends Card
        super(suit,name,-1,CardTypeEnum.EyrieVizier);
     }
 }
+
+

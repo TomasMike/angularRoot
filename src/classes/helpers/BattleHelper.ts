@@ -30,7 +30,6 @@ export class BattleHelper
             aDice = dice[0];
             dDice = dice[1];
         }
-
         else
         {
             aDice = dice[1];

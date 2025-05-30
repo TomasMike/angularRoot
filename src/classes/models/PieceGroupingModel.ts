@@ -40,6 +40,11 @@ export class PieceGroupingModel
     {
         return ComponentHelper.GetComponentInfo(this.componentType);
     }
+
+    GetPlayerIdFromComponent():number
+    {
+        return this.playerNumber;
+    }
 }
 
 

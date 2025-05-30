@@ -9,6 +9,9 @@ html {
   display: flex;
   flex-wrap: wrap;
 }
+#message {
+  text-align: center;
+}
 .MarquiseDeCat {
   background-color: orange;
 }
