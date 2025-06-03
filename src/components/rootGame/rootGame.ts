@@ -19,7 +19,7 @@ import { ExtensionFaker } from '../../classes/helpers/ExtensionFaker';
 import { RaceHelper } from '../../classes/helpers/RaceHelper';
 import { MoveResult } from '../../classes/models/MoveResult';
 import { AskerPromptOption } from '../../classes/models/Option';
-import { IngamePrompt } from '../board/ingamePrompt';
+import { IngamePrompt } from '../../components/board/ingameprompt'
 
 @Component({
     selector: 'rootGame',
@@ -34,7 +34,8 @@ import { IngamePrompt } from '../board/ingamePrompt';
                 <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
                 <div id="message">{{messageText}}</div>
                 <div id="askDiv"><ingameprompt #askerPrompt [OptionSelectedEmitter]="AskerPromptOptionSelectedHandler"></ingameprompt></div>
-                <div id="debugButtonsPanel">
+                <p></p>
+                 <div id="debugButtonsPanel">
                     <!-- <div><button (click)="Start()">Start</button></div> -->
                     <!-- <div><button (click)="Reset()">Reset</button></div> -->
                     <div><button (click)="MoveButtonClick()">{{getMoveBtnText()}}</button></div>
@@ -112,7 +113,7 @@ export class GameComponent
             },
             (cancelable: boolean) => { return this.AskerAddDecree(cancelable); },
             (cancelable?: boolean, allowedIds?: number[], question?: string) => { return this.Move(cancelable, allowedIds, question); },
-            (question: string, options: AskerPromptOption[], cancelable?: boolean) => this.AskTest(question,options,cancelable)
+            (question: string, options: AskerPromptOption[], cancelable?: boolean) => this.AskTest(question, options, cancelable)
         );
 
 
@@ -174,11 +175,11 @@ export class GameComponent
     //#endregion
 
 
-    async AskTest(question:string,options:AskerPromptOption[],cancelable?: boolean): Promise<number>
+    async AskTest(question: string, options: AskerPromptOption[], cancelable?: boolean): Promise<number>
     {
         this.AskerPromptElement().addOptions(options);
-        
-        if(!cancelable)
+
+        if (!cancelable)
             this.AskerPromptElement().addOptions([new AskerPromptOption("Cancel", -1)]);
 
         this.messageText = question;
