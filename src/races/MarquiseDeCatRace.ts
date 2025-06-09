@@ -87,11 +87,11 @@ export class MarquiseDeCatRace implements IRace
     }
     Day(): void
     {
-        throw new Error("Method not implemented.");
+        // throw new Error("Method not implemented.");
     }
     Evening(): void
     {
-        throw new Error("Method not implemented.");
+        // throw new Error("Method not implemented.");
     }
 
     HandleComponentSpawn(type: ComponentTypeEnum): boolean

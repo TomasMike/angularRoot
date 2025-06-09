@@ -81,7 +81,7 @@ export class EyrieDynastiesRace implements IRace
     {
         this.WarriorsReserve = 20;
         this.RoostReserve = 7;
-        this.UnusedLeaders = [];
+        this.UnusedLeaders = [EyrieLeaderEnum.Builder,EyrieLeaderEnum.Commander,EyrieLeaderEnum.Despot,EyrieLeaderEnum.Charismatic];
         this.UsedLeaders = [];
         this.Player = player;
         this.CardsInDecree = [];
@@ -281,7 +281,7 @@ export class EyrieDynastiesRace implements IRace
 
                     var possibleDefendants = ClearingHelper.GetClearingById(battleClearing).GetPossibleDefendersForAskPrompt(RaceEnum.EyrieDynasties);
 
-                    var pickedDefender = await this.a.AskPrompt("pick race to battle", possibleDefendants);
+                    var pickedDefender = await this.a.AskPrompt("pick race to battle", possibleDefendants, true);
 
                     if (pickedDefender === -1)
                         continue;
@@ -311,7 +311,24 @@ export class EyrieDynastiesRace implements IRace
 
             if (requiredSuitsToBuildIn.length > 0)
             {
+                do 
+                {
+                    var possibleClearingsToBuildIn = GameManager.GameState.Clearings
+                        .Where(c => requiredSuitsToBuildIn.some(b => c.IsCardSuitMatchingClearing(b))) //clearings of suits in decree
+                        .Where(c => c.GetWhoRulesClearing() === RaceEnum.EyrieDynasties) //the eyrie can battle in
+                        .Where(c => c.HasFreeBuildingSlot()) //has free build slot
 
+                    if (possibleClearingsToBuildIn.length === 0)
+                    {
+                        //turmoil
+                    }
+
+                    var buildClearing = await this.a.AskOneClearingFiltered(possibleClearingsToBuildIn.map(c => c.Id), "pick a clearing to build roost in.")
+
+                    ClearingHelper.GetClearingById(buildClearing).AddPieces(ComponentTypeEnum.EyrieDynasties_Building_Roost);
+
+                    this.RoostReserve--;
+                } while (requiredSuitsToBuildIn.length > 0);
             }
             //#endregion DECREE BUILD
 
@@ -359,13 +376,22 @@ export class EyrieDynastiesRace implements IRace
 
     async SetupNewLeader(asker: Asker, debug: boolean = false)
     {
-        var extraInfo = EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => `[${_.value}]-${_.text}`).join(',');
+
+        var options;
+
+        if(this.UnusedLeaders)
+
+        this.Leaders.Where(l => this).forEach(l =>
+        {
+
+        })
+
         let leader: number;
 
         if (debug)
             leader = 0;
         else
-            leader = await asker.AskPrompt(`Choose leader `, EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => new AskerPromptOption(_.text, _.value)))
+            leader = await asker.AskPrompt('Choose leader', EnumHelper.GetEnumArray(EyrieLeaderEnum).map(_ => new AskerPromptOption(_.text, _.value)), false);
 
         this.ActiveLeader = leader;
 
@@ -375,9 +401,7 @@ export class EyrieDynastiesRace implements IRace
         }
 
         //rule fact, you must go through all leaders before using any leader a second time
-        this.UnusedLeaders = EnumHelper.GetEnumArray(EyrieLeaderEnum)
-            .filter(_ => _.value !== leader)
-            .map(_ => _.value);
+        this.UnusedLeaders = 
     }
 
 
@@ -409,7 +433,7 @@ export class EyrieDynastiesRace implements IRace
         {
             var selection = await this.a.AskAddDecree(canCancel);
 
-            if(GeneralHelper.IsUndefined(selection))
+            if (GeneralHelper.IsUndefined(selection))
                 continue;
 
             if (selection == "-1")

@@ -20,6 +20,7 @@ import { RaceHelper } from '../../classes/helpers/RaceHelper';
 import { MoveResult } from '../../classes/models/MoveResult';
 import { AskerPromptOption } from '../../classes/models/Option';
 import { IngamePrompt } from '../../components/board/ingameprompt'
+import { GeneralHelper } from '../../classes/helpers/GeneralHelper';
 
 @Component({
     selector: 'rootGame',
@@ -103,17 +104,11 @@ export class GameComponent
         // this.AskPromptOptions = [new AskerPromptOption("t", 1)];
         this.Asker = new Asker(
             this,
-            (c?: boolean, question?: string) => 
-            {
-                return this.GetNextClearingClickAsync(c, question);
-            },
-            (allowedIds: number[], question?: string, c?: boolean) => 
-            {
-                return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
-            },
-            (cancelable: boolean) => { return this.AskerAddDecree(cancelable); },
-            (cancelable?: boolean, allowedIds?: number[], question?: string) => { return this.Move(cancelable, allowedIds, question); },
-            (question: string, options: AskerPromptOption[], cancelable?: boolean) => this.AskTest(question, options, cancelable)
+            (c?: boolean, question?: string) =>                                 { return this.GetNextClearingClickAsync(c, question); },
+            (allowedIds: number[], question?: string, c?: boolean) =>           { return this.GetNextClearingClickFilteredAsync(allowedIds, question, c); },
+            (canCancel: boolean) =>                                             { return this.AskerAddDecree(canCancel); },
+            (canCancel?: boolean, allowedIds?: number[], question?: string) =>  { return this.Move(canCancel, allowedIds, question); },
+            (question: string, options: AskerPromptOption[], canCancel: boolean) => this.AskTest(question, options, canCancel)
         );
 
 
@@ -175,11 +170,11 @@ export class GameComponent
     //#endregion
 
 
-    async AskTest(question: string, options: AskerPromptOption[], cancelable?: boolean): Promise<number>
+    async AskTest(question: string, options: AskerPromptOption[], canCancel: boolean): Promise<number>
     {
         this.AskerPromptElement().addOptions(options);
 
-        if (!cancelable)
+        if (canCancel)
             this.AskerPromptElement().addOptions([new AskerPromptOption("Cancel", -1)]);
 
         this.messageText = question;

@@ -1,3 +1,4 @@
+import { error } from "console";
 import { GameManager } from "../GameManager";
 import { ClearingHelper } from "../helpers/ClearingHelper";
 import { ComponentHelper } from "../helpers/ComponentHelper";
@@ -5,6 +6,7 @@ import { ExtensionFaker } from "../helpers/ExtensionFaker";
 import { GeneralHelper } from "../helpers/GeneralHelper";
 import { Dictionary } from "../types/Dictionary";
 import { TArray } from "../types/TArray";
+import { BuildingSlot } from "./BuildingSlot";
 import { Card } from "./Card";
 import { CardSuitEnum, ClearingSuitEnum, ComponentGroupEnum, ComponentTypeEnum, RaceEnum } from "./Enums";
 import { AskerPromptOption } from "./Option";
@@ -19,8 +21,9 @@ export class ClearingModel
     Pieces: TArray<PieceGroupingModel>;
     Highlighted: boolean;
     SuitText: string;
+    BuildingSlots: BuildingSlot[];
 
-    constructor(id: number, color: ClearingSuitEnum, left: number, top: number)
+    constructor(id: number, buildingSlots: number, buildingAndRuinsSlots: number, color: ClearingSuitEnum, left: number, top: number)
     {
         this.Id = id;
         this.Suit = color;
@@ -29,6 +32,16 @@ export class ClearingModel
         this.Top = top;
         this.Pieces = new TArray;
         this.Highlighted = false;
+
+        this.BuildingSlots = [];
+        for (let i = 1; i <= buildingSlots; i++)
+        {
+            this.BuildingSlots.push(new BuildingSlot(false));
+        }
+        for (let i = 1; i <= buildingAndRuinsSlots; i++)
+        {
+            this.BuildingSlots.push(new BuildingSlot(true));
+        }
     }
 
     GetCardSuitOfClearing(): CardSuitEnum
@@ -60,6 +73,16 @@ export class ClearingModel
 
     AddPieces(type: ComponentTypeEnum, amount: number = 1, pNumber?: number): void
     {
+        
+        if(ComponentHelper.GetComponentInfo(type).Group === ComponentGroupEnum.Building)
+        {
+            if(!this.HasFreeBuildingSlot())
+                throw new Error("Cant build, no free build spaces");
+
+            this.BuildingSlots.find( bs => bs.IsEmpty())?.Building === type;
+
+        }
+
         if (typeof pNumber === 'undefined')
         {
             pNumber = GameManager.GameState.Players.First(p => p.RaceEnum === ComponentHelper.GetComponentInfo(type).Race).Number;
@@ -196,12 +219,17 @@ export class ClearingModel
             {
                 if (options.every(o => o.Id !== cNum))
                 {
-                    options.push(new AskerPromptOption(p.GetComponentInfo().ComponentDisplayText, cNum));
+                    options.push(new AskerPromptOption(p.GetComponentRaceText(), cNum));
                 }
             }
         });
 
         return options;
+    }
+
+    HasFreeBuildingSlot():boolean
+    {
+        return this.BuildingSlots.some(b => b.IsEmpty());
     }
 
 
