@@ -130,7 +130,7 @@ export class GameComponent
             {
                 p.Hand.Draw(GameManager.DrawCard());
             }
-
+            this.Log(`Setuping ${RaceHelper.RaceNameAsText(p.RaceEnum)} start.`);
             p.SetRace();
             var sc = await p.Race.Setup(this.Asker, usedStartingClearings);
             usedStartingClearings.push(sc);
@@ -145,13 +145,13 @@ export class GameComponent
             for (let index = 0; index < GameManager.GameState.Players.length; index++)
             {
                 var p = GameManager.GameState.Players[index];
-                this.Log(`${RaceEnum[p.RaceEnum]} start.`);
-
+                this.Log(`${RaceHelper.RaceNameAsText(p.RaceEnum)} start.`);
+                this.Log(`${RaceHelper.RaceNameAsText(p.RaceEnum)} MORNING start.`);
                 await p.Race.Morning();
+                this.Log(`${RaceHelper.RaceNameAsText(p.RaceEnum)} DAY start.`);
                 await p.Race.Day();
+                this.Log(`${RaceHelper.RaceNameAsText(p.RaceEnum)} EVENING start.`);
                 await p.Race.Evening();
-
-
             }
         }
 
