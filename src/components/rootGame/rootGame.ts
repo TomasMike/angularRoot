@@ -1,5 +1,5 @@
-import { Component, EventEmitter } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, EventEmitter, Signal, viewChild } from '@angular/core';
+import { ChildActivationEnd, RouterOutlet } from '@angular/router';
 import { BoardComponent } from '../board/board';
 import { GameManager } from '../../classes/GameManager';
 import { Asker } from "../../classes/Asker";
@@ -18,10 +18,14 @@ import { TArray } from '../../classes/types/TArray';
 import { ExtensionFaker } from '../../classes/helpers/ExtensionFaker';
 import { RaceHelper } from '../../classes/helpers/RaceHelper';
 import { MoveResult } from '../../classes/models/MoveResult';
+import { AskerPromptOption } from '../../classes/models/Option';
+import { IngamePrompt } from '../../components/board/ingameprompt'
+import { GeneralHelper } from '../../classes/helpers/GeneralHelper';
+
 @Component({
     selector: 'rootGame',
     standalone: true,
-    imports: [CommonModule, BoardComponent, MatSelectModule, RacePickingSectionComponent, PlayerBoardComponent],
+    imports: [CommonModule, BoardComponent, MatSelectModule, RacePickingSectionComponent, PlayerBoardComponent, IngamePrompt],
     //templateUrl: './game.html',
     template: `
     <table>
@@ -30,7 +34,9 @@ import { MoveResult } from '../../classes/models/MoveResult';
             <td>
                 <board id="boardWrapper" [clearings]="this.GetGS().Clearings" [clickEventEmitter]="clearingClickHandler" ></board>
                 <div id="message">{{messageText}}</div>
-                <div id="debugButtonsPanel">
+                <div id="askDiv"><ingameprompt #askerPrompt [OptionSelectedEmitter]="AskerPromptOptionSelectedHandler"></ingameprompt></div>
+                <p></p>
+                 <div id="debugButtonsPanel">
                     <!-- <div><button (click)="Start()">Start</button></div> -->
                     <!-- <div><button (click)="Reset()">Reset</button></div> -->
                     <div><button (click)="MoveButtonClick()">{{getMoveBtnText()}}</button></div>
@@ -78,32 +84,35 @@ import { MoveResult } from '../../classes/models/MoveResult';
 })
 export class GameComponent
 {
-    messageText!: string;
     clearingClickHandler: EventEmitter<number>;
-    moveMode: MoveMode;
     CancelButtonClickHandler: EventEmitter<number>;
+    AskerPromptOptionSelectedHandler: EventEmitter<number>;
+    messageText!: string;
+    moveMode: MoveMode;
     Asker: Asker;
     History: string[];
+    AskPromptOptions!: AskerPromptOption[];
+    AskerPromptElement: Signal<IngamePrompt> = viewChild.required(IngamePrompt);
 
     constructor(public dialog: MatDialog)
     {
         this.clearingClickHandler = new EventEmitter<number>();
         this.CancelButtonClickHandler = new EventEmitter<number>();
+        this.AskerPromptOptionSelectedHandler = new EventEmitter<number>;
         this.moveMode = MoveMode.None;
         this.History = [];
-
+        // this.AskPromptOptions = [new AskerPromptOption("t", 1)];
         this.Asker = new Asker(
             this,
-            (c?: boolean, question?: string) => 
-            {
-                return this.GetNextClearingClickAsync(c, question);
-            },
-            (allowedIds: number[], question?: string, c?: boolean) => 
-            {
-                return this.GetNextClearingClickFilteredAsync(allowedIds, question, c);
-            },
-            (cancelable: boolean) => { return this.AskerAddDecree(cancelable); },
-            (cancelable?: boolean, allowedIds?: number[], question?: string) => { return this.Move(cancelable, allowedIds, question); });
+            (c?: boolean, question?: string) =>                                 { return this.GetNextClearingClickAsync(c, question); },
+            (allowedIds: number[], question?: string, c?: boolean) =>           { return this.GetNextClearingClickFilteredAsync(allowedIds, question, c); },
+            (canCancel: boolean) =>                                             { return this.AskerAddDecree(canCancel); },
+            (canCancel?: boolean, allowedIds?: number[], question?: string) =>  { return this.Move(canCancel, allowedIds, question); },
+            (question: string, options: AskerPromptOption[], canCancel: boolean) => this.AskTest(question, options, canCancel)
+        );
+
+
+
     }
 
     //#region GAME LOOP
@@ -161,6 +170,26 @@ export class GameComponent
     //#endregion
 
 
+    async AskTest(question: string, options: AskerPromptOption[], canCancel: boolean): Promise<number>
+    {
+        this.AskerPromptElement().addOptions(options);
+
+        if (canCancel)
+            this.AskerPromptElement().addOptions([new AskerPromptOption("Cancel", -1)]);
+
+        this.messageText = question;
+        var retVal: number = 0;
+        await new Promise<number>(async callback =>
+        {
+            var s = this.AskerPromptOptionSelectedHandler.subscribe(i =>
+            {
+                s.unsubscribe();
+                callback(i);
+            });
+        }).then(a => retVal = a);
+        return retVal;
+
+    }
     //#region PRIVATE
 
     GetGS()
@@ -198,7 +227,8 @@ export class GameComponent
 
     Test()
     {
-        console.log(GameManager.GameState);
+        // this.AskTest("t");
+        // console.log(GameManager.GameState);
         //var q = this.Asker.AskPrompt("kolko?",["1","2"],false);
         //console.log(q);
     }
@@ -217,7 +247,7 @@ export class GameComponent
     //#endregion
 
 
-    async Move(cancelable?: boolean, availableClearingsToMoveFrom?: number[], question?: string): Promise<MoveResult|null>
+    async Move(cancelable?: boolean, availableClearingsToMoveFrom?: number[], question?: string): Promise<MoveResult | null>
     {
         var canceled = false;
 
@@ -312,7 +342,7 @@ export class GameComponent
 
             GameManager.Move(moveFrom, moveTo, amountMoving);
             this.Log(`${RaceHelper.RaceNameAsText(movingPlayer.Race.RaceEnum)} moving ${amountMoving} warrior/s from [${moveFrom}] to [${moveTo}]`)
-            return new MoveResult(moveFrom,moveTo,amountMoving);
+            return new MoveResult(moveFrom, moveTo, amountMoving);
         }
 
         return null;

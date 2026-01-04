@@ -107,5 +107,10 @@ export class GameState
 
         this.History.push(message);
     }
+
+    public IsTwoVagabondGame():boolean
+    {
+        return this.Players.Where(p => p.RaceEnum === RaceEnum.Vagabond).length === 2;
+    }
 }
 

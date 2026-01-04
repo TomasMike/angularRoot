@@ -1,25 +1,29 @@
 import { MoveResult } from "./models/MoveResult";
+import { AskerPromptOption } from "./models/Option";
 
 export class Asker
 {
     that: object;
     AskOneClearing: (cancelable?: boolean, question?: string) => Promise<number>;
-    AskOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>;
+    AskOneClearingFiltered: (allowedIds: number[], question?: string, canCancel?: boolean) => Promise<number>;
     AskAddDecree: (canCancel: boolean) => Promise<string>;
-    DoAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<MoveResult|null>;
+    DoAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<MoveResult | null>;
+    AskPrompt: (question: string, options: AskerPromptOption[], canCancel: boolean) => Promise<number>;
 
     constructor(
         that: object,
         askOneClearing: (cancelable?: boolean, question?: string) => Promise<number>,
-        askOneClearingFiltered: (allowedIds: number[], question?: string, cancelable?: boolean) => Promise<number>,
+        askOneClearingFiltered: (allowedIds: number[], question?: string, canCancel?: boolean) => Promise<number>,
         askAddDecree: (canCancel: boolean) => Promise<string>,
-        doAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<MoveResult|null>)
+        doAMove: (cancelable?: boolean, allowedIds?: number[], question?: string) => Promise<MoveResult | null>,
+        askPrompt: (question: string, options: AskerPromptOption[], canCancel: boolean) => Promise<number>)
     {
         this.that = that;
         this.AskOneClearing = askOneClearing;
         this.AskOneClearingFiltered = askOneClearingFiltered;
         this.AskAddDecree = askAddDecree;
         this.DoAMove = doAMove;
+        this.AskPrompt = askPrompt;
     }
 
     /**
@@ -30,7 +34,7 @@ export class Asker
      * @param extraInfo 
      * @returns 
      */
-    AskPrompt(question: string, validAnswers?: string[], cancelable?: boolean, extraInfo?: string)
+    AskPromptOld(question: string, validAnswers?: string[], cancelable?: boolean, extraInfo?: string)
     {
         let answeredWrongly = false;
         //cancelable = cancelable ?? true;

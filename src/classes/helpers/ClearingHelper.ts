@@ -21,18 +21,18 @@ export class ClearingHelper
     static InitClearings(): TArray<ClearingModel>
     {
         return new TArray([
-            new ClearingModel(1, ClearingSuitEnum.Fox, 60, 60),
-            new ClearingModel(2, ClearingSuitEnum.Mouse, 440, 110),
-            new ClearingModel(3, ClearingSuitEnum.Rabbit, 410, 410),
-            new ClearingModel(4, ClearingSuitEnum.Rabbit, 60, 380),
-            new ClearingModel(5, ClearingSuitEnum.Rabbit, 270, 60),
-            new ClearingModel(6, ClearingSuitEnum.Fox, 460, 240),
-            new ClearingModel(7, ClearingSuitEnum.Mouse, 290, 340),
-            new ClearingModel(8, ClearingSuitEnum.Fox, 190, 420),
-            new ClearingModel(9, ClearingSuitEnum.Mouse, 50, 190),
-            new ClearingModel(10, ClearingSuitEnum.Rabbit, 220, 130),
-            new ClearingModel(11, ClearingSuitEnum.Mouse, 320, 220),
-            new ClearingModel(12, ClearingSuitEnum.Fox, 150, 250),
+            new ClearingModel(1,  1, 0, ClearingSuitEnum.Fox, 60, 60),
+            new ClearingModel(2,  2, 0, ClearingSuitEnum.Mouse, 440, 110),
+            new ClearingModel(3,  1, 0, ClearingSuitEnum.Rabbit, 410, 410),
+            new ClearingModel(4,  1, 0, ClearingSuitEnum.Rabbit, 60, 380),
+            new ClearingModel(5,  2, 0, ClearingSuitEnum.Rabbit, 270, 60),
+            new ClearingModel(6,  1, 1, ClearingSuitEnum.Fox, 460, 240),
+            new ClearingModel(7,  2, 0, ClearingSuitEnum.Mouse, 290, 340),
+            new ClearingModel(8,  2, 0, ClearingSuitEnum.Fox, 190, 420),
+            new ClearingModel(9,  2, 0, ClearingSuitEnum.Mouse, 50, 190),
+            new ClearingModel(10, 1, 1, ClearingSuitEnum.Rabbit, 220, 130),
+            new ClearingModel(11, 2, 1, ClearingSuitEnum.Mouse, 320, 220),
+            new ClearingModel(12, 1, 1, ClearingSuitEnum.Fox, 150, 250),
         ]);
     }
 

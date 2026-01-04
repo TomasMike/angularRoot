@@ -17,33 +17,33 @@ import { Observable, observable } from 'rxjs';
     styleUrl: './board.css',
     imports: [ClearingComponent, CommonModule]
 })
-export class BoardComponent implements OnInit
+export class BoardComponent 
 {
     @Input() clearings!: ClearingModel[];
     @Input() clickEventEmitter!: EventEmitter<number>;
 
-    GameManager = inject(GameManager);
+    //GameManager = inject(GameManager);
 
     //qwe:Observable<number>;
 
-    ngOnInit(): void
-    {
-        //console.log("test qwe");
-        var data = GameManager.GetGameData();
-        if (data != null) {
+    // ngOnInit(): void
+    // {
+    //     //console.log("test qwe");
+    //     var data = GameManager.GetGameData();
+    //     if (data != null) {
 
-        }
+    //     }
 
-        var o = new Observable((a)=>{
+    //     var o = new Observable((a)=>{
             
-        });
-    }
+    //     });
+    // }
 
-    onClearingClickHander(e: number)
-    {
+    // onClearingClickHander(e: number)
+    // {
 
 
-    }
+    // }
 
 
 

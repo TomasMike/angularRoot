@@ -2,6 +2,7 @@ import { AnonymousSubject } from "rxjs/internal/Subject";
 import { ComponentHelper } from "../helpers/ComponentHelper"
 import { ComponentTypeEnum, RaceEnum } from "./Enums";
 import { ComponentInfo } from "../ComponentInfo";
+import { ComponentType } from "@angular/cdk/portal";
 
 /**
  * a group of same components of one player, like 5 warriors, 1 sawmill
@@ -39,6 +40,16 @@ export class PieceGroupingModel
     GetComponentInfo(): ComponentInfo
     {
         return ComponentHelper.GetComponentInfo(this.componentType);
+    }
+
+    GetPlayerIdFromComponent():number
+    {
+        return this.playerNumber;
+    }
+
+    GetComponentType():ComponentTypeEnum
+    {
+        return this.componentType;
     }
 }
 
